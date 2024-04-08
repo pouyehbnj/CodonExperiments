@@ -852,3 +852,11 @@ reverse_complement,Codon,4.106
 reverse_complement,C++,2.060
 reverse_complement,Python,0.238
 reverse_complement,Codon,4.133
+float,C,1.140
+float,C++,1.709
+float,Python,23.398
+float,Codon,3.757
+float,C,0.571
+float,C++,1.637
+float,Python,22.197
+float,Codon,3.019
