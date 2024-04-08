@@ -45,3 +45,5 @@ for accessing data (details below).
               `@par(schedule='dynamic')` line.
 - `word_count`: Counts occurrences of words in a file using a dictionary. The file should be passed to the benchmark script through the `DATA_WORD_COUNT` environment variable.
 - `primes`: Counts the number of prime numbers below a threshold. Codon version is multithreaded with a dynamic schedule via one additional `@par(schedule='dynamic')` line.
+# CodonExperiments
+Experimenting with Codon a high-performance Python library
