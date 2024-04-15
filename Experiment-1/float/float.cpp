@@ -36,6 +36,7 @@ Point maximize(std::vector<Point>& points) {
 }
 
 int main(int argc, char *argv[]) {
+    //  auto start = std::chrono::high_resolution_clock::now();
     if (argc != 2) {
         std::cout << "Usage: " << argv[0] << " <limit>" << std::endl;
         return 1;
@@ -45,7 +46,7 @@ int main(int argc, char *argv[]) {
     std::vector<Point> points;
 
     // Benchmark start time
-    // auto start = std::chrono::high_resolution_clock::now();
+    auto start = std::chrono::high_resolution_clock::now();
 
     // Initialize points
     for (int i = 0; i < POINTS; ++i) {
@@ -61,11 +62,12 @@ int main(int argc, char *argv[]) {
     Point maxPoint = maximize(points);
 
     // Benchmark end time
-    // auto end = std::chrono::high_resolution_clock::now();
-    // std::chrono::duration<double> diff = end - start;
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> diff = end - start;
     // std::cout <<"test";
     // std::cout << "<Point: x=" << maxPoint.x << ", y=" << maxPoint.y << ", z=" << maxPoint.z << ">" << std::endl;
     // std::cout << "Benchmark took " << diff.count() << " seconds." << std::endl;
+    std::cout << diff.count()<< std::endl;
 
     return 0;
 }

@@ -49,8 +49,8 @@ def benchmark(n):
     return maximize(points)
 
 
-# t0 = time()
+t0 = time()
 # print(benchmark(POINTS))
 benchmark(POINTS)
-# t1 = time()
-# print(t1 - t0)
+t1 = time()
+print(t1 - t0)
