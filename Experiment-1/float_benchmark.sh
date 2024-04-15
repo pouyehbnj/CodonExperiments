@@ -181,13 +181,13 @@ for i in {1..1}; do
 
    
     # C++ (compile and run as a single step for timing)
-    measure_execution_perf "C++" "${CPP} -std=c++17 -O3 ${BENCH_DIR}/float/float.cpp -o ${BENCH_DIR}/float/float_cpp && ${BENCH_DIR}/float/float_cpp ${POINTS}"
+    measure_execution "C++" "${CPP} -std=c++17 -O3 ${BENCH_DIR}/float/float.cpp -o ${BENCH_DIR}/float/float_cpp && ${BENCH_DIR}/float/float_cpp ${POINTS}"
 
     # Python
-    measure_execution_perf "Python" "${PYTHON} ${BENCH_DIR}/float/float.py ${POINTS}"
+    measure_execution "Python" "${PYTHON} ${BENCH_DIR}/float/float.py ${POINTS}"
 
     # Codon
-    measure_execution_perf "Codon" "${CODON} run -release ${BENCH_DIR}/float/float.py ${POINTS}"
+    measure_execution "Codon" "${CODON} run -release ${BENCH_DIR}/float/float.py ${POINTS}"
 
     # Clean up
     # rm $time_output
