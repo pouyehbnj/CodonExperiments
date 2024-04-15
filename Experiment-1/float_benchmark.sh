@@ -100,7 +100,7 @@ measure_execution() {
         ((count++))
 
         # sleep 1
-        sleep 0.01
+        sleep 0.1
     done
 
     # Capture the end time once the process completes
