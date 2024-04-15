@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -e
 set -o pipefail
+set -x  # Add this near the top of your script to debug command executions.
 
 # Setup environment variables
 export BENCH_DIR=$(dirname "$0")
