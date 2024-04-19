@@ -1,220 +1,133 @@
-// // #include <cctype>
-// // #include <string>
-// // #include <algorithm>
-// // #include <iterator>
-// // #include <iostream>
-// // #include <fstream> 
-// // using namespace std;
 
-// // const int LINELENGTH = 60;
-
-// // typedef string Header;
-// // typedef string Segment;
-
-// // inline char complement(char element)
-// // {
-// //   static const char charMap[] =
-// //     {
-// //       'T', 'V', 'G', 'H', '\0', '\0', 'C', 'D', '\0', '\0', 'M', '\0', 'K',
-// //       'N', '\0', '\0', '\0', 'Y', 'S', 'A', 'A', 'B', 'W', '\0', 'R', '\0'
-// //     };
-
-// //   return charMap[toupper(element) - 'A'];
-// // }
-
-// // void print_revcomp(Header const& header, Segment const& seg, ostream& out = std::cout)
-// // {
-// //     out << header << "\n";
-    
-// //     Segment comp(seg.rbegin(),seg.rend());
-// //     transform(comp.begin(),comp.end(), comp.begin(), complement);
-   
-// //     size_t i = 0;
-// //     size_t stop = comp.length()/LINELENGTH + ((comp.length()%LINELENGTH)?1:0);
-    
-// //     while(i < stop)
-// //         out << comp.substr(i++*LINELENGTH,LINELENGTH) << "\n";
-// // }
-
-// // int main ()
-// // {
-// //   // Replace cin with an ifstream object
-// //   std::ifstream file("./reverse_complement/fasta_data.txt"); // Opens the file
-
-// //   // Make sure the file opened successfully
-// //   if (!file.is_open()) {
-// //     std::cerr << "Error opening file" << std::endl;
-// //     return 1;
-// //   }
-
-// //   // Use file instead of cin
-// //   Segment line, segment; 
-// //   Header header;
-// //   while (getline(file, line))
-// //   {
-// //     if (line[0] == '>')
-// //     {
-// //         if (!segment.empty())
-// //           print_revcomp(header, segment, std::cout); // Output to std::cout
-// //         header = line;
-// //         segment.clear();
-// //     }
-// //     else
-// //         segment += line;
-// //   }
-// //   print_revcomp(header, segment, std::cout); // Output to std::cout
-
-// //   file.close(); // Close the file when done
-
-// //   return 0;
-// // }
 // #include <iostream>
 // #include <fstream>
 // #include <vector>
+// #include <algorithm>
 
 // const char COMMENT = '>';
 
-// std::vector<char> COMPLEMENTS(256, 0);
+// std::vector<char> complements(256, '\0');
 
 // void initializeComplements() {
 //     const char* from = "ACGTUMRWSYKVHDBNacgtumrwsykvhdbn";
 //     const char* to = "TGCAAKYWSRMBDHVNTGCAAKYWSRMBDHVN";
 //     for (int i = 0; from[i]; ++i) {
-//         COMPLEMENTS[static_cast<unsigned char>(from[i])] = to[i];
+//         complements[static_cast<unsigned char>(from[i])] = to[i];
 //     }
 // }
 
-// std::vector<char> reverse_sequence(const std::vector<char>& sequence) {
-//     std::vector<char> chunk;
-//     std::vector<char> complemented(sequence.size());
-
-//     for (std::size_t i = 0; i < sequence.size(); ++i) {
-//         complemented[i] = COMPLEMENTS[static_cast<unsigned char>(sequence[i])];
+// std::string reverse_sequence(const std::string& sequence) {
+//     std::string reversed;
+//     std::string formatted_result;
+//     for (auto it = sequence.rbegin(); it != sequence.rend(); ++it) {
+//         reversed.push_back(complements[static_cast<unsigned char>(*it)]);
 //     }
-
-//     std::size_t seq_len = complemented.size();
-//     std::size_t last_line_len = seq_len % 60;
-//     if (last_line_len) {
-//         chunk.push_back('\n');
-//         chunk.insert(chunk.end(), complemented.begin(), complemented.begin() + last_line_len);
+    
+//     size_t pos = 0;
+//     while (pos < reversed.size()) {
+//         if (pos > 0) formatted_result += '\n';
+//         formatted_result += reversed.substr(pos, 60);
+//         pos += 60;
 //     }
-
-//     for (std::size_t i = last_line_len; i < seq_len; i += 60) {
-//         chunk.push_back('\n');
-//         chunk.insert(chunk.end(), complemented.begin() + i, complemented.begin() + std::min(i + 60, seq_len));
-//     }
-
-//     std::reverse(chunk.begin(), chunk.end());
-//     return chunk;
+//     return formatted_result;
 // }
 
 // int main() {
 //     initializeComplements();
-//     std::ifstream file("./reverse_complement/fasta_data.txt", std::ios::binary);
+//     std::ifstream file("./fasta_data.txt");
 
-//     if (!file.is_open()) {
-//         std::cerr << "Error opening file." << std::endl;
-//         return 1;
-//     }
+//     // if (!file.is_open()) {
+//     //     std::cerr << "Error opening file." << std::endl;
+//     //     return 1;
+//     // }
 
-//     std::vector<char> heading;
-//     std::vector<char> sequence;
-//     std::string line;
-
-//     while (std::getline(file, line)) {
-//         if (line[0] == COMMENT) {
-//             if (!heading.empty()) {
-//                 std::cout.write(heading.data(), heading.size());
-//                 std::cout.write(reverse_sequence(sequence).data(), reverse_sequence(sequence).size());
-//                 heading.clear();
+//     std::string line, sequence, header;
+//     bool firstHeader = true;
+//     while (getline(file, line)) {
+//         if (!line.empty() && line[0] == COMMENT) {
+//             if (!sequence.empty()) {
+//                 if (!firstHeader) std::cout << '\n'<< '\n'; // New line before header
+//                 std::cout << header << '\n' << reverse_sequence(sequence);
 //                 sequence.clear();
+//                 firstHeader = false;
 //             }
-//             heading.insert(heading.end(), line.begin(), line.end());
+//             header = line;
 //         } else {
-//             sequence.insert(sequence.end(), line.begin(), line.end());
+//             sequence += line;
 //         }
 //     }
 
-//     if (!heading.empty()) {
-//         std::cout.write(heading.data(), heading.size());
-//         std::cout.write(reverse_sequence(sequence).data(), reverse_sequence(sequence).size());
+//     if (!sequence.empty()) {
+//         if (!firstHeader) std::cout << '\n'<< '\n';
+//         std::cout << header << '\n' << reverse_sequence(sequence);
 //     }
 
 //     return 0;
 // }
+
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <algorithm>
 
 const char COMMENT = '>';
 
-std::vector<char> COMPLEMENTS(256, 0);
+std::vector<char> complements(256, '\0');
 
 void initializeComplements() {
     const char* from = "ACGTUMRWSYKVHDBNacgtumrwsykvhdbn";
     const char* to = "TGCAAKYWSRMBDHVNTGCAAKYWSRMBDHVN";
     for (int i = 0; from[i]; ++i) {
-        COMPLEMENTS[static_cast<unsigned char>(from[i])] = to[i];
+        complements[static_cast<unsigned char>(from[i])] = to[i];
     }
 }
 
-std::vector<char> reverse_sequence(const std::vector<char>& sequence) {
-    std::vector<char> chunk;
-    std::vector<char> complemented(sequence.size());
-
-    for (std::size_t i = 0; i < sequence.size(); ++i) {
-        complemented[i] = COMPLEMENTS[static_cast<unsigned char>(sequence[i])];
+std::string format_sequence(const std::string& sequence) {
+    std::string formatted_result;
+    size_t pos = 0;
+    while (pos < sequence.size()) {
+        if (pos > 0) formatted_result += '\n';
+        formatted_result += sequence.substr(pos, std::min(size_t(60), sequence.size() - pos));
+        pos += 60;
     }
+    return formatted_result;
+}
 
-    std::size_t seq_len = complemented.size();
-    std::size_t last_line_len = seq_len % 60;
-    if (last_line_len) {
-        chunk.push_back('\n');
-        chunk.insert(chunk.end(), complemented.begin(), complemented.begin() + last_line_len);
+std::string reverse_complement(const std::string& sequence) {
+    std::string reversed(sequence.rbegin(), sequence.rend());
+    for (char& c : reversed) {
+        c = complements[static_cast<unsigned char>(c)];
     }
+    return format_sequence(reversed);
+}
 
-    for (std::size_t i = last_line_len; i < seq_len; i += 60) {
-        chunk.push_back('\n');
-        chunk.insert(chunk.end(), complemented.begin() + i, complemented.begin() + std::min(i + 60, seq_len));
+void process_file(const std::string& filepath) {
+    std::ifstream file(filepath);
+
+    std::string line, sequence, header;
+    bool firstEntry = true;
+    while (getline(file, line)) {
+        if (line.empty()) continue;
+        if (line[0] == COMMENT) {
+            if (!sequence.empty()) {
+                if (!firstEntry) std::cout << '\n'<< '\n';
+                std::cout << header << "\n" << reverse_complement(sequence);
+                sequence.clear();
+                firstEntry = false;
+            }
+            header = line;
+        } else {
+            sequence += line;
+        }
     }
-
-    std::reverse(chunk.begin(), chunk.end());
-    return chunk;
+    if (!sequence.empty()) {
+        if (!firstEntry) std::cout << '\n'<< '\n';
+        std::cout << header << "\n" << reverse_complement(sequence);
+    }
 }
 
 int main() {
     initializeComplements();
-    std::ifstream file("./reverse_complement/fasta_data.txt", std::ios::binary);
-
-    if (!file.is_open()) {
-        std::cerr << "Error opening file." << std::endl;
-        return 1;
-    }
-
-    std::vector<char> heading;
-    std::vector<char> sequence;
-    std::string line;
-    auto start_time = std::chrono::high_resolution_clock::now();
-    while (std::getline(file, line)) {
-        if (line[0] == COMMENT) {
-            if (!heading.empty()) {
-                std::cout.write(heading.data(), heading.size());
-                std::cout.write(reverse_sequence(sequence).data(), reverse_sequence(sequence).size());
-                heading.clear();
-                sequence.clear();
-            }
-            heading.insert(heading.end(), line.begin(), line.end());
-        } else {
-            sequence.insert(sequence.end(), line.begin(), line.end());
-        }
-    }
-
-    if (!heading.empty()) {
-        std::cout.write(heading.data(), heading.size());
-        std::cout.write(reverse_sequence(sequence).data(), reverse_sequence(sequence).size());
-    }
-    auto end_time = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time).count();
-    std::cout << "Execution time: " << duration << " microseconds" << std::endl;
+    process_file("./fasta_data.txt");
     return 0;
 }

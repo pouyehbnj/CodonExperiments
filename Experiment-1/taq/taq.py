@@ -46,7 +46,7 @@ BUCKET_SIZE = 10000000  // int(argv[1])
 t0 = time()
 
 data = {}
-with open('./taq/data', 'r') as f:
+with open('./data', 'r') as f:
     header = True
 
     for line in f:
@@ -69,5 +69,5 @@ for symbol, series in data.items():
     y, signals = process_data(series)
     print(symbol, sum(signals))
 
-t1 = time()
-print(t1 - t0)
+# t1 = time()
+# print(t1 - t0)

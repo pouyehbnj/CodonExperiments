@@ -25,9 +25,9 @@ analyze_complexity() {
 }
 
 # Run Lizard complexity analysis for each language
-analyze_complexity "${BENCH_DIR}/regex_redux.cpp" "C++"
-analyze_complexity "${BENCH_DIR}/regex_redux.py" "Python"
-analyze_complexity "${BENCH_DIR}/regex_redux.py" "Codon"
+analyze_complexity "${BENCH_DIR}/reverse_complement.cpp" "C++"
+analyze_complexity "${BENCH_DIR}/reverse_complement.py" "Python"
+analyze_complexity "${BENCH_DIR}/reverse_complement.py" "Codon"
 
 # Creating input 
 
@@ -45,11 +45,11 @@ do
     "${BENCH_DIR}/fasta_cpp" "${SIZE}"
 
     # Compile C++ program
-    ${CPP} -std=c++17 -O3 "${BENCH_DIR}/regex_redux.cpp" -o "${BENCH_DIR}/regex_redux_cpp"
+    ${CPP} -std=c++17 -O3 "${BENCH_DIR}/reverse_complement.cpp" -o "${BENCH_DIR}/reverse_complement_cpp"
     
     # Run C++ program and measure time
     START_TIME=$(python -c "import time; print(time.time())")
-    CPP_OUTPUT=$("${BENCH_DIR}/regex_redux_cpp")
+    CPP_OUTPUT=$("${BENCH_DIR}/reverse_complement_cpp")
     # echo "$CPP_OUTPUT"
     END_TIME=$(python -c "import time; print(time.time())")
     CPP_TIME=$(echo "$END_TIME - $START_TIME" | bc)
@@ -58,7 +58,7 @@ do
     
     # Run Python program and measure time
     START_TIME=$(python -c "import time; print(time.time())")
-    PYTHON_OUTPUT=$(${PYTHON} "${BENCH_DIR}/regex_redux.py")
+    PYTHON_OUTPUT=$(${PYTHON} "${BENCH_DIR}/reverse_complement.py")
     # echo "$PYTHON_OUTPUT"
     END_TIME=$(python -c "import time; print(time.time())")
     PYTHON_TIME=$(echo "$END_TIME - $START_TIME" | bc)
@@ -66,11 +66,11 @@ do
     echo "${i},python,${PYTHON_TIME},${SIZE}" >> "${CSV_FILE}"
     
     # Compile Codon Python program
-    ${CODON} build --release -numerics=py "${BENCH_DIR}/regex_redux.py"
+    ${CODON} build --release -numerics=py "${BENCH_DIR}/reverse_complement.py"
     
     # Run Codon Python program and measure time
     START_TIME=$(python -c "import time; print(time.time())")
-    CODON_OUTPUT=$("${BENCH_DIR}/regex_redux")
+    CODON_OUTPUT=$("${BENCH_DIR}/reverse_complement")
     # echo "$CODON_OUTPUT"
     END_TIME=$(python -c "import time; print(time.time())")
     CODON_TIME=$(echo "$END_TIME - $START_TIME" | bc)
@@ -86,6 +86,6 @@ do
         echo "Python output: ${PYTHON_OUTPUT}"
         echo "Codon output: ${CODON_OUTPUT}"
     fi
-    rm "${BENCH_DIR}/regex_redux_cpp"
-    rm  "${BENCH_DIR}/regex_redux"
+    rm "${BENCH_DIR}/reverse_complement_cpp"
+    rm  "${BENCH_DIR}/reverse_complement"
 done

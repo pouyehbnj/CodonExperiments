@@ -43,7 +43,7 @@ def generate_sequences(lines):
 data = []
 # ./reverse_complement
 t0=time.time()
-with open('./reverse_complement/fasta_data.txt', 'r') as file:
+with open('./fasta_data.txt', 'r') as file:
     for line in file:
         data.append(line.strip())
 # t3 = time.time()
@@ -68,5 +68,5 @@ if heading:
     print(heading)
     print(reverse_sequence(sequence))
     
-t1 = time.time()
-print(t1 - t0)
+# t1 = time.time()
+# print(t1 - t0)

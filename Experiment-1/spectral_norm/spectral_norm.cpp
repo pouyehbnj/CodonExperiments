@@ -52,6 +52,6 @@ int main(int argc, char *argv[]) {
         total += vBv + vv;
     }
 
-    cout << fixed << setprecision(6) << total << endl;
+    cout << fixed << setprecision(3) << total << endl;
     return 0;
 }

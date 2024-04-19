@@ -55,11 +55,11 @@ int main() {
   cin.tie(nullptr);
   cout.sync_with_stdio(false);
 
-  ifstream file("./word_count/sample_text.txt"); // Use a static file path
-  if (!file.is_open()) {
-    cerr << "Could not open file: ./sample_text.txt" << endl;
-    return -1;
-  }
+  ifstream file("./sample_text.txt"); // Use a static file path
+  // if (!file.is_open()) {
+  //   cerr << "Could not open file: ./sample_text.txt" << endl;
+  //   return -1;
+  // }
 
   unordered_map<string, int> map;
   for (string line; getline(file, line);) {

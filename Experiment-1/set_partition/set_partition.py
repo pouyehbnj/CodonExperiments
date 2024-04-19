@@ -39,9 +39,7 @@ def partition_filtered(collection, minsize=1, forgive=0):
             yield candidate
 
 
-import time
 
-t = time.time()
 something = list(range(1, int(sys.argv[1])))
 v = partition_filtered(something, minsize=2)
 x = 0
@@ -49,4 +47,7 @@ for p in v:
     p.sort()
     x += p[len(p) // 3][0]
 print(x)
-print(time.time() - t)
+
+
+
+

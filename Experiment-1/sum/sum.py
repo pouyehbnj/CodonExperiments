@@ -7,7 +7,7 @@ nums = range(limit)
 sum = 0
 for k in nums:
     sum = sum + k
-# print("Sum of 50000000 numbers is : ", sum)
-t2 = time.time()
-t = t2 - t1
+print(sum)
+# t2 = time.time()
+# t = t2 - t1
 # print(t)
