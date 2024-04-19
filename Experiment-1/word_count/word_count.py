@@ -7,7 +7,7 @@ import os
 
 # current_directory = os.getcwd()
 # print("Current directory:", current_directory)
-filename = "./word_count/sample_text.txt"
+filename = "./sample_text.txt"
 with open(filename) as f:
     for l in f:
         for w in l.split():

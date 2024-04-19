@@ -103,5 +103,5 @@ def bench_spectral_norm(N, loops):
 if __name__ == "__main__":
     N = int(sys.argv[1]) if len(sys.argv) > 1 else 260
     LOOPS = int(sys.argv[2]) if len(sys.argv) > 2 else 100
-    print(bench_spectral_norm(N, LOOPS))
+    print(f"{bench_spectral_norm(N, LOOPS):.3f}")
 

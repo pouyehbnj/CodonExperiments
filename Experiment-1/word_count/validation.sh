@@ -25,31 +25,28 @@ analyze_complexity() {
 }
 
 # Run Lizard complexity analysis for each language
-analyze_complexity "${BENCH_DIR}/regex_redux.cpp" "C++"
-analyze_complexity "${BENCH_DIR}/regex_redux.py" "Python"
-analyze_complexity "${BENCH_DIR}/regex_redux.py" "Codon"
+analyze_complexity "${BENCH_DIR}/word_count.cpp" "C++"
+analyze_complexity "${BENCH_DIR}/word_count.py" "Python"
+analyze_complexity "${BENCH_DIR}/word_count.py" "Codon"
 
 # Creating input 
 
-"${CPP}" -std=c++17 -O3 "${BENCH_DIR}/fasta.cpp" 
+
 
 for i in {1..10}
 do
     # Generate a random tree depth between 1 and 30
-    SIZE=$((2 + RANDOM % 100))
+    SIZE=$((1 + RANDOM % 100000))
     echo "Running tests for size: ${SIZE}"
-
-    # CREATE THE Input FILE
-    echo "Creating Input with size ${SIZE}."
-    ${CPP} -std=c++17 -O3 "${BENCH_DIR}/fasta.cpp" -o "${BENCH_DIR}/fasta_cpp" >/dev/null 2>&1
-    "${BENCH_DIR}/fasta_cpp" "${SIZE}"
+    # echo "Creating Input with ${WORD_NUM} words."
+    ${PYTHON} "${BENCH_DIR}/text_generator.py" ${SIZE}
 
     # Compile C++ program
-    ${CPP} -std=c++17 -O3 "${BENCH_DIR}/regex_redux.cpp" -o "${BENCH_DIR}/regex_redux_cpp"
+    ${CPP} -std=c++17 -O3 "${BENCH_DIR}/word_count.cpp" -o "${BENCH_DIR}/word_count_cpp"
     
     # Run C++ program and measure time
     START_TIME=$(python -c "import time; print(time.time())")
-    CPP_OUTPUT=$("${BENCH_DIR}/regex_redux_cpp")
+    CPP_OUTPUT=$("${BENCH_DIR}/word_count_cpp")
     # echo "$CPP_OUTPUT"
     END_TIME=$(python -c "import time; print(time.time())")
     CPP_TIME=$(echo "$END_TIME - $START_TIME" | bc)
@@ -58,7 +55,7 @@ do
     
     # Run Python program and measure time
     START_TIME=$(python -c "import time; print(time.time())")
-    PYTHON_OUTPUT=$(${PYTHON} "${BENCH_DIR}/regex_redux.py")
+    PYTHON_OUTPUT=$(${PYTHON} "${BENCH_DIR}/word_count.py")
     # echo "$PYTHON_OUTPUT"
     END_TIME=$(python -c "import time; print(time.time())")
     PYTHON_TIME=$(echo "$END_TIME - $START_TIME" | bc)
@@ -66,11 +63,11 @@ do
     echo "${i},python,${PYTHON_TIME},${SIZE}" >> "${CSV_FILE}"
     
     # Compile Codon Python program
-    ${CODON} build --release -numerics=py "${BENCH_DIR}/regex_redux.py"
+    ${CODON} build --release -numerics=py "${BENCH_DIR}/word_count.py"
     
     # Run Codon Python program and measure time
     START_TIME=$(python -c "import time; print(time.time())")
-    CODON_OUTPUT=$("${BENCH_DIR}/regex_redux")
+    CODON_OUTPUT=$("${BENCH_DIR}/word_count")
     # echo "$CODON_OUTPUT"
     END_TIME=$(python -c "import time; print(time.time())")
     CODON_TIME=$(echo "$END_TIME - $START_TIME" | bc)
@@ -86,6 +83,6 @@ do
         echo "Python output: ${PYTHON_OUTPUT}"
         echo "Codon output: ${CODON_OUTPUT}"
     fi
-    rm "${BENCH_DIR}/regex_redux_cpp"
-    rm  "${BENCH_DIR}/regex_redux"
+    rm "${BENCH_DIR}/word_count_cpp"
+    rm  "${BENCH_DIR}/word_count"
 done

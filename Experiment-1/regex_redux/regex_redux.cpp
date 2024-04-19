@@ -1,29 +1,30 @@
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <string>
 #include <regex>
 
 int main() {
+    
     std::string file_name = "./fasta_data.txt";
     std::ifstream file(file_name);
-    std::string seq, line;
+    std::stringstream buffer;
 
-    // Read entire file content into a single string
-    while (std::getline(file, line)) {
-        if (line.empty() || line[0] == '>') continue;
-        seq += line;
-    }
+    // if (!file.is_open()) {
+    //     std::cerr << "Failed to open file: " << file_name << std::endl;
+    //     return 1;
+    // }
 
-    // Initial length of the sequence
-    int ilen = seq.length();
-
-    // Remove newlines and headers
+    buffer << file.rdbuf();
+    std::string seq = buffer.str();
+     int ilen = seq.length();
+    // Remove newlines and headers in one pass
     std::regex newline_regex(">[^\n]*\n|\n");
     seq = std::regex_replace(seq, newline_regex, "");
 
-    // Cleaned length of the sequence
+   
+    seq = std::regex_replace(seq, newline_regex, "");  // Remove newlines and headers
     int clen = seq.length();
-
     // Regular expressions for DNA variants
     const char* variants[] = {
         "agggtaaa|tttaccct",

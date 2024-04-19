@@ -6,10 +6,10 @@ int main(int argc, char *argv[]) {
     // double cpu_time_used;
     
     // start = clock();
-    if (argc != 2) {
-        printf("Usage: %s <limit>\n", argv[0]);
-        return 1;
-    }
+    // if (argc != 2) {
+    //     printf("Usage: %s <limit>\n", argv[0]);
+    //     return 1;
+    // }
     int numbers = atoi(argv[1]);
     long long sum = 0;
     for (long long k = 0; k < numbers; k++) {
