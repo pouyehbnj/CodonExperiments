@@ -1,11 +1,11 @@
 #include <cmath>
 #include <iostream>
 #include <vector>
-
+#include <iomanip>
 
 class Point {
 public:
-    double x, y, z;
+    float x, y, z;
 
     Point(int i) {
         x = std::sin(i);
@@ -14,7 +14,7 @@ public:
     }
 
     void normalize() {
-        double norm = std::sqrt(x * x + y * y + z * z);
+        float norm = std::sqrt(x * x + y * y + z * z);
         x /= norm;
         y /= norm;
         z /= norm;
@@ -62,12 +62,13 @@ int main(int argc, char *argv[]) {
     Point maxPoint = maximize(points);
 
     // Benchmark end time
-    auto end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> diff = end - start;
+    // auto end = std::chrono::high_resolution_clock::now();
+    // std::chrono::duration<float> diff = end - start;
     // std::cout <<"test";
-    // std::cout << "<Point: x=" << maxPoint.x << ", y=" << maxPoint.y << ", z=" << maxPoint.z << ">" << std::endl;
-    // std::cout << "Benchmark took " << diff.count() << " seconds." << std::endl;
-    std::cout << diff.count()<< std::endl;
+    std::cout << std::fixed << std::setprecision(3);
+    std::cout << "<Point: x=" << maxPoint.x << ", y=" << maxPoint.y << ", z=" << maxPoint.z << ">" << std::endl;
+    //std::cout << "Benchmark took " << diff.count() << " seconds." << std::endl;
+    //std::cout << diff.count()<< std::endl;
 
     return 0;
 }

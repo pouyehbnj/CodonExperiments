@@ -55,7 +55,7 @@ int main(int argc, char *argv[]) {
     double elapsed_time = std::chrono::duration_cast<std::chrono::duration<double>>(end_time - start_time).count();
 
     std::cout << "Pfannkuchen(" << n << ") = " << max_flips << std::endl;
-    std::cout << "Time taken: " << elapsed_time << " seconds" << std::endl;
+    // std::cout << "Time taken: " << elapsed_time << " seconds" << std::endl;
 
     return 0;
 }

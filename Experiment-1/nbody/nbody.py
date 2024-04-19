@@ -95,7 +95,7 @@ def report_energy(bodies=SYSTEM, pairs=PAIRS, e=0.0):
         e -= (m1 * m2) / ((dx * dx + dy * dy + dz * dz) ** 0.5)
     for (r, [vx, vy, vz], m) in bodies:
         e += m * (vx * vx + vy * vy + vz * vz) / 2.
-    print(e)
+    print(f"{e:.3f}")
 
 def offset_momentum(ref, bodies=SYSTEM, px=0.0, py=0.0, pz=0.0):
 
@@ -116,5 +116,5 @@ def main(n, ref='sun'):
 
 # t0 = time()
 main(int(sys.argv[1]))
-t1 = time()
+# t1 = time()
 # print(t1 - t0)

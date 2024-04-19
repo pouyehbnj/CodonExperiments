@@ -1,30 +1,31 @@
 #include <iostream>
 #include <vector>
-
+#include <complex>
+#include <chrono>
 
 const int MAX = 1000;  // Maximum Mandelbrot iterations
-const int N = 4096;    // Width and height of the image
 
 // Scale function to map pixel coordinates to complex plane coordinates
-double scale(int coord, double min, double max) {
+double scale(int coord, double min, double max, int N) {
     return min + (coord / static_cast<double>(N)) * (max - min);
 }
 
-int main() {
+int main(int argc, char *argv[]) {
+    if (argc != 2) {
+        std::cerr << "Usage: " << argv[0] << " <N>" << std::endl;
+        return 1;
+    }
+    int N = std::atoi(argv[1]);
     std::vector<int> pixels(N * N, 0);
-    auto start_time = std::chrono::high_resolution_clock::now();
 
     for (int i = 0; i < N; ++i) {
         for (int j = 0; j < N; ++j) {
-            double c_real = scale(j, -2.00, 0.47);
-            double c_imag = scale(i, -1.12, 1.12);
-            double z_real = 0, z_imag = 0;
+            std::complex<double> c(scale(j, -2.00, 0.47, N), scale(i, -1.12, 1.12, N));
+            std::complex<double> z(0, 0);
             int iteration = 0;
 
-            while (z_real * z_real + z_imag * z_imag <= 4 && iteration < MAX) {
-                double temp = z_real * z_real - z_imag * z_imag + c_real;
-                z_imag = 2 * z_real * z_imag + c_imag;
-                z_real = temp;
+            while (abs(z) <= 2 && iteration < MAX) {
+                z = z * z + c;
                 iteration++;
             }
 
@@ -32,17 +33,11 @@ int main() {
         }
     }
 
-    // Calculate the sum of all pixel values
     long long sum = 0;
     for (int pixel : pixels) {
         sum += pixel;
     }
-    std::cout << "Sum of pixels: " << sum << std::endl;
-
-    // Calculate and print execution time
-    // auto end_time = std::chrono::high_resolution_clock::now();
-    // auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
-    // std::cout << "Execution time: " << duration << " milliseconds" << std::endl;
+    std::cout << sum << std::endl;
 
     return 0;
 }

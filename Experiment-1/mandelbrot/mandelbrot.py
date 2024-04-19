@@ -1,6 +1,8 @@
 import time
+import sys
 MAX    = 1000  # maximum Mandelbrot iterations
-N      = 4096  # width and height of image
+N      = int(sys.argv[1])
+# 4096  # width and height of image
 pixels = [0 for _ in range(N * N)]
 
 def scale(x, a, b):
@@ -19,4 +21,4 @@ for i in range(N):
 
         pixels[i*N + j] = int(255 * iteration/MAX)
 print(sum(pixels))
-print(time.time() - t0)
+# print(time.time() - t0)
