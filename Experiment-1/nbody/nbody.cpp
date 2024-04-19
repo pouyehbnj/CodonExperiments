@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <utility>
 #include <vector>
-
+#include <iomanip>
 namespace {
 
 const double PI = 3.14159265358979323;
@@ -114,8 +114,8 @@ void report_energy(std::vector<Body *> &bodies = SYSTEM,
     double m = body->m;
     e += m * (vx * vx + vy * vy + vz * vz) / 2.;
   }
-
-  std::cout << e << std::endl;
+  // cout.precision(3);
+  std::cout << std::fixed << std::setprecision(3)  << e << std::endl;
 }
 
 void offset_momentum(Body &ref, std::vector<Body *> &bodies = SYSTEM, double px = 0.0,
@@ -138,16 +138,16 @@ void offset_momentum(Body &ref, std::vector<Body *> &bodies = SYSTEM, double px 
 } // namespace
 
 int main(int argc, char *argv[]) {
-  using clock = std::chrono::high_resolution_clock;
-  using std::chrono::duration_cast;
-  using std::chrono::milliseconds;
+  // using clock = std::chrono::high_resolution_clock;
+  // using std::chrono::duration_cast;
+  // using std::chrono::milliseconds;
 
-  auto t = clock::now();
+  // auto t = clock::now();
   std::string ref = "sun";
   offset_momentum(BODIES[ref]);
   report_energy();
   advance(0.01, std::atoi(argv[1]));
   report_energy();
-  std::cout << (duration_cast<milliseconds>(clock::now() - t).count() / 1e3)
-            << std::endl;
+  // std::cout << (duration_cast<milliseconds>(clock::now() - t).count() / 1e3)
+  //           << std::endl;
 }

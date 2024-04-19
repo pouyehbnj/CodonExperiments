@@ -42,5 +42,5 @@ for idx in range(fact(n)):
     max_flips = max(flips, max_flips)
 
 print(f'Pfannkuchen({n}) = {max_flips}')
-t1 = time()
-print(t1 - t0)
+# t1 = time()
+# print(t1 - t0)

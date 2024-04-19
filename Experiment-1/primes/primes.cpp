@@ -11,10 +11,10 @@ bool is_prime(int n) {
 }
 
 int main(int argc, char *argv[]) {
-    if (argc != 2) {
-        std::cout << "Usage: " << argv[0] << " <limit>" << std::endl;
-        return 1;
-    }
+    // if (argc != 2) {
+    //     std::cout << "Usage: " << argv[0] << " <limit>" << std::endl;
+    //     return 1;
+    // }
     int limit = std::atoi(argv[1]);
     int total = 0;
 

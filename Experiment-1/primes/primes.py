@@ -15,6 +15,7 @@ total = 0
 for i in range(2, limit):
     if is_prime(i):
         total += 1
+
 # t1 = time()
 
 print(total)

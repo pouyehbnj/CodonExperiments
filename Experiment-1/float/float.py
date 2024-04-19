@@ -15,7 +15,7 @@ class Point:
         self.z = (x * x) / 2
 
     def __repr__(self):
-        return f"<Point: x={self.x}, y={self.y}, z={self.z}>"
+        return f"<Point: x={self.x:.3f}, y={self.y:.3f}, z={self.z:.3f}>"
 
     def normalize(self):
         x = self.x
@@ -50,7 +50,7 @@ def benchmark(n):
 
 
 t0 = time()
-# print(benchmark(POINTS))
-benchmark(POINTS)
-t1 = time()
-print(t1 - t0)
+print(benchmark(POINTS))
+# benchmark(POINTS)
+# t1 = time()
+# print(t1 - t0)
