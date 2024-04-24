@@ -50,8 +50,8 @@ do
     # echo "$CPP_OUTPUT"
     END_TIME=$(${PYTHON} -c "import time; print(time.time())")
     CPP_TIME_O0=$(echo "$END_TIME - $START_TIME" | bc)
-    echo "C++ execution time: ${CPP_TIME}s"
-    echo "${i},cpp,${CPP_TIME},o0,${SIZE}" >> "${CSV_FILE}"
+    echo "C++ execution time: ${CPP_TIME_O0}s"
+    echo "${i},cpp,${CPP_TIME_O0},o0,${SIZE}" >> "${CSV_FILE}"
 
      # Compile C++ program
     ${CPP} -std=c++17 -O3 "${BENCH_DIR}/reverse_complement.cpp" -o "${BENCH_DIR}/reverse_complement_cpp_o3"
@@ -62,8 +62,8 @@ do
     # echo "$CPP_OUTPUT"
     END_TIME=$(${PYTHON} -c "import time; print(time.time())")
     CPP_TIME_O3=$(echo "$END_TIME - $START_TIME" | bc)
-    echo "C++ execution time: ${CPP_TIME}s"
-    echo "${i},cpp,${CPP_TIME},03,${SIZE}" >> "${CSV_FILE}"
+    echo "C++ execution time: ${CPP_TIME_O3}s"
+    echo "${i},cpp,${CPP_TIME_O3},03,${SIZE}" >> "${CSV_FILE}"
     
     # Run Python program and measure time
     START_TIME=$(${PYTHON} -c "import time; print(time.time())")
