@@ -1,4 +1,2 @@
 run_number,execution_method,execution_time,flag,SIZE
-1,cpp,.3926062,o0,250000
-1,cpp,.3317440,o3,250000
-1,python,1.0697119,NA,250000
+
