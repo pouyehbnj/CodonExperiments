@@ -39,46 +39,46 @@ do
     echo "Running tests for size: ${SIZE}"
 
     # Compile C++ program with o0
-    ${CPP} -std=c++17 -O0 "${BENCH_DIR}/fasta.cpp" -o "${BENCH_DIR}/fasta_cpp_o0"  >/dev/null 2>&1
+    ${CPP} -std=c++17 -O0 "${BENCH_DIR}/fasta.cpp" -o "${BENCH_DIR}/fasta_cpp_o0" >/dev/null 2>&1  
     
     # Run C++ program and measure time
-    START_TIME=$(python -c "import time; print(time.time())")
-    CPP_OUTPUT=$("${BENCH_DIR}/fasta_cpp_o0" ${SIZE} >/dev/null 2>&1)
+    START_TIME=$(${PYTHON} -c "import time; print(time.time())")
+    CPP_OUTPUT=$("${BENCH_DIR}/fasta_cpp_o0" ${SIZE})
     # echo "$CPP_OUTPUT"
-    END_TIME=$(python -c "import time; print(time.time())")
+    END_TIME=$(${PYTHON} -c "import time; print(time.time())")
     CPP_TIME_O0=$(echo "$END_TIME - $START_TIME" | bc)
     echo "C++ execution time: ${CPP_TIME_O0}s"
     echo "${i},cpp,${CPP_TIME_O0},o0,${SIZE}" >> "${CSV_FILE}"
 
     # Compile C++ program with o3
-    ${CPP} -std=c++17 -O3 "${BENCH_DIR}/fasta.cpp" -o "${BENCH_DIR}/fasta_cpp_o3"  >/dev/null 2>&1
+    ${CPP} -std=c++17 -O3 "${BENCH_DIR}/fasta.cpp" -o "${BENCH_DIR}/fasta_cpp_o3" >/dev/null 2>&1
     
     # Run C++ program and measure time
-    START_TIME=$(python -c "import time; print(time.time())")
-    CPP_OUTPUT=$("${BENCH_DIR}/fasta_cpp_o3" ${SIZE}>/dev/null 2>&1)
+    START_TIME=$(${PYTHON} -c "import time; print(time.time())")
+    CPP_OUTPUT=$("${BENCH_DIR}/fasta_cpp_o3" ${SIZE})
     # echo "$CPP_OUTPUT"
-    END_TIME=$(python -c "import time; print(time.time())")
+    END_TIME=$(${PYTHON} -c "import time; print(time.time())")
     CPP_TIME_O3=$(echo "$END_TIME - $START_TIME" | bc)
     echo "C++ execution time: ${CPP_TIME_O3}s"
     echo "${i},cpp,${CPP_TIME_O3},o3,${SIZE}" >> "${CSV_FILE}"
     
     # Run Python program and measure time
-    START_TIME=$(python -c "import time; print(time.time())")
-    PYTHON_OUTPUT=$(${PYTHON} "${BENCH_DIR}/fasta.py" ${SIZE}>/dev/null 2>&1)
+    START_TIME=$(${PYTHON} -c "import time; print(time.time())")
+    PYTHON_OUTPUT=$(${PYTHON} "${BENCH_DIR}/fasta.py" ${SIZE})
     # echo "$PYTHON_OUTPUT"
-    END_TIME=$(python -c "import time; print(time.time())")
+    END_TIME=$(${PYTHON} -c "import time; print(time.time())")
     PYTHON_TIME=$(echo "$END_TIME - $START_TIME" | bc)
     echo "Python execution time: ${PYTHON_TIME}s"
     echo "${i},python,${PYTHON_TIME},NA,${SIZE}" >> "${CSV_FILE}"
     
     # Compile Codon Python program
-    ${CODON} build --release "${BENCH_DIR}/fasta.py"  >/dev/null 2>&1
+    ${CODON} build --release "${BENCH_DIR}/fasta.py"  
     
     # Run Codon Python program and measure time
-    START_TIME=$(python -c "import time; print(time.time())")
-    CODON_OUTPUT=$("${BENCH_DIR}/fasta" ${SIZE}>/dev/null 2>&1)
+    START_TIME=$(${PYTHON} -c "import time; print(time.time())")
+    CODON_OUTPUT=$("${BENCH_DIR}/fasta" ${SIZE})
     # echo "$CODON_OUTPUT"
-    END_TIME=$(python -c "import time; print(time.time())")
+    END_TIME=$(${PYTHON} -c "import time; print(time.time())")
     CODON_TIME=$(echo "$END_TIME - $START_TIME" | bc)
     echo "Codon execution time: ${CODON_TIME}s"
     echo "${i},codon,${CODON_TIME},NA,${SIZE}" >> "${CSV_FILE}"
@@ -94,7 +94,7 @@ do
     fi
     rm "${BENCH_DIR}/fasta_cpp_o0"
     rm "${BENCH_DIR}/fasta_cpp_o3"
-    rm  "${BENCH_DIR}/fasta"
+    rm "${BENCH_DIR}/fasta"
 
     cpp_times_O0+=("$CPP_TIME_O0")
     cpp_times_O3+=("$CPP_TIME_O3")
