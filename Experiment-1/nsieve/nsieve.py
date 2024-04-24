@@ -1,5 +1,5 @@
 import sys
-from time import time
+
 
 def nsieve(n):
     count = 0
@@ -12,11 +12,11 @@ def nsieve(n):
     print(f'Primes up to {n:8} {count:8}')
 
 
-if __name__ == '__main__':
-    t0 = time()
-    n = int(sys.argv[1]) 
+# if __name__ == '__main__':
+    
+n = int(sys.argv[1]) 
     # if len(sys.argv) > 1 else 4
-    for i in range(0, 3):
-        nsieve(10000 << (n-i))
+for i in range(0, 3):
+    nsieve(10000 << (n-i))
     # t1 = time()
     # print(t1 - t0)

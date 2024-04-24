@@ -26,10 +26,10 @@ void nsieve(std::size_t max) {
 }
 
 int main(int argc, char **argv) {
-  if (argc != 2) {
-    std::cerr << "usage: " << argv[0] << " <n>\n";
-    return 1;
-  }
+//   if (argc != 2) {
+//     std::cerr << "usage: " << argv[0] << " <n>\n";
+//     return 1;
+//   }
   unsigned int count;
   {
     std::istringstream convertor(argv[1]);
