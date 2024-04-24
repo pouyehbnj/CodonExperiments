@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# Source the user's .bashrc to ensure all user environment settings are applied
+if [ -f "~/.bashrc" ]; then
+    source ~/.bashrc
+fi
+
+if [ -f "$HOME/.profile" ]; then
+    source "$HOME/.profile"
+fi
 # Setup environment variables
 export BENCH_DIR=$(dirname "$0")
 export PYTHON="${EXE_PYTHON:-python3}"
@@ -39,46 +47,46 @@ do
     echo "Running tests for size: ${SIZE}"
 
     # Compile C++ program with o0
-    ${CPP} -std=c++17 -O0 "${BENCH_DIR}/mandelbrot.cpp" -o "${BENCH_DIR}/mandelbrot_cpp_o0"  >/dev/null 2>&1
+    ${CPP} -std=c++17 -O0 "${BENCH_DIR}/mandelbrot.cpp" -o "${BENCH_DIR}/mandelbrot_cpp_o0"  
     
     # Run C++ program and measure time
-    START_TIME=$(python -c "import time; print(time.time())")
-    CPP_OUTPUT=$("${BENCH_DIR}/mandelbrot_cpp_o0" ${SIZE} >/dev/null 2>&1)
+    START_TIME=$(${PYTHON} -c "import time; print(time.time())")
+    CPP_OUTPUT=$("${BENCH_DIR}/mandelbrot_cpp_o0" ${SIZE})
     # echo "$CPP_OUTPUT"
-    END_TIME=$(python -c "import time; print(time.time())")
+    END_TIME=$(${PYTHON} -c "import time; print(time.time())")
     CPP_TIME_O0=$(echo "$END_TIME - $START_TIME" | bc)
     echo "C++ execution time: ${CPP_TIME_O0}s"
     echo "${i},cpp,${CPP_TIME_O0},o0,${SIZE}" >> "${CSV_FILE}"
 
     # Compile C++ program with o3
-    ${CPP} -std=c++17 -O3 "${BENCH_DIR}/mandelbrot.cpp" -o "${BENCH_DIR}/mandelbrot_cpp_o3"  >/dev/null 2>&1
+    ${CPP} -std=c++17 -O3 "${BENCH_DIR}/mandelbrot.cpp" -o "${BENCH_DIR}/mandelbrot_cpp_o3"
     
     # Run C++ program and measure time
-    START_TIME=$(python -c "import time; print(time.time())")
-    CPP_OUTPUT=$("${BENCH_DIR}/mandelbrot_cpp_o3" ${SIZE}>/dev/null 2>&1)
+    START_TIME=$(${PYTHON} -c "import time; print(time.time())")
+    CPP_OUTPUT=$("${BENCH_DIR}/mandelbrot_cpp_o3" ${SIZE})
     # echo "$CPP_OUTPUT"
-    END_TIME=$(python -c "import time; print(time.time())")
+    END_TIME=$(${PYTHON} -c "import time; print(time.time())")
     CPP_TIME_O3=$(echo "$END_TIME - $START_TIME" | bc)
     echo "C++ execution time: ${CPP_TIME_O3}s"
     echo "${i},cpp,${CPP_TIME_O3},o3,${SIZE}" >> "${CSV_FILE}"
     
     # Run Python program and measure time
-    START_TIME=$(python -c "import time; print(time.time())")
-    PYTHON_OUTPUT=$(${PYTHON} "${BENCH_DIR}/mandelbrot.py" ${SIZE}>/dev/null 2>&1)
+    START_TIME=$(${PYTHON} -c "import time; print(time.time())")
+    PYTHON_OUTPUT=$(${PYTHON} "${BENCH_DIR}/mandelbrot.py" ${SIZE})
     # echo "$PYTHON_OUTPUT"
-    END_TIME=$(python -c "import time; print(time.time())")
+    END_TIME=$(${PYTHON} -c "import time; print(time.time())")
     PYTHON_TIME=$(echo "$END_TIME - $START_TIME" | bc)
     echo "Python execution time: ${PYTHON_TIME}s"
     echo "${i},python,${PYTHON_TIME},NA,${SIZE}" >> "${CSV_FILE}"
     
     # Compile Codon Python program
-    ${CODON} build --release "${BENCH_DIR}/mandelbrot.py"  >/dev/null 2>&1
+    ${CODON} build --release "${BENCH_DIR}/mandelbrot.py"  
     
     # Run Codon Python program and measure time
-    START_TIME=$(python -c "import time; print(time.time())")
-    CODON_OUTPUT=$("${BENCH_DIR}/mandelbrot" ${SIZE}>/dev/null 2>&1)
+    START_TIME=$(${PYTHON} -c "import time; print(time.time())")
+    CODON_OUTPUT=$("${BENCH_DIR}/mandelbrot" ${SIZE})
     # echo "$CODON_OUTPUT"
-    END_TIME=$(python -c "import time; print(time.time())")
+    END_TIME=$(${PYTHON} -c "import time; print(time.time())")
     CODON_TIME=$(echo "$END_TIME - $START_TIME" | bc)
     echo "Codon execution time: ${CODON_TIME}s"
     echo "${i},codon,${CODON_TIME},NA,${SIZE}" >> "${CSV_FILE}"
@@ -94,7 +102,7 @@ do
     fi
     rm "${BENCH_DIR}/mandelbrot_cpp_o0"
     rm "${BENCH_DIR}/mandelbrot_cpp_o3"
-    rm  "${BENCH_DIR}/mandelbrot"
+    rm "${BENCH_DIR}/mandelbrot"
 
     cpp_times_O0+=("$CPP_TIME_O0")
     cpp_times_O3+=("$CPP_TIME_O3")
