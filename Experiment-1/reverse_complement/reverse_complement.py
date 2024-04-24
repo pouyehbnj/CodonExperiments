@@ -42,7 +42,6 @@ def generate_sequences(lines):
 # Read the entire file into memory
 data = []
 # ./reverse_complement
-t0=time.time()
 with open('./fasta_data.txt', 'r') as file:
     for line in file:
         data.append(line.strip())

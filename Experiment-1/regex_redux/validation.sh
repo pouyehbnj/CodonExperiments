@@ -32,35 +32,48 @@ analyze_complexity "${BENCH_DIR}/regex_redux.py" "Codon"
 # Creating input 
 
 "${CPP}" -std=c++17 -O3 "${BENCH_DIR}/fasta.cpp" 
+# CREATE THE Input FILE
+echo "Creating Input with size ${SIZE}."
+${CPP} -std=c++17 -O3 "${BENCH_DIR}/fasta.cpp" -o "${BENCH_DIR}/fasta_cpp" >/dev/null 2>&1
+"${BENCH_DIR}/fasta_cpp" "${SIZE}"
 
 for i in {1..10}
 do
     # Generate a random tree depth between 1 and 30
-    SIZE=$((2 + RANDOM % 100))
+    SIZE=250000
     echo "Running tests for size: ${SIZE}"
 
-    # CREATE THE Input FILE
-    echo "Creating Input with size ${SIZE}."
-    ${CPP} -std=c++17 -O3 "${BENCH_DIR}/fasta.cpp" -o "${BENCH_DIR}/fasta_cpp" >/dev/null 2>&1
-    "${BENCH_DIR}/fasta_cpp" "${SIZE}"
+
 
     # Compile C++ program
-    ${CPP} -std=c++17 -O3 "${BENCH_DIR}/regex_redux.cpp" -o "${BENCH_DIR}/regex_redux_cpp"
+    ${CPP} -std=c++17 -O0 "${BENCH_DIR}/regex_redux.cpp" -o "${BENCH_DIR}/regex_redux_cpp_o0"
     
     # Run C++ program and measure time
-    START_TIME=$(python -c "import time; print(time.time())")
-    CPP_OUTPUT=$("${BENCH_DIR}/regex_redux_cpp")
+    START_TIME=$(${PYTHON} -c "import time; print(time.time())")
+    CPP_OUTPUT=$("${BENCH_DIR}/regex_redux_cpp_o0")
     # echo "$CPP_OUTPUT"
-    END_TIME=$(python -c "import time; print(time.time())")
+    END_TIME=$(${PYTHON} -c "import time; print(time.time())")
+    CPP_TIME=$(echo "$END_TIME - $START_TIME" | bc)
+    echo "C++ execution time: ${CPP_TIME}s"
+    echo "${i},cpp,${CPP_TIME},${SIZE}" >> "${CSV_FILE}"
+
+     # Compile C++ program
+    ${CPP} -std=c++17 -O3 "${BENCH_DIR}/regex_redux.cpp" -o "${BENCH_DIR}/regex_redux_cpp_o3"
+    
+    # Run C++ program and measure time
+    START_TIME=$(${PYTHON} -c "import time; print(time.time())")
+    CPP_OUTPUT=$("${BENCH_DIR}/regex_redux_cpp_o3")
+    # echo "$CPP_OUTPUT"
+    END_TIME=$(${PYTHON} -c "import time; print(time.time())")
     CPP_TIME=$(echo "$END_TIME - $START_TIME" | bc)
     echo "C++ execution time: ${CPP_TIME}s"
     echo "${i},cpp,${CPP_TIME},${SIZE}" >> "${CSV_FILE}"
     
     # Run Python program and measure time
-    START_TIME=$(python -c "import time; print(time.time())")
+    START_TIME=$(${PYTHON} -c "import time; print(time.time())")
     PYTHON_OUTPUT=$(${PYTHON} "${BENCH_DIR}/regex_redux.py")
     # echo "$PYTHON_OUTPUT"
-    END_TIME=$(python -c "import time; print(time.time())")
+    END_TIME=$(${PYTHON} -c "import time; print(time.time())")
     PYTHON_TIME=$(echo "$END_TIME - $START_TIME" | bc)
     echo "Python execution time: ${PYTHON_TIME}s"
     echo "${i},python,${PYTHON_TIME},${SIZE}" >> "${CSV_FILE}"
@@ -69,10 +82,10 @@ do
     ${CODON} build --release -numerics=py "${BENCH_DIR}/regex_redux.py"
     
     # Run Codon Python program and measure time
-    START_TIME=$(python -c "import time; print(time.time())")
+    START_TIME=$(${PYTHON} -c "import time; print(time.time())")
     CODON_OUTPUT=$("${BENCH_DIR}/regex_redux")
     # echo "$CODON_OUTPUT"
-    END_TIME=$(python -c "import time; print(time.time())")
+    END_TIME=$(${PYTHON} -c "import time; print(time.time())")
     CODON_TIME=$(echo "$END_TIME - $START_TIME" | bc)
     echo "Codon execution time: ${CODON_TIME}s"
     echo "${i},codon,${CODON_TIME},${SIZE}" >> "${CSV_FILE}"
@@ -86,6 +99,30 @@ do
         echo "Python output: ${PYTHON_OUTPUT}"
         echo "Codon output: ${CODON_OUTPUT}"
     fi
-    rm "${BENCH_DIR}/regex_redux_cpp"
+    rm "${BENCH_DIR}/regex_redux_cpp_o0"
+    rm "${BENCH_DIR}/regex_redux_cpp_o3"
     rm  "${BENCH_DIR}/regex_redux"
+
+    cpp_times_O0+=("$CPP_TIME_O0")
+    cpp_times_O3+=("$CPP_TIME_O3")
+    python_times+=("$PYTHON_TIME")
+    codon_times+=("$CODON_TIME")
 done
+
+# Function to calculate mean using awk
+calculate_mean() {
+    local times=("$@")
+    printf '%s\n' "${times[@]}" | awk '{sum+=$1} END {print (NR>0 ? sum/NR : 0)}'
+}
+
+# Calculate means
+cpp_mean_O0=$(calculate_mean "${cpp_times_O0[@]}")
+cpp_mean_O3=$(calculate_mean "${cpp_times_O3[@]}")
+python_mean=$(calculate_mean "${python_times[@]}")
+codon_mean=$(calculate_mean "${codon_times[@]}")
+
+# Output means
+echo "C++ o0 Mean Execution Time: $cpp_mean_O0 seconds"  >> "${CSV_FILE}"
+echo "C++ 03 Mean Execution Time: $cpp_mean_O3 seconds"  >> "${CSV_FILE}"
+echo "Python Mean Execution Time: $python_mean seconds"  >> "${CSV_FILE}"
+echo "Codon Mean Execution Time: $codon_mean seconds"  >> "${CSV_FILE}"
