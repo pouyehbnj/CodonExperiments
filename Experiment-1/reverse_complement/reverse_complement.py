@@ -45,6 +45,7 @@ data = []
 with open('./fasta_data.txt', 'r') as file:
     for line in file:
         data.append(line.strip())
+# print("read the file")
 # t3 = time.time()
 # print("data reading time:", t3 - t2)
 

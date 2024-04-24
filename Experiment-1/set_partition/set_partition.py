@@ -1,6 +1,5 @@
 # https://stackoverflow.com/questions/73473074/speed-up-set-partition-generation-by-skipping-ones-with-subsets-smaller-or-large
 import sys
-import time
 
 def conforms(candidate, minsize, forgive):
     """
