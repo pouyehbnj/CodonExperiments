@@ -2,7 +2,7 @@
 
 # Source the user's .bashrc to ensure all user environment settings are applied
 source ~/.bashrc
-
+source ~/.profile
 # Setup environment variables
 export BENCH_DIR=$(dirname "$0")
 export PYTHON="${EXE_PYTHON:-python3}"
