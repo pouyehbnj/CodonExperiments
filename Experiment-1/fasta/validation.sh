@@ -39,7 +39,7 @@ do
     echo "Running tests for size: ${SIZE}"
 
     # Compile C++ program with o0
-    ${CPP} -std=c++17 -O0 "${BENCH_DIR}/fasta.cpp" -o "${BENCH_DIR}/fasta_cpp_o0" >/dev/null 2>&1  
+    ${CPP} -std=c++17 -O0 "${BENCH_DIR}/fasta.cpp" -o "${BENCH_DIR}/fasta_cpp_o0"  
     
     # Run C++ program and measure time
     START_TIME=$(${PYTHON} -c "import time; print(time.time())")
@@ -51,7 +51,7 @@ do
     echo "${i},cpp,${CPP_TIME_O0},o0,${SIZE}" >> "${CSV_FILE}"
 
     # Compile C++ program with o3
-    ${CPP} -std=c++17 -O3 "${BENCH_DIR}/fasta.cpp" -o "${BENCH_DIR}/fasta_cpp_o3" >/dev/null 2>&1
+    ${CPP} -std=c++17 -O3 "${BENCH_DIR}/fasta.cpp" -o "${BENCH_DIR}/fasta_cpp_o3"
     
     # Run C++ program and measure time
     START_TIME=$(${PYTHON} -c "import time; print(time.time())")
