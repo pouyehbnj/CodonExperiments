@@ -1,5 +1,4 @@
 from math import sin, cos, sqrt
-from time import time
 import sys
 # POINTS = 10000000
 POINTS = int(sys.argv[1])
@@ -49,7 +48,6 @@ def benchmark(n):
     return maximize(points)
 
 
-t0 = time()
 print(benchmark(POINTS))
 # benchmark(POINTS)
 # t1 = time()
