@@ -41,17 +41,15 @@ for i in {1..10}
 do
    
 
-
-
     # Compile C++ program
     ${CPP} -std=c++17 -O0 "${BENCH_DIR}/reverse_complement.cpp" -o "${BENCH_DIR}/reverse_complement_cpp_o0"
     
     # Run C++ program and measure time
     START_TIME=$(${PYTHON} -c "import time; print(time.time())")
-    CPP_TIME_O0=$("${BENCH_DIR}/reverse_complement_cpp_o0")
+    CPP_OUTPUT=$("${BENCH_DIR}/reverse_complement_cpp_o0")
     # echo "$CPP_OUTPUT"
     END_TIME=$(${PYTHON} -c "import time; print(time.time())")
-    CPP_TIME=$(echo "$END_TIME - $START_TIME" | bc)
+    CPP_TIME_O0=$(echo "$END_TIME - $START_TIME" | bc)
     echo "C++ execution time: ${CPP_TIME}s"
     echo "${i},cpp,${CPP_TIME},o0,${SIZE}" >> "${CSV_FILE}"
 
