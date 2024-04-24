@@ -24,14 +24,12 @@ struct IUB
    double p;
 };
 
-struct IUB_accum : public std::__binary_function<IUB const &, IUB, IUB>
-{
-   result_type
-      operator () (first_argument_type a, second_argument_type b) const
-   {
-      b.p += a.p;
-      return b;
-   }
+struct IUB_accum {
+    IUB operator () (const IUB& a, const IUB& b) const {
+        IUB result = b;
+        result.p += a.p;
+        return result;
+    }
 };
 
 template <typename Iter>
