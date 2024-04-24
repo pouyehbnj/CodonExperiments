@@ -1,4 +1,0 @@
-Language,Total nloc,Avg.NLOC,AvgCCN,Avg.token,Fun Cnt,Warning cnt,Fun Rt,nloc Rt
-C++,,58,10.4,3.2,75.8,5,0,0.00,0.00
-Python,,56,8.0,3.0,44.3,3,0,0.00,0.00
-Codon,,56,8.0,3.0,44.3,3,0,0.00,0.00
