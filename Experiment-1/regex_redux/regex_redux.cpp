@@ -5,26 +5,21 @@
 #include <regex>
 
 int main() {
-    
     std::string file_name = "./fasta_data.txt";
     std::ifstream file(file_name);
     std::stringstream buffer;
 
-    // if (!file.is_open()) {
-    //     std::cerr << "Failed to open file: " << file_name << std::endl;
-    //     return 1;
-    // }
-
     buffer << file.rdbuf();
     std::string seq = buffer.str();
-     int ilen = seq.length();
+
+    std::cout << "Initial sequence length: " << seq.length() << std::endl;
+
     // Remove newlines and headers in one pass
     std::regex newline_regex(">[^\n]*\n|\n");
     seq = std::regex_replace(seq, newline_regex, "");
 
-   
-    seq = std::regex_replace(seq, newline_regex, "");  // Remove newlines and headers
-    int clen = seq.length();
+    std::cout << "Sequence length after removing headers and newlines: " << seq.length() << std::endl;
+
     // Regular expressions for DNA variants
     const char* variants[] = {
         "agggtaaa|tttaccct",
@@ -44,7 +39,7 @@ int main() {
             std::sregex_iterator(seq.begin(), seq.end(), var_regex),
             std::sregex_iterator()
         );
-        std::cout << variant << " " << matches << std::endl;
+        std::cout << variant << ": " << matches << std::endl;
     }
 
     // Substitutions
@@ -58,9 +53,10 @@ int main() {
 
     for (auto& rep : replacements) {
         seq = std::regex_replace(seq, std::regex(rep.first), rep.second);
+        std::cout << "After substitution '" << rep.first << "' -> '" << rep.second << "': " << seq.length() << std::endl;
     }
 
-    std::cout << std::endl << ilen << std::endl << clen << std::endl << seq.length() << std::endl;
+    std::cout << "Final sequence length: " << seq.length() << std::endl;
 
     return 0;
 }
