@@ -11,10 +11,10 @@ double scale(int coord, double min, double max, int N) {
 }
 
 int main(int argc, char *argv[]) {
-    if (argc != 2) {
-        std::cerr << "Usage: " << argv[0] << " <N>" << std::endl;
-        return 1;
-    }
+    // if (argc != 2) {
+    //     std::cerr << "Usage: " << argv[0] << " <N>" << std::endl;
+    //     return 1;
+    // }
     int N = std::atoi(argv[1]);
     std::vector<int> pixels(N * N, 0);
 
