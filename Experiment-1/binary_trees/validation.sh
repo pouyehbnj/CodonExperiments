@@ -5,8 +5,13 @@ export BENCH_DIR=$(dirname "$0")
 export PYTHON="${EXE_PYTHON:-python3}"
 export CPP="${EXE_CPP:-clang++}"
 export CODON="${EXE_CODON:-build/codon}"
-export CSV_FILE="${BENCH_DIR}/execution_times.csv"
+export CSV_FILE="${BENCH_DIR}/execution_times_fixed_o3.csv"
 export LIZARD_CSV="${BENCH_DIR}/lizard_complexity.csv"
+
+# # # # # # # # # # # # # # # # # # # # # # 
+# Fix the seed for reproducibility
+RANDOM_SEED=12345
+RANDOM=$RANDOM_SEED
 
 # Prepare CSV file with header
 echo "run_number,execution_method,execution_time,tree_depth" > "${CSV_FILE}"
@@ -27,13 +32,15 @@ analyze_complexity() {
 # Run Lizard complexity analysis for each language
 analyze_complexity "${BENCH_DIR}/binary_trees.cpp" "C++"
 analyze_complexity "${BENCH_DIR}/binary_trees.py" "Python"
-analyze_complexity "${BENCH_DIR}/binary_trees_codon.py" "Codon"
+analyze_complexity "${BENCH_DIR}/binary_trees.py" "Codon"
 
 # Run tests for 10 random inputs
 for i in {1..10}
 do
     # Generate a random tree depth between 1 and 30
-    TREE_DEPTH=$((1 + RANDOM % 20))
+    # TREE_DEPTH=$((1 + RANDOM % 20))
+    # echo "Running tests for tree depth: ${TREE_DEPTH}"
+    TREE_DEPTH=16
     echo "Running tests for tree depth: ${TREE_DEPTH}"
 
     # Compile C++ program
@@ -76,4 +83,23 @@ do
     fi
     rm "${BENCH_DIR}/binary_trees_cpp"
     rm  "${BENCH_DIR}/binary_trees_codon"
+    cpp_times+=("$CPP_TIME")
+    python_times+=("$PYTHON_TIME")
+    codon_times+=("$CODON_TIME")
 done
+
+# Function to calculate mean using awk
+calculate_mean() {
+    local times=("$@")
+    printf '%s\n' "${times[@]}" | awk '{sum+=$1} END {print (NR>0 ? sum/NR : 0)}'
+}
+
+# Calculate means
+cpp_mean=$(calculate_mean "${cpp_times[@]}")
+python_mean=$(calculate_mean "${python_times[@]}")
+codon_mean=$(calculate_mean "${codon_times[@]}")
+
+# Output means
+echo "C++ Mean Execution Time: $cpp_mean seconds"
+echo "Python Mean Execution Time: $python_mean seconds"
+echo "Codon Mean Execution Time: $codon_mean seconds"

@@ -1,0 +1,14 @@
+run_number,execution_method,execution_time,SIZE
+1,cpp,1.0222168,10
+2,cpp,.927417,10
+3,cpp,.921336,10
+4,cpp,.929093,10
+5,cpp,1.147798,10
+6,cpp,.935385,10
+7,cpp,.917703,10
+8,cpp,.9240442,10
+9,cpp,.9211641,10
+10,cpp,.9212579,10
+C++ Mean Execution Time: 0.956742 seconds
+Python Mean Execution Time: 0 seconds
+Codon Mean Execution Time: 0 seconds

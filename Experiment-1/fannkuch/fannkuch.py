@@ -21,7 +21,7 @@ def perm(n, i):
 n = int(argv[1])
 max_flips = 0
 
-t0 = time()
+# t0 = time()
 for idx in range(fact(n)):
     p = perm(n, idx)
     flips = 0
