@@ -45,8 +45,8 @@ int main(int argc, char *argv[]) {
     // const int POINTS = 10000000;
     std::vector<Point> points;
 
-    // Benchmark start time
-    auto start = std::chrono::high_resolution_clock::now();
+    // // Benchmark start time
+    // auto start = std::chrono::high_resolution_clock::now();
 
     // Initialize points
     for (int i = 0; i < POINTS; ++i) {
