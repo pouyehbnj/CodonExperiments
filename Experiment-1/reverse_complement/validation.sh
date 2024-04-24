@@ -9,7 +9,7 @@ export CSV_FILE="${BENCH_DIR}/execution_times.csv"
 export LIZARD_CSV="${BENCH_DIR}/lizard_complexity.csv"
 
 # Prepare CSV file with header
-echo "run_number,execution_method,execution_time,SIZE" > "${CSV_FILE}"
+echo "run_number,execution_method,execution_time,flag,SIZE" > "${CSV_FILE}"
 echo "Language,Total nloc,Avg.NLOC,AvgCCN,Avg.token,Fun Cnt,Warning cnt,Fun Rt,nloc Rt" > "${LIZARD_CSV}"
 
 # Lizard complexity analysis function
@@ -48,12 +48,12 @@ do
     
     # Run C++ program and measure time
     START_TIME=$(${PYTHON} -c "import time; print(time.time())")
-    CPP_OUTPUT=$("${BENCH_DIR}/reverse_complement_cpp_o0")
+    CPP_TIME_O0=$("${BENCH_DIR}/reverse_complement_cpp_o0")
     # echo "$CPP_OUTPUT"
     END_TIME=$(${PYTHON} -c "import time; print(time.time())")
     CPP_TIME=$(echo "$END_TIME - $START_TIME" | bc)
     echo "C++ execution time: ${CPP_TIME}s"
-    echo "${i},cpp,${CPP_TIME},${SIZE}" >> "${CSV_FILE}"
+    echo "${i},cpp,${CPP_TIME},o0,${SIZE}" >> "${CSV_FILE}"
 
      # Compile C++ program
     ${CPP} -std=c++17 -O3 "${BENCH_DIR}/reverse_complement.cpp" -o "${BENCH_DIR}/reverse_complement_cpp_o3"
@@ -63,9 +63,9 @@ do
     CPP_OUTPUT=$("${BENCH_DIR}/reverse_complement_cpp_o3")
     # echo "$CPP_OUTPUT"
     END_TIME=$(${PYTHON} -c "import time; print(time.time())")
-    CPP_TIME=$(echo "$END_TIME - $START_TIME" | bc)
+    CPP_TIME_O3=$(echo "$END_TIME - $START_TIME" | bc)
     echo "C++ execution time: ${CPP_TIME}s"
-    echo "${i},cpp,${CPP_TIME},${SIZE}" >> "${CSV_FILE}"
+    echo "${i},cpp,${CPP_TIME},03,${SIZE}" >> "${CSV_FILE}"
     
     # Run Python program and measure time
     START_TIME=$(${PYTHON} -c "import time; print(time.time())")
@@ -74,7 +74,7 @@ do
     END_TIME=$(${PYTHON} -c "import time; print(time.time())")
     PYTHON_TIME=$(echo "$END_TIME - $START_TIME" | bc)
     echo "Python execution time: ${PYTHON_TIME}s"
-    echo "${i},python,${PYTHON_TIME},${SIZE}" >> "${CSV_FILE}"
+    echo "${i},python,${PYTHON_TIME},NA,${SIZE}" >> "${CSV_FILE}"
     
     # Compile Codon Python program
     ${CODON} build --release -numerics=py "${BENCH_DIR}/reverse_complement.py"
@@ -86,7 +86,7 @@ do
     END_TIME=$(${PYTHON} -c "import time; print(time.time())")
     CODON_TIME=$(echo "$END_TIME - $START_TIME" | bc)
     echo "Codon execution time: ${CODON_TIME}s"
-    echo "${i},codon,${CODON_TIME},${SIZE}" >> "${CSV_FILE}"
+    echo "${i},codon,${CODON_TIME},NA,${SIZE}" >> "${CSV_FILE}"
 
     # Compare outputs
     if [ "${CPP_OUTPUT}" == "${PYTHON_OUTPUT}" ] && [ "${PYTHON_OUTPUT}" == "${CODON_OUTPUT}" ]; then
