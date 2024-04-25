@@ -75,3 +75,4 @@ _*
 *.csv
 ################# large data input file
 /Experiment-1/taq/data
+/Experiment-1/taq/data.gz
