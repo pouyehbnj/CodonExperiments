@@ -1,79 +1,40 @@
 #!/usr/bin/env bash
-set -e
-set -o pipefail
+# Source the user's .bashrc to ensure all user environment settings are applied
+if [ -f "~/.bashrc" ]; then
+    source ~/.bashrc
+fi
 
+if [ -f "$HOME/.profile" ]; then
+    source "$HOME/.profile"
+fi
 # Setup environment variables
 export BENCH_DIR=$(dirname "$0")
 export PYTHON="${EXE_PYTHON:-python3}"
+export CPP="${EXE_CPP:-clang++}"
 export CODON="${EXE_CODON:-build/codon}"
+export CSV_FILE="${BENCH_DIR}/execution_times_fixed.csv"
+export LIZARD_CSV="${BENCH_DIR}/lizard_complexity.csv"
 
-results_file="benchmark_results.csv"
-# SIZE=15
-# Ensure the results file has headers
-if [ ! -f "$results_file" ]; then
-    echo "name,run by,total time,execution time" > "$results_file"
-fi
+# Prepare CSV file with header
+echo "run_number,execution_method,execution_time,flag,line_count" > "${CSV_FILE}"
+echo "Language,Total nloc,Avg.NLOC,AvgCCN,Avg.token,Fun Cnt,Warning cnt,Fun Rt,nloc Rt" > "${LIZARD_CSV}"
 
+# Lizard complexity analysis function
+analyze_complexity() {
+    local file=$1
+    local language=$2
 
-# Function to extract real time in seconds
-extract_real_time() {
-    # Extracts the time, assuming a format of XmY.YYYs and converts it to total seconds.
-    local time_str=$(grep real $1 | sed 's/real\s*//' | sed 's/s//')
-    # Split based on 'm' to separate minutes and seconds
-    local minutes=$(echo $time_str | cut -d'm' -f1)
-    local seconds=$(echo $time_str | cut -d'm' -f2)
-    # If minutes is empty, it means the time was in seconds only
-    if [[ -z "$minutes" || $minutes == "0" ]]; then
-        echo "$seconds"
-    else
-        echo "$minutes * 60 + $seconds" | bc
-    fi
+    # Run Lizard and process output to extract the correct summary line
+    local summary=$(lizard $file -l $language | awk '/^ *[0-9]/ {line=$0} END{print line}' | tr -s '[:blank:]' ',')
+
+    # Append the results to the CSV file
+    echo "$language,$summary" >> "${LIZARD_CSV}"
 }
 
-# Prepare a temporary file for time output
-time_output="time_output.txt"
-
-# Function to time execution
-# time_execution() {
-#     local lang=$1
-#     local command=$2
-
-#     # Time execution
-#     { time eval $command > /dev/null; } 2> $time_output
-#     local exec_time=$(extract_real_time $time_output)
-#     echo "${lang} Execution Time: ${exec_time}s"
-
-#     # Append results to CSV
-#     echo "${benchmark_name},${lang},${exec_time}" >> "$results_file"
-# }
-time_execution() {
-    local lang=$1
-    local command=$2
-
-    # Create a temporary file to store the output
-    local output_file=$(mktemp)
-
-    # Time the execution and capture the output
-    { time eval $command > $output_file; } 2> $time_output
-    local total_time=$(extract_real_time $time_output)
-    echo "${lang} Total Time: ${total_time}s"
-    # Extract the execution time from the time output
-    # local exec_time=$(grep -E '^real' $time_output | tail -n 1)
-
-    # Print the execution time
-    # echo "${lang} Total Time: ${exec_time}"
-    exec_time=$(tail -n 1 $output_file)
-    echo "Core Execution time is:" "${exec_time}"
-    # Append results to CSV
-    echo "${benchmark_name},${lang},${total_time},${exec_time}" >> "$results_file"
-
-    # Print the last line of output from the command
-    
-
-    # Clean up temporary files
-    rm $output_file
-}
-
+# Run Lizard complexity analysis for each language
+# analyze_complexity "${BENCH_DIR}/restrain_bodies.cpp" "C++"
+analyze_complexity "${BENCH_DIR}/restrain_bodies.py" "Python"
+analyze_complexity "${BENCH_DIR}/restrain_bodies.py" "Codon"
 
 # Benchmark name
 benchmark_name="restrain_bodies"
@@ -89,14 +50,48 @@ for file in "${BENCH_DIR}"/data/*; do
     # Print the file name and line count
     echo "Processing file: $filename, Line count: $line_count lines"
 
+
+    # Compile Codon Python program
+    ${CODON} build --release "${BENCH_DIR}/restrain_bodies.py"  
     # Run the Python script with Codon and measure execution time
-    time_execution "Codon" "${CODON} run -release ${BENCH_DIR}/restrain_bodies_test3.py ${file}"
+    START_TIME=$(${PYTHON} -c "import time; print(time.time())")
+    # echo "Codon" "${CODON}${file}"
+    CODON_OUTPUT=$("${BENCH_DIR}/restrain_bodies")
+    END_TIME=$(${PYTHON} -c "import time; print(time.time())")
+    CODON_TIME=$(echo "$END_TIME - $START_TIME" | bc)
+    echo "Codon execution time: ${CODON_TIME}s"
+    echo "${i},codon,${CODON_TIME},NA,${line_count}" >> "${CSV_FILE}"
 
     # Run the Python script with Python and measure execution time
-    time_execution "Python" "${PYTHON} ${BENCH_DIR}/restrain_bodies_test3.py ${file}"
+    START_TIME=$(${PYTHON} -c "import time; print(time.time())")
+    PYTHON_OUTPUT=$(${PYTHON} "${BENCH_DIR}/restrain_bodies.py" ${file})
+    END_TIME=$(${PYTHON} -c "import time; print(time.time())")
+    PYTHON_TIME=$(echo "$END_TIME - $START_TIME" | bc)
+    echo "Python execution time: ${PYTHON_TIME}s"
+    echo "${i},python,${PYTHON_TIME},NA,${line_count}" >> "${CSV_FILE}"
 
     # Add a separator between runs
     echo "----------------------------------------"
+    python_times+=("$PYTHON_TIME")
+    codon_times+=("$CODON_TIME")
+    rm ${BENCH_DIR}/restrain_bodies
 done
 
+
+calculate_mean() {
+    local times=("$@")
+    printf '%s\n' "${times[@]}" | awk '{sum+=$1} END {print (NR>0 ? sum/NR : 0)}'
+}
+
+# # Calculate means
+# cpp_mean_O0=$(calculate_mean "${cpp_times_O0[@]}")
+# cpp_mean_O3=$(calculate_mean "${cpp_times_O3[@]}")
+python_mean=$(calculate_mean "${python_times[@]}")
+codon_mean=$(calculate_mean "${codon_times[@]}")
+
+# # Output means
+# echo "C++ o0 Mean Execution Time: $cpp_mean_O0 seconds"  >> "${CSV_FILE}"
+# echo "C++ 03 Mean Execution Time: $cpp_mean_O3 seconds"  >> "${CSV_FILE}"
+echo "Python Mean Execution Time: $python_mean seconds"  >> "${CSV_FILE}"
+echo "Codon Mean Execution Time: $codon_mean seconds"  >> "${CSV_FILE}"
 echo  "${benchmark_name} benchmark completed."
