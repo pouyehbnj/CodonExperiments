@@ -1,43 +1,3 @@
-// #include <chrono>
-// #include <fstream>
-// #include <iostream>
-// #include <sstream>
-// #include <string>
-// #include <unordered_map>
-
-// using namespace std;
-
-// int main(int argc, char *argv[]) {
-//   using clock = chrono::high_resolution_clock;
-//   using chrono::duration_cast;
-//   using chrono::milliseconds;
-//   auto t = clock::now();
-
-//   cin.tie(nullptr);
-//   cout.sync_with_stdio(false);
-
-//   if (argc != 2) {
-//     cerr << "Expected one argument." << endl;
-//     return -1;
-//   }
-
-//   ifstream file(argv[1]);
-//   if (!file.is_open()) {
-//     cerr << "Could not open file: " << argv[1] << endl;
-//     return -1;
-//   }
-
-//   unordered_map<string, int> map;
-//   for (string line; getline(file, line);) {
-//     istringstream sin(line);
-//     for (string word; sin >> word;)
-//       map[word] += 1;
-//   }
-
-//   cout << map.size() << endl;
-//   cout << (duration_cast<milliseconds>(clock::now() - t).count() / 1e3) << endl;
-// }
-#include <chrono>
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -46,28 +6,37 @@
 
 using namespace std;
 
-int main() {
-  // using clock = chrono::high_resolution_clock;
-  // using chrono::duration_cast;
-  // using chrono::milliseconds;
-  // auto t = clock::now();
-
-  cin.tie(nullptr);
-  cout.sync_with_stdio(false);
-
-  ifstream file("./sample_text.txt"); // Use a static file path
-  // if (!file.is_open()) {
-  //   cerr << "Could not open file: ./sample_text.txt" << endl;
-  //   return -1;
-  // }
-
-  unordered_map<string, int> map;
-  for (string line; getline(file, line);) {
-    istringstream sin(line);
-    for (string word; sin >> word;)
-      map[word] += 1;
-  }
-
-  cout << map.size() << endl;
-  // cout << (duration_cast<milliseconds>(clock::now() - t).count() / 1e3) << endl;
+// Opens a file and returns the ifstream object
+ifstream openFile(const string& filename) {
+    ifstream file(filename);
+    // if (!file.is_open()) {
+    //     cerr << "Could not open file: " << filename << endl;
+    //     exit(-1); // Exit if file cannot be opened
+    // }
+    return file;
 }
+
+// Reads lines from the file and updates the word count map
+void countWords(ifstream& file, unordered_map<string, int>& wordCount) {
+    string line;
+    while (getline(file, line)) {
+        istringstream sin(line);
+        string word;
+        while (sin >> word) {
+            wordCount[word]++;
+        }
+    }
+}
+
+int main() {
+    const string filename = "./sample_text.txt";
+    ifstream file = openFile(filename);
+    unordered_map<string, int> wordCount;
+
+    countWords(file, wordCount);
+
+    cout << wordCount.size() << endl;
+    return 0;
+}
+
+
