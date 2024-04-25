@@ -71,5 +71,7 @@ temp/
 playground/
 scratch*.*
 _*
-#################
+#################  result files
 *.csv
+################# large data input file
+/Experiment-1/taq/data
