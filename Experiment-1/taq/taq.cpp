@@ -87,21 +87,13 @@ process_data(const std::vector<std::pair<uint64_t, long>> &series) {
   return {y, find_peaks(y)};
 }
 
-// const uint64_t BUCKET_SIZE = 1000000000;
-
-} // namespace
+} 
 
 int main(int argc, char *argv[]) {
     uint64_t SIZE;
     SIZE = std::atoi(argv[1]);
     uint64_t BUCKET_SIZE = 1000000000 / SIZE;
-//   using clock = std::chrono::high_resolution_clock;
-//   using std::chrono::duration_cast;
-//   using std::chrono::milliseconds;
 
-//   auto t = clock::now();
-//   std::unordered_map<std::string, std::vector<std::pair<uint64_t, long>>> data;
-//   std::ifstream file("./data");
     std::map<std::string, std::vector<std::pair<uint64_t, long>>> data;
     std::ifstream file("./data");
     bool header = true;
@@ -135,7 +127,5 @@ int main(int argc, char *argv[]) {
               << std::endl;
   }
 
-//   std::cout << (duration_cast<milliseconds>(clock::now() - t).count() / 1e3)
-//             << std::endl;
 }
 
