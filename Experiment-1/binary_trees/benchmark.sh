@@ -135,7 +135,7 @@ export BENCH_DIR=$(dirname "$0")
 export PYTHON="${EXE_PYTHON:-python3}"
 export CPP="${EXE_CPP:-clang++}"
 export CODON="${EXE_CODON:-build/codon}"
-export CSV_FILE="${BENCH_DIR}/execution_times_fixed.csv"
+export CSV_FILE="${BENCH_DIR}/benchmarks.csv"
 
 # Prepare CSV file with header
 echo "run_number,execution_method,execution_time,compilation_time,flag,SIZE,cpu_usage,mem_usage" > "${CSV_FILE}"
