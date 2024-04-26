@@ -161,7 +161,7 @@ for i in {1..10}
 do
     SIZE=16
     echo "Running tests for size: ${SIZE}"
-
+    echo "hello?"
     # Compile C++ program with O0
     echo "Compile C++ program with O0"
     COMPILE_START_TIME=$(${PYTHON} -c "import time; print(time.time())")
