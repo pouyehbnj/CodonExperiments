@@ -175,11 +175,11 @@ do
     START_TIME=$(${PYTHON} -c "import time; print(time.time())")
     "${BENCH_DIR}/binary_trees_cpp_o0" ${SIZE} 1> /dev/null & 
     CPP_PID_o0=$! 
-    sleep 1
-    CPP_O0_STATS=$(log_process_stats $CPP_PID_o0 $i "cpp o0")
+    sleep 0.1
+    CPP_O0_STATS=$(log_process_stats $CPP_PID_o0 $i "cpp_o0")
     WAIT_TIME=$(${PYTHON} -c "import time; print(time.time())")
     CPP_TIME_O0=$(echo "$WAIT_TIME - $START_TIME" | bc)
-    echo "${i},cpp,${CPP_TIME_O0},${COMP_TIME_O0},o0,${SIZE},${STATS}" >> "${CSV_FILE}"
+    echo "${i},cpp,${CPP_TIME_O0},${COMP_TIME_O0},o0,${SIZE},${CPP_O0_STATS}" >> "${CSV_FILE}"
     echo "C++ execution time,stats: ${CPP_TIME_O0}s,${CPP_O0_STATS}"
 
 
@@ -195,11 +195,11 @@ do
     START_TIME=$(${PYTHON} -c "import time; print(time.time())")
     "${BENCH_DIR}/binary_trees_cpp_o3" ${SIZE} 1> /dev/null &
     CPP_PID_o3=$!
-    sleep 1
-    CPP_O3_STATS=$(log_process_stats $CPP_PID_o3 $i "cpp o3")
+    sleep 0.1
+    CPP_O3_STATS=$(log_process_stats $CPP_PID_o3 $i "cpp_o3")
     WAIT_TIME=$(${PYTHON} -c "import time; print(time.time())")
     CPP_TIME_O3=$(echo "$WAIT_TIME - $START_TIME" | bc)
-    echo "${i},cpp,${CPP_TIME_O3},${COMP_TIME_O3},o3,${SIZE},${STATS}" >> "${CSV_FILE}"
+    echo "${i},cpp,${CPP_TIME_O3},${COMP_TIME_O3},o3,${SIZE},${CPP_O3_STATS}" >> "${CSV_FILE}"
     echo "C++ execution time,stats: ${COMP_TIME_O3}s,${CPP_O3_STATS}"
 
 
@@ -208,11 +208,11 @@ do
     START_TIME=$(${PYTHON} -c "import time; print(time.time())")
     ${PYTHON} "${BENCH_DIR}/binary_trees.py" ${SIZE} 1> /dev/null &
     PYTHON_PID=$!
-    sleep 1
+    sleep 0.1
     PYTHON_STATS=$(log_process_stats $PYTHON_PID $i "python")
     WAIT_TIME=$(${PYTHON} -c "import time; print(time.time())")
     PYTHON_TIME=$(echo "$WAIT_TIME - $i" | bc)
-    echo "${i},python,${PYTHON_TIME},0,NA,${SIZE},${STATS}" >> "${CSV_FILE}"
+    echo "${i},python,${PYTHON_TIME},0,NA,${SIZE},${PYTHON_STATS}" >> "${CSV_FILE}"
     echo "Python execution time,stats: ${PYTHON_TIME}s,${PYTHON_STATS}"
 
     # Compile Codon Python program
@@ -227,11 +227,11 @@ do
     START_TIME=$(${PYTHON} -c "import time; print(time.time())")
     "${BENCH_DIR}/binary_trees_codon" ${SIZE} 1> /dev/null &
     CODON_PID=$!
-    sleep 1
+    sleep 0.1
     CODON_STATS=$(log_process_stats $CODON_PID $i "codon")
     WAIT_TIME=$(${PYTHON} -c "import time; print(time.time())")
     CODON_TIME=$(echo "$WAIT_TIME - $i" | bc)
-    echo "${i},codon,${CODON_TIME},${COMP_TIME_CODON},NA,${SIZE},${STATS}" >> "${CSV_FILE}"
+    echo "${i},codon,${CODON_TIME},${COMP_TIME_CODON},NA,${SIZE},${CODON_STATS}" >> "${CSV_FILE}"
     echo "Codon execution time,stats: ${CODON_TIME}s,${CODON_STATS}"
 
     # Clean up
