@@ -122,8 +122,8 @@
 #!/bin/bash
 
 # Source the user's .bashrc to ensure all user environment settings are applied
-if [ -f "~/.bashrc" ]; then
-    source ~/.bashrc
+if [ -f "$HOME/.bashrc" ]; then
+    source "$HOME/.bashrc"
 fi
 
 if [ -f "$HOME/.profile" ]; then
@@ -172,8 +172,9 @@ do
     echo "Run C++ program with o0 and measure time and resources"
     START_TIME=$(${PYTHON} -c "import time; print(time.time())")
     "${BENCH_DIR}/binary_trees_cpp_o0" ${SIZE} 1> /dev/null & 
-    CPP_PID=$! 
-    STATS=$(log_process_stats $CPP_PID $START_TIME)
+    CPP_PID_o0=$! 
+    wait $CPP_PID_o0
+    STATS=$(log_process_stats $CPP_PID_o0 $START_TIME)
     WAIT_TIME=$(${PYTHON} -c "import time; print(time.time())")
     CPP_TIME_O0=$(echo "$WAIT_TIME - $START_TIME" | bc)
     echo "${i},cpp,${CPP_TIME_O0},${COMP_TIME_O0},o0,${SIZE},${STATS}" >> "${CSV_FILE}"
@@ -190,8 +191,9 @@ do
     echo "Run C++ program with O3 and measure time and resources"
     START_TIME=$(${PYTHON} -c "import time; print(time.time())")
     "${BENCH_DIR}/binary_trees_cpp_o3" ${SIZE} 1> /dev/null &
-    CPP_PID=$!
-    STATS=$(log_process_stats $CPP_PID $START_TIME)
+    CPP_PID_o3=$!
+    wait $CPP_PID_o3
+    STATS=$(log_process_stats $CPP_PID_o3 $START_TIME)
     WAIT_TIME=$(${PYTHON} -c "import time; print(time.time())")
     CPP_TIME_O3=$(echo "$WAIT_TIME - $START_TIME" | bc)
     echo "${i},cpp,${CPP_TIME_O3},${COMP_TIME_O3},o3,${SIZE},${STATS}" >> "${CSV_FILE}"
@@ -202,6 +204,7 @@ do
     START_TIME=$(${PYTHON} -c "import time; print(time.time())")
     ${PYTHON} "${BENCH_DIR}/binary_trees.py" ${SIZE} 1> /dev/null &
     PYTHON_PID=$!
+    wait $PYTHON_PID
     STATS=$(log_process_stats $PYTHON_PID $START_TIME)
     WAIT_TIME=$(${PYTHON} -c "import time; print(time.time())")
     PYTHON_TIME=$(echo "$WAIT_TIME - $START_TIME" | bc)
@@ -220,6 +223,7 @@ do
     START_TIME=$(${PYTHON} -c "import time; print(time.time())")
     "${BENCH_DIR}/binary_trees_codon" ${SIZE} 1> /dev/null &
     CODON_PID=$!
+    wait $CODON_PID
     STATS=$(log_process_stats $CODON_PID $START_TIME)
     WAIT_TIME=$(${PYTHON} -c "import time; print(time.time())")
     CODON_TIME=$(echo "$WAIT_TIME - $START_TIME" | bc)
