@@ -160,14 +160,14 @@ log_process_stats() {
 for i in {1..10}
 do
     SIZE=16
-    echo "Running tests for size: ${SIZE}"
-    echo "hello?"
+    echo "Running test number ${i} for size: ${SIZE}"
     # Compile C++ program with O0
     echo "Compile C++ program with O0"
     COMPILE_START_TIME=$(${PYTHON} -c "import time; print(time.time())")
     ${CPP} -std=c++17 -O0 "${BENCH_DIR}/binary_trees.cpp" -o "${BENCH_DIR}/binary_trees_cpp_o0" 
     COMP_TIME_O0=$(echo "$(${PYTHON} -c "import time; print(time.time())") - $COMPILE_START_TIME" | bc)
-    
+    echo "C++ compile time,stats: ${CPP_TIME_O0}s,${STATS}"
+
     # Run C++ program and measure time and resources
     echo "Run C++ program with o0 and measure time and resources"
     START_TIME=$(${PYTHON} -c "import time; print(time.time())")
@@ -177,13 +177,15 @@ do
     WAIT_TIME=$(${PYTHON} -c "import time; print(time.time())")
     CPP_TIME_O0=$(echo "$WAIT_TIME - $START_TIME" | bc)
     echo "${i},cpp,${CPP_TIME_O0},${COMP_TIME_O0},o0,${SIZE},${STATS}" >> "${CSV_FILE}"
-    
+    echo "C++ execution time,stats: ${CPP_TIME_O0}s,${STATS}"
+
     # Compile C++ program with O3
     echo "Compile C++ program with O3"
     COMPILE_START_TIME=$(${PYTHON} -c "import time; print(time.time())")
     ${CPP} -std=c++17 -O3 "${BENCH_DIR}/binary_trees.cpp" -o "${BENCH_DIR}/binary_trees_cpp_o3"
     COMP_TIME_O3=$(echo "$(${PYTHON} -c "import time; print(time.time())") - $COMPILE_START_TIME" | bc)
-    
+    echo "C++ compilation time,stats: ${COMP_TIME_O3}s,${STATS}"
+
     # Run C++ program and measure time and resources
     echo "Run C++ program with O3 and measure time and resources"
     START_TIME=$(${PYTHON} -c "import time; print(time.time())")
@@ -193,6 +195,7 @@ do
     WAIT_TIME=$(${PYTHON} -c "import time; print(time.time())")
     CPP_TIME_O3=$(echo "$WAIT_TIME - $START_TIME" | bc)
     echo "${i},cpp,${CPP_TIME_O3},${COMP_TIME_O3},o3,${SIZE},${STATS}" >> "${CSV_FILE}"
+    echo "C++ execution time,stats: ${COMP_TIME_O3}s,${STATS}"
     
     # Run Python program and measure time and resources
     echo "Run Python program and measure time and resources"
@@ -203,12 +206,14 @@ do
     WAIT_TIME=$(${PYTHON} -c "import time; print(time.time())")
     PYTHON_TIME=$(echo "$WAIT_TIME - $START_TIME" | bc)
     echo "${i},python,${PYTHON_TIME},0,NA,${SIZE},${STATS}" >> "${CSV_FILE}"
-    
+    echo "Python execution time,stats: ${PYTHON_TIME}s,${STATS}"
+
     # Compile Codon Python program
     echo "Compile Codon Python program"
     COMPILE_START_TIME=$(${PYTHON} -c "import time; print(time.time())")
     ${CODON} build --release "${BENCH_DIR}/binary_trees_codon.py"
     COMP_TIME_CODON=$(echo "$(${PYTHON} -c "import time; print(time.time())") - $COMPILE_START_TIME" | bc)
+    echo "Codon compile time,stats: ${COMP_TIME_CODON}s,${STATS}"
     
     # Run Codon Python program and measure time and resources
     echo "Run Codon Python program and measure time and resources"
@@ -219,6 +224,7 @@ do
     WAIT_TIME=$(${PYTHON} -c "import time; print(time.time())")
     CODON_TIME=$(echo "$WAIT_TIME - $START_TIME" | bc)
     echo "${i},codon,${CODON_TIME},${COMP_TIME_CODON},NA,${SIZE},${STATS}" >> "${CSV_FILE}"
+    echo "Codon execution time,stats: ${CODON_TIME}s,${STATS}"
 
     # Clean up
     rm "${BENCH_DIR}/binary_trees_cpp_o0"
