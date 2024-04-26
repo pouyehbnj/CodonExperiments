@@ -181,7 +181,7 @@ do
     CPP_TIME_O0=$(echo "$WAIT_TIME - $START_TIME" | bc)
     echo "${i},cpp,${CPP_TIME_O0},${CPP_COMPILE_TIME_O0},o0,${SIZE},${CPP_O0_STATS}" >> "${CSV_FILE}"
     echo "C++ execution time,stats: ${CPP_TIME_O0}s,${CPP_O0_STATS}"
-    kill -9 $CPP_PID_o0
+    # kill -9 $CPP_PID_o0
 
     # Compile C++ program with O3
     echo "Compile C++ program with O3"
@@ -201,7 +201,7 @@ do
     CPP_TIME_O3=$(echo "$WAIT_TIME - $START_TIME" | bc)
     echo "${i},cpp,${CPP_TIME_O3},${COMP_TIME_O3},o3,${SIZE},${CPP_O3_STATS}" >> "${CSV_FILE}"
     echo "C++ execution time,stats: ${COMP_TIME_O3}s,${CPP_O3_STATS}"
-    kill -9 $CPP_PID_o3
+    # kill -9 $CPP_PID_o3
 
     # Run Python program and measure time and resources
     echo "Run ${i} Python program and measure time and resources"
@@ -214,7 +214,7 @@ do
     PYTHON_TIME=$(echo "$WAIT_TIME - $i" | bc)
     echo "${i},python,${PYTHON_TIME},0,NA,${SIZE},${PYTHON_STATS}" >> "${CSV_FILE}"
     echo "Python execution time,stats: ${PYTHON_TIME}s,${PYTHON_STATS}"
-    kill -9 $PYTHON_PID
+    # kill -9 $PYTHON_PID
 
 
     # Compile Codon Python program
@@ -236,7 +236,7 @@ do
     CODON_TIME=$(echo "$WAIT_TIME - $i" | bc)
     echo "${i},codon,${CODON_TIME},${COMP_TIME_CODON},NA,${SIZE},${CODON_STATS}" >> "${CSV_FILE}"
     echo "Codon execution time,stats: ${CODON_TIME}s,${CODON_STATS}"
-    kill -9 $CODON_PID
+    # kill -9 $CODON_PID
 
     # Clean up
     rm "${BENCH_DIR}/binary_trees_cpp_o0"
