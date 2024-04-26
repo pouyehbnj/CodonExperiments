@@ -171,7 +171,7 @@ do
     echo "C++ compile time: ${CPP_TIME_O0}s"
 
     # Run C++ program and measure time and resources
-    echo "Run C++ program with o0 and measure time and resources"
+    echo "Run ${i} C++ program with o0 and measure time and resources"
     START_TIME=$(${PYTHON} -c "import time; print(time.time())")
     "${BENCH_DIR}/binary_trees_cpp_o0" ${SIZE} 1> /dev/null & 
     CPP_PID_o0=$! 
@@ -191,7 +191,7 @@ do
     echo "C++ compilation time: ${COMP_TIME_O3}s"
 
     # Run C++ program and measure time and resources
-    echo "Run C++ program with O3 and measure time and resources"
+    echo "Run ${i} C++ program with O3 and measure time and resources"
     START_TIME=$(${PYTHON} -c "import time; print(time.time())")
     "${BENCH_DIR}/binary_trees_cpp_o3" ${SIZE} 1> /dev/null &
     CPP_PID_o3=$!
@@ -204,7 +204,7 @@ do
 
 
     # Run Python program and measure time and resources
-    echo "Run Python program and measure time and resources"
+    echo "Run ${i} Python program and measure time and resources"
     START_TIME=$(${PYTHON} -c "import time; print(time.time())")
     ${PYTHON} "${BENCH_DIR}/binary_trees.py" ${SIZE} 1> /dev/null &
     PYTHON_PID=$!
@@ -223,7 +223,7 @@ do
     echo "Codon compile time: ${COMP_TIME_CODON}s"
     
     # Run Codon Python program and measure time and resources
-    echo "Run Codon Python program and measure time and resources"
+    echo "Run ${i} Codon Python program and measure time and resources"
     START_TIME=$(${PYTHON} -c "import time; print(time.time())")
     "${BENCH_DIR}/binary_trees_codon" ${SIZE} 1> /dev/null &
     CODON_PID=$!
