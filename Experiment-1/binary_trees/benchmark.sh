@@ -149,7 +149,7 @@ log_process_stats() {
     echo "CPU(%),MEM(%)" > "$stats_file"
     while kill -0 $pid 2> /dev/null; do
         ps -p $pid -o %cpu,%mem --no-headers >> "$stats_file"
-        sleep 0.1
+        sleep 0.01
     done
     local cpu_avg=$(awk -F',' '{cpu+=$1} END {print cpu/NR}' "$stats_file")
     local mem_avg=$(awk -F',' '{mem+=$2} END {print mem/NR}' "$stats_file")
