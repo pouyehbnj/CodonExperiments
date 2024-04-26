@@ -163,27 +163,31 @@ do
     echo "Running tests for size: ${SIZE}"
 
     # Compile C++ program with O0
+    echo "Compile C++ program with O0"
     COMPILE_START_TIME=$(${PYTHON} -c "import time; print(time.time())")
-    ${CPP} -std=c++17 -O0 "${BENCH_DIR}/binary_trees.cpp" -o "${BENCH_DIR}/binary_trees_cpp_o0"
+    ${CPP} -std=c++17 -O0 "${BENCH_DIR}/binary_trees.cpp" -o "${BENCH_DIR}/binary_trees_cpp_o0" 
     COMP_TIME_O0=$(echo "$(${PYTHON} -c "import time; print(time.time())") - $COMPILE_START_TIME" | bc)
     
     # Run C++ program and measure time and resources
+    echo "Run C++ program with o0 and measure time and resources"
     START_TIME=$(${PYTHON} -c "import time; print(time.time())")
-    "${BENCH_DIR}/binary_trees_cpp_o0" ${SIZE} &
-    CPP_PID=$!
+    "${BENCH_DIR}/binary_trees_cpp_o0" ${SIZE} 1> /dev/null & 
+    CPP_PID=$! 
     STATS=$(log_process_stats $CPP_PID $START_TIME)
     WAIT_TIME=$(${PYTHON} -c "import time; print(time.time())")
     CPP_TIME_O0=$(echo "$WAIT_TIME - $START_TIME" | bc)
     echo "${i},cpp,${CPP_TIME_O0},${COMP_TIME_O0},o0,${SIZE},${STATS}" >> "${CSV_FILE}"
     
     # Compile C++ program with O3
+    echo "Compile C++ program with O3"
     COMPILE_START_TIME=$(${PYTHON} -c "import time; print(time.time())")
     ${CPP} -std=c++17 -O3 "${BENCH_DIR}/binary_trees.cpp" -o "${BENCH_DIR}/binary_trees_cpp_o3"
     COMP_TIME_O3=$(echo "$(${PYTHON} -c "import time; print(time.time())") - $COMPILE_START_TIME" | bc)
     
     # Run C++ program and measure time and resources
+    echo "Run C++ program with O3 and measure time and resources"
     START_TIME=$(${PYTHON} -c "import time; print(time.time())")
-    "${BENCH_DIR}/binary_trees_cpp_o3" ${SIZE} &
+    "${BENCH_DIR}/binary_trees_cpp_o3" ${SIZE} 1> /dev/null &
     CPP_PID=$!
     STATS=$(log_process_stats $CPP_PID $START_TIME)
     WAIT_TIME=$(${PYTHON} -c "import time; print(time.time())")
@@ -191,8 +195,9 @@ do
     echo "${i},cpp,${CPP_TIME_O3},${COMP_TIME_O3},o3,${SIZE},${STATS}" >> "${CSV_FILE}"
     
     # Run Python program and measure time and resources
+    echo "Run Python program and measure time and resources"
     START_TIME=$(${PYTHON} -c "import time; print(time.time())")
-    ${PYTHON} "${BENCH_DIR}/binary_trees.py" ${SIZE} &
+    ${PYTHON} "${BENCH_DIR}/binary_trees.py" ${SIZE} 1> /dev/null &
     PYTHON_PID=$!
     STATS=$(log_process_stats $PYTHON_PID $START_TIME)
     WAIT_TIME=$(${PYTHON} -c "import time; print(time.time())")
@@ -200,13 +205,15 @@ do
     echo "${i},python,${PYTHON_TIME},0,NA,${SIZE},${STATS}" >> "${CSV_FILE}"
     
     # Compile Codon Python program
+    echo "Compile Codon Python program"
     COMPILE_START_TIME=$(${PYTHON} -c "import time; print(time.time())")
     ${CODON} build --release "${BENCH_DIR}/binary_trees_codon.py"
     COMP_TIME_CODON=$(echo "$(${PYTHON} -c "import time; print(time.time())") - $COMPILE_START_TIME" | bc)
     
     # Run Codon Python program and measure time and resources
+    echo "Run Codon Python program and measure time and resources"
     START_TIME=$(${PYTHON} -c "import time; print(time.time())")
-    "${BENCH_DIR}/binary_trees_codon" ${SIZE} &
+    "${BENCH_DIR}/binary_trees_codon" ${SIZE} 1> /dev/null &
     CODON_PID=$!
     STATS=$(log_process_stats $CODON_PID $START_TIME)
     WAIT_TIME=$(${PYTHON} -c "import time; print(time.time())")
