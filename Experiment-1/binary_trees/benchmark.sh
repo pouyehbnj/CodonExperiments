@@ -154,6 +154,7 @@ log_process_stats() {
     local mem_avg=$(awk -F',' '{mem+=$2} END {print mem/NR}' "$stats_file")
     echo "$cpu_avg,$mem_avg"
     rm "$stats_file"
+    sleep 1
 }
 
 # Run tests for 10 random inputs
@@ -173,12 +174,13 @@ do
     START_TIME=$(${PYTHON} -c "import time; print(time.time())")
     "${BENCH_DIR}/binary_trees_cpp_o0" ${SIZE} 1> /dev/null & 
     CPP_PID_o0=$! 
-    wait $CPP_PID_o0
+    sleep 1
     STATS=$(log_process_stats $CPP_PID_o0 $START_TIME)
     WAIT_TIME=$(${PYTHON} -c "import time; print(time.time())")
     CPP_TIME_O0=$(echo "$WAIT_TIME - $START_TIME" | bc)
     echo "${i},cpp,${CPP_TIME_O0},${COMP_TIME_O0},o0,${SIZE},${STATS}" >> "${CSV_FILE}"
     echo "C++ execution time,stats: ${CPP_TIME_O0}s,${STATS}"
+
 
     # Compile C++ program with O3
     echo "Compile C++ program with O3"
@@ -192,19 +194,20 @@ do
     START_TIME=$(${PYTHON} -c "import time; print(time.time())")
     "${BENCH_DIR}/binary_trees_cpp_o3" ${SIZE} 1> /dev/null &
     CPP_PID_o3=$!
-    wait $CPP_PID_o3
+    sleep 1
     STATS=$(log_process_stats $CPP_PID_o3 $START_TIME)
     WAIT_TIME=$(${PYTHON} -c "import time; print(time.time())")
     CPP_TIME_O3=$(echo "$WAIT_TIME - $START_TIME" | bc)
     echo "${i},cpp,${CPP_TIME_O3},${COMP_TIME_O3},o3,${SIZE},${STATS}" >> "${CSV_FILE}"
     echo "C++ execution time,stats: ${COMP_TIME_O3}s,${STATS}"
-    
+
+
     # Run Python program and measure time and resources
     echo "Run Python program and measure time and resources"
     START_TIME=$(${PYTHON} -c "import time; print(time.time())")
     ${PYTHON} "${BENCH_DIR}/binary_trees.py" ${SIZE} 1> /dev/null &
     PYTHON_PID=$!
-    wait $PYTHON_PID
+    sleep 1
     STATS=$(log_process_stats $PYTHON_PID $START_TIME)
     WAIT_TIME=$(${PYTHON} -c "import time; print(time.time())")
     PYTHON_TIME=$(echo "$WAIT_TIME - $START_TIME" | bc)
@@ -223,7 +226,7 @@ do
     START_TIME=$(${PYTHON} -c "import time; print(time.time())")
     "${BENCH_DIR}/binary_trees_codon" ${SIZE} 1> /dev/null &
     CODON_PID=$!
-    wait $CODON_PID
+    sleep 1
     STATS=$(log_process_stats $CODON_PID $START_TIME)
     WAIT_TIME=$(${PYTHON} -c "import time; print(time.time())")
     CODON_TIME=$(echo "$WAIT_TIME - $START_TIME" | bc)
