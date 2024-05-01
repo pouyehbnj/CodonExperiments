@@ -25,7 +25,7 @@ log_process_stats() {
     local run_number=$2
     local execution_method=$3
     local stats_file="${BENCH_DIR}/stats_${run_number}_${execution_method}_pid${pid}.csv"
-    local power_file="${BENCH_DIR}/power_${run_number}_${execution_method}"
+    local power_file="${BENCH_DIR}/power_${run_number}_${execution_method}_"
 
     # Start PowerJoular monitoring for the specific PID and capture its PID
     sudo powerjoular -tp $pid -f "$power_file" &
