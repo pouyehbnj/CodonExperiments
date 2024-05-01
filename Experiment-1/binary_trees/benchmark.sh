@@ -51,7 +51,7 @@ log_process_stats() {
 # Run tests for 10 random inputs
 for i in {1..10}
 do
-    SIZE=20
+    SIZE=16
     echo "Running test number ${i} for size: ${SIZE}"
     # Compile C++ program with O0
     echo "Compile C++ program with O0"
