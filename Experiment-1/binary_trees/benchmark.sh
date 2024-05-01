@@ -43,7 +43,7 @@ log_process_stats() {
     sleep 1
 
     local cpu_avg=$(awk -F',' '{cpu+=$1} END {print cpu/NR}' "$stats_file")
-    local mem_avg=$(awk -F',' '{mem+=$2} END {print mem/NR}' "$stats_file")
+    local mem_avg=$(awk '{mem+=$2} END {print mem/NR}' "$stats_file")
     local power_avg=$(awk -F',' 'NR > 1 {power+=$3} END {print power/(NR-1)}' "${BENCH_DIR}/power_${run_number}_${execution_method}-${pid}.csv")
     echo "stats including cpu,memory,power:$cpu_avg,$mem_avg,$power_avg" 
 }
@@ -85,7 +85,7 @@ do
     START_TIME=$(${PYTHON} -c "import time; print(time.time())")
     "${BENCH_DIR}/binary_trees_cpp_o3" ${SIZE} 1> /dev/null &
     CPP_PID_o3=$!
-    sleep 0.1
+    sleep 1
     CPP_O3_STATS=$(log_process_stats $CPP_PID_o3 $i "cpp_o3")
     WAIT_TIME=$(${PYTHON} -c "import time; print(time.time())")
     CPP_TIME_O3=$(echo "$WAIT_TIME - $START_TIME" | bc)
@@ -98,7 +98,7 @@ do
     START_TIME=$(${PYTHON} -c "import time; print(time.time())")
     ${PYTHON} "${BENCH_DIR}/binary_trees.py" ${SIZE} 1> /dev/null &
     PYTHON_PID=$!
-    sleep 0.1
+    sleep 1
     PYTHON_STATS=$(log_process_stats $PYTHON_PID $i "python")
     WAIT_TIME=$(${PYTHON} -c "import time; print(time.time())")
     PYTHON_TIME=$(echo "$WAIT_TIME - $i" | bc)
@@ -120,7 +120,7 @@ do
     START_TIME=$(${PYTHON} -c "import time; print(time.time())")
     "${BENCH_DIR}/binary_trees_codon" ${SIZE} 1> /dev/null &
     CODON_PID=$!
-    sleep 0.1
+    sleep 1
     CODON_STATS=$(log_process_stats $CODON_PID $i "codon")
     WAIT_TIME=$(${PYTHON} -c "import time; print(time.time())")
     CODON_TIME=$(echo "$WAIT_TIME - $i" | bc)
