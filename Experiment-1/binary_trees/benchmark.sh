@@ -96,7 +96,7 @@ do
     # Run Python program and measure time and resources
     echo "Run ${i} Python program and measure time and resources"
     START_TIME=$(${PYTHON} -c "import time; print(time.time())")
-    ${PYTHON} "${BENCH_DIR}/binary_trees_codon.py" ${SIZE} 1> /dev/null &
+    ${PYTHON} "${BENCH_DIR}/binary_trees.py" ${SIZE} 1> /dev/null &
     PYTHON_PID=$!
     sleep 0.1
     PYTHON_STATS=$(log_process_stats $PYTHON_PID $i "python")
