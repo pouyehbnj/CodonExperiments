@@ -25,10 +25,10 @@ log_process_stats() {
     local run_number=$2
     local execution_method=$3
     local stats_file="${BENCH_DIR}/stats_${run_number}_${execution_method}_pid${pid}.csv"
-    local power_file="${BENCH_DIR}/power_${run_number}_${execution_method}_"
+    # local power_file="${BENCH_DIR}/power_${run_number}_${execution_method}_"
 
     # Start PowerJoular monitoring for the specific PID and capture its PID
-    sudo powerjoular -tp $pid -f "$power_file" &
+    sudo powerjoular -tp $pid -f "${BENCH_DIR}/power_${run_number}_${execution_method}" &
     local powerjoular_pid=$!
 
     echo "CPU(%),MEM(%)" > "$stats_file"
@@ -44,14 +44,14 @@ log_process_stats() {
 
     local cpu_avg=$(awk -F',' '{cpu+=$1} END {print cpu/NR}' "$stats_file")
     local mem_avg=$(awk -F',' '{mem+=$2} END {print mem/NR}' "$stats_file")
-    local power_avg=$(awk -F',' '{power+=$2} END {print power/NR}' "$power_file-$pid.csv")
+    local power_avg=$(awk -F',' '{power+=$2} END {print power/NR}' "${BENCH_DIR}/power_${run_number}_${execution_method}-${pid}.csv")
     echo "$cpu_avg,$mem_avg,$power_avg" 
 }
 
 # Run tests for 10 random inputs
 for i in {1..10}
 do
-    SIZE=16
+    SIZE=20
     echo "Running test number ${i} for size: ${SIZE}"
     # Compile C++ program with O0
     echo "Compile C++ program with O0"
