@@ -28,7 +28,7 @@ log_process_stats() {
     # local power_file="${BENCH_DIR}/power_${run_number}_${execution_method}_"
 
     # Start PowerJoular monitoring for the specific PID and capture its PID
-    sudo powerjoular -tp $pid -f "${BENCH_DIR}/power_${run_number}_${execution_method}" &
+    sudo powerjoular -p $pid -f "${BENCH_DIR}/power_${run_number}_${execution_method}" &
     local powerjoular_pid=$!
 
     echo "CPU(%),MEM(%)" > "$stats_file"
@@ -40,12 +40,12 @@ log_process_stats() {
      # Stop PowerJoular monitoring
     sudo kill -INT $powerjoular_pid
     # rm "$stats_file"
-    sleep 2
+    sleep 1
 
     local cpu_avg=$(awk -F',' '{cpu+=$1} END {print cpu/NR}' "$stats_file")
     local mem_avg=$(awk -F',' '{mem+=$2} END {print mem/NR}' "$stats_file")
-    local power_avg=$(awk -F',' '{power+=$2} END {print power/NR}' "${BENCH_DIR}/power_${run_number}_${execution_method}-${pid}.csv")
-    echo "$cpu_avg,$mem_avg,$power_avg" 
+    local power_avg=$(awk -F',' 'NR > 1 {power+=$3} END {print power/(NR-1)}' "${BENCH_DIR}/power_${run_number}_${execution_method}-${pid}.csv")
+    echo "stats including cpu,memory,power:$cpu_avg,$mem_avg,$power_avg" 
 }
 
 # Run tests for 10 random inputs
