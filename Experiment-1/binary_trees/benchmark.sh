@@ -10,7 +10,10 @@ if [ -f "$HOME/.profile" ]; then
 fi
 
 # Setup environment variables
-export BENCH_DIR=$(dirname "$0")
+# Determine the absolute directory where the script is located
+SCRIPT_PATH=$(readlink -f "$0")
+BENCH_DIR=$(dirname "$SCRIPT_PATH")
+# export BENCH_DIR=$(dirname "$0")
 export PYTHON="${EXE_PYTHON:-python3}"
 export CPP="${EXE_CPP:-clang++}"
 export CODON="${EXE_CODON:-build/codon}"
