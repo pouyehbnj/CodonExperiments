@@ -99,7 +99,7 @@ START_TIME=$(${PYTHON} -c "import time; print(time.time())")
 CPP_PID=$!
 
 # Start PowerJoular monitoring for the specific PID and ensure it has time to start
-sudo powerjoular -p $CPP_PID -f "${BENCH_DIR}/power-cpp-${CPP_PID}" &
+sudo powerjoular -p $CPP_PID -f "${BENCH_DIR}/power-cpp" &
 powerjoular_pid=$!
 # sleep 1  # Sleep to ensure that PowerJoular starts before the process potentially exits
 
@@ -108,7 +108,7 @@ stats_file="${BENCH_DIR}/stats_cpp_pid${CPP_PID}.csv"
 echo "CPU(%),MEM(%)" > "$stats_file"
 while kill -0 $CPP_PID 2> /dev/null; do
     ps -p $CPP_PID -o %cpu,%mem --no-headers >> "$stats_file"
-    sleep 0.01
+    sleep 0.001
 done
 
 # Finish up PowerJoular monitoring
