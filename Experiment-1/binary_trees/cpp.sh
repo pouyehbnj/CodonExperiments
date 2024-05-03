@@ -100,7 +100,7 @@ CPP_PID=$!
 
 # Start PowerJoular monitoring for the specific PID and ensure it has time to start
 sudo powerjoular -p $CPP_PID -f "${BENCH_DIR}/power-cpp-${CPP_PID}" &
-local powerjoular_pid=$!
+powerjoular_pid=$!
 sleep 1  # Sleep to ensure that PowerJoular starts before the process potentially exits
 
 # Monitor system stats
