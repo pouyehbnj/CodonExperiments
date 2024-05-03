@@ -24,7 +24,7 @@ log_process_stats() {
 
     # Start PowerJoular monitoring for the specific PID and capture its PID
    sudo powerjoular -p $pid -f "${BENCH_DIR}/power-cpp" &
-    local powerjoular_pid=$!
+   local powerjoular_pid=$!
 
     echo "CPU(%),MEM(%)" > "$stats_file"
     while kill -0 $pid 2> /dev/null; do
@@ -52,7 +52,7 @@ echo "Run C++ program and measure time and resources"
 START_TIME=$(${PYTHON} -c "import time; print(time.time())")
 "${BENCH_DIR}/binary_trees_cpp" ${SIZE} 1> /dev/null &
 CPP_PID=$!
-sleep 1
+sleep 0.1
 CPP_STATS=$(log_process_stats $CPP_PID)
 WAIT_TIME=$(${PYTHON} -c "import time; print(time.time())")
 EXECUTION_TIME=$(echo "$WAIT_TIME - $START_TIME" | bc)
