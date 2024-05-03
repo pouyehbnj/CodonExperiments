@@ -20,11 +20,13 @@ echo "run_number,execution_method,execution_time,compilation_time,SIZE,cpu_usage
 # Helper function to log process stats
 log_process_stats() {
     local pid=$1
+  
     local stats_file="${BENCH_DIR}/stats_cpp_pid${pid}.csv"
-
+    # local stats_file="${BENCH_DIR}/stats_cpp_pid${pid}.csv"
     # Start PowerJoular monitoring for the specific PID and capture its PID
    sudo powerjoular -p $pid -f "${BENCH_DIR}/power-cpp" &
    local powerjoular_pid=$!
+   
 
     echo "CPU(%),MEM(%)" > "$stats_file"
     while kill -0 $pid 2> /dev/null; do
@@ -34,7 +36,7 @@ log_process_stats() {
     
     # Stop PowerJoular monitoring
     sudo kill -INT $powerjoular_pid
-    sleep 2
+    sleep 5
 
     local cpu_avg=$(awk -F',' '{cpu+=$1} END {print cpu/NR}' "$stats_file")
     local mem_avg=$(awk '{mem+=$2} END {print mem/NR}' "$stats_file")
