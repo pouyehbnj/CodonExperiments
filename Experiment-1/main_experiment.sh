@@ -48,7 +48,9 @@ declare -A execution_counts
 
 # Initialize the count for every possible combination
 for subject in "${!subjects[@]}"; do
+    echo "now working on subj:" $subject
     size_categories=(${subject_sizes[$subject]})  # Get size categories for the subject
+    echo "size categories of this subject:" $size_categories
     for size_category in "${size_categories[@]}"; do
         sizes=(${sizes_categories[$size_category]})
         for size in "${sizes[@]}"; do
