@@ -30,8 +30,8 @@ subject_sizes["binary_trees"]="small_sizes medium_sizes large_sizes"
 # Define sizes categories
 declare -A sizes_categories
 sizes_categories["small_sizes"]="16"
-# sizes_categories["medium_sizes"]="128 256 512"
-# sizes_categories["large_sizes"]="1024 2048 4096"
+sizes_categories["medium_sizes"]="16"
+sizes_categories["large_sizes"]="16"
 
 # Create an array from the keys of the associative array for random selection
 subjects=(${!subject_sizes[@]})
