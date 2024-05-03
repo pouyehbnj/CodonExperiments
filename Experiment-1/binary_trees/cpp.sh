@@ -102,9 +102,9 @@ log_process_stats() {
     done
 
     # Allow some time for final data capture
-    sleep 0.2
+    # sleep 0.2
     sudo kill -INT $powerjoular_pid
-    sleep 0.5  # Wait for PowerJoular to finish writing to the file
+    sleep 3  # Wait for PowerJoular to finish writing to the file
 
     # Process monitoring data
     local cpu_avg=$(awk -F',' '{cpu+=$1} END {print cpu/NR}' "$stats_file")
