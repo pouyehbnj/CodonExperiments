@@ -101,7 +101,7 @@ while [ "$current_runs" -lt "$total_required_runs" ]; do
     # Check if this combination still needs to be run
     if [ "${execution_counts[$key]}" -lt "$total_runs" ]; then
         # Run the method with the size parameter
-        echo "Running $method in $subject with size $size... (${execution_counts[$key]}+1 out of $total_runs)"
+        echo "Running $method in $subject with size $size..."
         # Ensure script is executable and run it
         if cd "${SCRIPT_DIR}/$subject"; then
             chmod +x "${method}.sh"  # Set permissions to ensure the script is executable
@@ -112,7 +112,7 @@ while [ "$current_runs" -lt "$total_required_runs" ]; do
 
         # Increment the count for this combination
         execution_counts[$key]=$((execution_counts[$key] + 1))
-
+        echo "This was run number" ${execution_counts[$key]} "out of $total_runs"
         # Increment the total number of method runs
         current_runs=$((current_runs + 1))
         sleep 1
