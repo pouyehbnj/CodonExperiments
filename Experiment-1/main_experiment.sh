@@ -102,10 +102,12 @@ while [ "$current_runs" -lt "$total_required_runs" ]; do
     if [ "${execution_counts[$key]}" -lt "$total_runs" ]; then
         # Run the method with the size parameter
         echo "Running $method in $subject with size $size... (${execution_counts[$key]}+1 out of $total_runs)"
+        # Ensure script is executable and run it
         if cd "${SCRIPT_DIR}/$subject"; then
-            ./$method $size
+            chmod +x "${method}.sh"  # Set permissions to ensure the script is executable
+            ./${method}.sh $size
         else
-            echo "Failed to change directory to ${SCRIPT_DIR}/$subject"
+            echo "Failed to change directory to ${SCRIPT_DIR}/$subject or execute script"
         fi
 
         # Increment the count for this combination
