@@ -60,6 +60,8 @@ for subject in "${!subjects[@]}"; do
     done
 done
 
+echo "execution counts created" $execution_counts
+
 # Total runs for each specific size in a category
 total_runs=10
 
@@ -74,6 +76,7 @@ for subject in "${!subjects[@]}"; do
 done
 total_required_runs=$((total_combinations * total_runs))
 current_runs=0
+echo "number of runs required:" $total_required_runs
 
 # Main loop
 while [ "$current_runs" -lt "$total_required_runs" ]; do
