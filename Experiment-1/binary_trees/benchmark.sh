@@ -10,10 +10,7 @@ if [ -f "$HOME/.profile" ]; then
 fi
 
 # Setup environment variables
-# Determine the absolute directory where the script is located
-SCRIPT_PATH=$(readlink -f "$0")
-BENCH_DIR=$(dirname "$SCRIPT_PATH")
-# export BENCH_DIR=$(dirname "$0")
+export BENCH_DIR=$(dirname "$0")
 export PYTHON="${EXE_PYTHON:-python3}"
 export CPP="${EXE_CPP:-clang++}"
 export CODON="${EXE_CODON:-build/codon}"
@@ -54,7 +51,7 @@ log_process_stats() {
 # Run tests for 10 random inputs
 for i in {1..10}
 do
-    SIZE=16
+    SIZE=20
     echo "Running test number ${i} for size: ${SIZE}"
     # Compile C++ program with O0
     echo "Compile C++ program with O0"

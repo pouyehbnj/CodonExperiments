@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Source the user's .bashrc to ensure all user environment settings are applied
-if [ -f "~/.bashrc" ]; then
-    source ~/.bashrc
+if [ -f "$HOME/.bashrc" ]; then
+    source "$HOME/.bashrc"
 fi
 
 if [ -f "$HOME/.profile" ]; then
