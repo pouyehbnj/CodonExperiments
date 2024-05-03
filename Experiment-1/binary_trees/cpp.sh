@@ -11,6 +11,7 @@ SIZE=$1
 SCRIPT_PATH=$(readlink -f "$0")
 BENCH_DIR=$(dirname "$SCRIPT_PATH")
 export CPP="${EXE_CPP:-clang++}"
+export PYTHON="${EXE_PYTHON:-python3}"
 export CSV_FILE="${BENCH_DIR}/cpp_benchmarks.csv"
 
 # Prepare CSV file with header
