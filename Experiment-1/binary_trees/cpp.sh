@@ -34,12 +34,13 @@ log_process_stats() {
     
     # Stop PowerJoular monitoring
     sudo kill -INT $powerjoular_pid
-    sleep 1
+    sleep 2
 
     local cpu_avg=$(awk -F',' '{cpu+=$1} END {print cpu/NR}' "$stats_file")
     local mem_avg=$(awk '{mem+=$2} END {print mem/NR}' "$stats_file")
     local power_avg=$(awk -F',' 'NR > 1 {power+=$3} END {print power/(NR-1)}' "${BENCH_DIR}/power-cpp-${pid}.csv")
-    echo "stats including cpu,memory,power:$cpu_avg,$mem_avg,$power_avg" 
+    # echo "stats including cpu,memory,power:$cpu_avg,$mem_avg,$power_avg" 
+    echo $cpu_avg,$mem_avg,$power_avg
 }
 
 echo "Compile C++ program with O3"
@@ -52,12 +53,12 @@ echo "Run C++ program and measure time and resources"
 START_TIME=$(${PYTHON} -c "import time; print(time.time())")
 "${BENCH_DIR}/binary_trees_cpp" ${SIZE} 1> /dev/null &
 CPP_PID=$!
-sleep 0.1
+# sleep 0.01
 CPP_STATS=$(log_process_stats $CPP_PID)
 WAIT_TIME=$(${PYTHON} -c "import time; print(time.time())")
 EXECUTION_TIME=$(echo "$WAIT_TIME - $START_TIME" | bc)
 echo "1,cpp,${EXECUTION_TIME},${COMP_TIME},${SIZE},${CPP_STATS}" >> "${CSV_FILE}"
-echo "C++ execution time,stats: ${CPP_TIME}s,${CPP_STATS}"
+echo "C++ execution time,stats: ${EXECUTION_TIME}s,${CPP_STATS}"
 
 # Clean up
 rm "${BENCH_DIR}/binary_trees_cpp"
