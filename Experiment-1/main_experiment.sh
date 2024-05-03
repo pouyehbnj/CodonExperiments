@@ -35,22 +35,19 @@ sizes_categories["large_sizes"]="16"
 
 # Create an array from the keys of the associative array for random selection
 subjects=(${!subject_sizes[@]})
-echo "all subjects:" $subjects
+echo "All subjects: ${subjects[@]}"
+
 # Define the array of methods
-methods=(
-    "cpp"
-    "python"
-    "codon"
-)
+methods=("cpp" "python" "codon")
 
 # Associative array to track execution counts
 declare -A execution_counts
 
 # Initialize the count for every possible combination
-for subject in "${!subjects[@]}"; do
-    echo "now working on subj:" $subject
+for subject in "${subjects[@]}"; do
+    echo "Now working on subject: $subject"
     size_categories=(${subject_sizes[$subject]})  # Get size categories for the subject
-    echo "size categories of this subject:" $size_categories
+    echo "Size categories of this subject: ${size_categories[@]}"
     for size_category in "${size_categories[@]}"; do
         sizes=(${sizes_categories[$size_category]})
         for size in "${sizes[@]}"; do
@@ -62,14 +59,14 @@ for subject in "${!subjects[@]}"; do
     done
 done
 
-echo "execution counts created" $execution_counts
+echo "Execution counts initialized."
 
 # Total runs for each specific size in a category
 total_runs=10
 
 # Calculate total combinations and required runs
 total_combinations=0
-for subject in "${!subjects[@]}"; do
+for subject in "${subjects[@]}"; do
     size_categories=(${subject_sizes[$subject]})
     for size_category in "${size_categories[@]}"; do
         sizes=(${sizes_categories[$size_category]})
@@ -78,15 +75,14 @@ for subject in "${!subjects[@]}"; do
 done
 total_required_runs=$((total_combinations * total_runs))
 current_runs=0
-echo "number of runs required:" $total_required_runs
+echo "Number of runs required: $total_required_runs"
 
 # Main loop
 while [ "$current_runs" -lt "$total_required_runs" ]; do
     # Randomly pick a subject from the array of subjects
-   
     random_subject_index=$((RANDOM % ${#subjects[@]}))
     subject=${subjects[random_subject_index]}
-    echo "subject selected:" $subject
+    echo "Subject selected: $subject"
 
     # Randomly pick a size category for the selected subject
     size_categories=(${subject_sizes[$subject]})
