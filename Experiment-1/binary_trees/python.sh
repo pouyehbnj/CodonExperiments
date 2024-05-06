@@ -23,6 +23,7 @@ log_process_stats() {
 
     # Start PowerJoular monitoring for the specific PID and capture its PID
     sudo powerjoular -p $pid -f "${BENCH_DIR}/power-python" 1> /dev/null &
+    sleep 0.5
     local powerjoular_pid=$(pgrep -f "powerjoular -p $pid")
     # local powerjoular_pid=$!
     # sleep 0.1
