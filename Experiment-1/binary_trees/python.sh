@@ -24,19 +24,20 @@ log_process_stats() {
     # Start PowerJoular monitoring for the specific PID and capture its PID
     sudo powerjoular -p $pid -f "${BENCH_DIR}/power-python" 1> /dev/null &
     local powerjoular_pid=$!
+    sleep 0.1
     
-    # Check if PowerJoular started correctly
-    if ! kill -0 $powerjoular_pid 2> /dev/null; then
-        echo "Failed to start PowerJoular for PID $pid"
-        return
-    fi
+    # # Check if PowerJoular started correctly
+    # if ! kill -0 $powerjoular_pid 2> /dev/null; then
+    #     echo "Failed to start PowerJoular for PID $pid"
+    #     return
+    # fi
 
     echo "CPU(%),MEM(%)" > "$stats_file"
     while kill -0 $pid 2> /dev/null; do
         ps -p $pid -o %cpu,%mem --no-headers >> "$stats_file"
         sleep 1
     done
-
+    wait $pid
     # sleep 2
     # # Stop PowerJoular monitoring
     # # echo "yoyoyoyoyoyoyoyoyoyoyoyoyoyo"
