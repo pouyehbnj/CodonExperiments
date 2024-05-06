@@ -32,9 +32,9 @@ log_process_stats() {
         sleep 1
     done
 
-    # sleep 1
+    sleep 1
     # Stop PowerJoular monitoring
-    
+    echo "yoyoyoyoyoyoyoyoyoyoyoyoyoyo"
     sudo kill -INT $powerjoular_pid
     # wait $powerjoular_pid
     # sudo kill -INT $powerjoular_pid
