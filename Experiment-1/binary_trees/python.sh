@@ -32,9 +32,9 @@ log_process_stats() {
         sleep 1
     done
 
-    sleep 1
+    sleep 2
     # Stop PowerJoular monitoring
-    echo "yoyoyoyoyoyoyoyoyoyoyoyoyoyo"
+    # echo "yoyoyoyoyoyoyoyoyoyoyoyoyoyo"
     sudo kill -INT $powerjoular_pid
     # wait $powerjoular_pid
     # sudo kill -INT $powerjoular_pid
@@ -43,7 +43,7 @@ log_process_stats() {
     local cpu_avg=$(awk -F',' '{cpu+=$1} END {print cpu/NR}' "$stats_file")
     local mem_avg=$(awk '{mem+=$2} END {print mem/NR}' "$stats_file")
     local power_avg=$(awk -F',' 'NR > 1 {power+=$3} END {print power/(NR-1)}' "${BENCH_DIR}/power-python-${pid}.csv")
-    echo "power:$power_avg" 
+    # echo "power:$power_avg" 
     echo $cpu_avg,$mem_avg,$power_avg
 }
 
