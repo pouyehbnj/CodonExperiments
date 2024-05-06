@@ -22,9 +22,10 @@ log_process_stats() {
     local stats_file="${BENCH_DIR}/stats_python_pid${pid}.csv"
 
     # Start PowerJoular monitoring for the specific PID and capture its PID
+    # local power_profile=powerjoular -p $pid -f "${BENCH_DIR}/power-python" 1> /dev/null
     sudo powerjoular -p $pid -f "${BENCH_DIR}/power-python" 1> /dev/null &
     sleep 0.5
-    local powerjoular_pid=$(pgrep -f "powerjoular -p $pid")
+    local powerjoular_pid=$(pgrep -f "powerjoular -p $pid -f ${BENCH_DIR}/power-python 1> /dev/null")
     # local powerjoular_pid=$!
     # sleep 0.1
     echo $powerjoular_pid
