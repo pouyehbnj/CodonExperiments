@@ -24,7 +24,8 @@ log_process_stats() {
     # Start PowerJoular monitoring for the specific PID and capture its PID
     sudo powerjoular -tp $pid -f "${BENCH_DIR}/power-python" &
     local powerjoular_pid=$!
-
+    wait $powerjoular_pid
+    
     echo "CPU(%),MEM(%)" > "$stats_file"
     while kill -0 $pid 2> /dev/null; do
         ps -p $pid -o %cpu,%mem --no-headers >> "$stats_file"
@@ -33,7 +34,7 @@ log_process_stats() {
 
     # sleep 1
     # Stop PowerJoular monitoring
-    wait $powerjoular_pid
+    
     sudo kill -INT $powerjoular_pid
     # wait $powerjoular_pid
     # sudo kill -INT $powerjoular_pid
