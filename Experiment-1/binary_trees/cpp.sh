@@ -102,9 +102,9 @@ echo $CPP_PID
 # Start PowerJoular monitoring for the specific PID and ensure it has time to start
 sudo powerjoular -p $CPP_PID -f "${BENCH_DIR}/power-cpp"  1> /dev/null &
 sleep 0.2
-powerjoular_pid=$(pgrep -f "powerjoular -p $pid -f ${BENCH_DIR}/power-cpp")
+powerjoular_pid=$(pgrep -f "powerjoular -p $CPP_PID -f ${BENCH_DIR}/power-cpp")
 # sleep 1  # Sleep to ensure that PowerJoular starts before the process potentially exits
-
+echo $powerjoular_pid
 # Monitor system stats
 stats_file="${BENCH_DIR}/stats_cpp_pid${CPP_PID}.csv"
 echo "CPU(%),MEM(%)" > "$stats_file"
