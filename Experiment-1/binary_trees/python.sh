@@ -25,6 +25,11 @@ log_process_stats() {
     sudo powerjoular -p $pid -f "${BENCH_DIR}/power-python" 1> /dev/null &
     local powerjoular_pid=$!
     
+    # Check if PowerJoular started correctly
+    if ! kill -0 $powerjoular_pid 2> /dev/null; then
+        echo "Failed to start PowerJoular for PID $pid"
+        return
+    fi
 
     echo "CPU(%),MEM(%)" > "$stats_file"
     while kill -0 $pid 2> /dev/null; do
