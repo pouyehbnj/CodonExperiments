@@ -27,7 +27,7 @@ log_process_stats() {
     local powerjoular_pid=$(pgrep -f "powerjoular -p $pid")
     # local powerjoular_pid=$!
     # sleep 0.1
-    # echo $powerjoular_pid
+    echo $powerjoular_pid
     # # Check if PowerJoular started correctly
     # if ! kill -0 $powerjoular_pid 2> /dev/null; then
     #     echo "Failed to start PowerJoular for PID $pid"
@@ -39,7 +39,7 @@ log_process_stats() {
         ps -p $pid -o %cpu,%mem --no-headers >> "$stats_file"
         sleep 1
     done
-    wait $pid
+    # wait $pid
     # sleep 2
     # # Stop PowerJoular monitoring
     # # echo "yoyoyoyoyoyoyoyoyoyoyoyoyoyo"
