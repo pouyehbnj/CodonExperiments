@@ -31,7 +31,7 @@ log_process_stats() {
         sleep 0.01
     done
 
-    sleep 2
+    sleep 1
     # Stop PowerJoular monitoring
     sudo kill -INT $powerjoular_pid
     wait $powerjoular_pid
@@ -49,7 +49,7 @@ echo "Run Python program and measure time and resources"
 START_TIME=$(${PYTHON} -c "import time; print(time.time())")
 ${PYTHON} "${BENCH_DIR}/binary_trees.py" ${SIZE} 1> /dev/null &
 PYTHON_PID=$!
-sleep 0.1
+sleep 0.0s1
 PYTHON_STATS=$(log_process_stats $PYTHON_PID)
 WAIT_TIME=$(${PYTHON} -c "import time; print(time.time())")
 PYTHON_TIME=$(echo "$WAIT_TIME - $START_TIME" | bc)
