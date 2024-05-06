@@ -32,9 +32,15 @@ log_process_stats() {
         sleep 0.01
     done
     
+    # # Stop PowerJoular monitoring
+    # sudo kill -INT $powerjoular_pid
+    # sleep 5
+    sleep 2
     # Stop PowerJoular monitoring
     sudo kill -INT $powerjoular_pid
-    sleep 5
+    wait $powerjoular_pid
+    # sudo kill -INT $powerjoular_pid
+    sleep 3
 
     local cpu_avg=$(awk -F',' '{cpu+=$1} END {print cpu/NR}' "$stats_file")
     local mem_avg=$(awk '{mem+=$2} END {print mem/NR}' "$stats_file")
