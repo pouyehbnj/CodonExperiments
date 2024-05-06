@@ -124,7 +124,7 @@ power_avg=$(awk -F',' 'NR > 1 {power+=$3} END {print power/(NR-1)}' "${BENCH_DIR
 # Calculate execution time
 EXECUTION_TIME=$(echo "$(${PYTHON} -c "import time; print(time.time())") - $START_TIME" | bc)
 echo "1,cpp,${EXECUTION_TIME},${COMP_TIME},${SIZE},${cpu_avg},${mem_avg},${power_avg}" >> "${CSV_FILE}"
-echo "C++ execution time,stats: ${EXECUTION_TIME}s, Stats: CPU: $cpu_avg, Mem: $mem_avg, Power: $power_avg"
+echo "C++ execution time,stats: ${EXECUTION_TIME}s,$cpu_avg,$mem_avg,$power_avg"
 
 # Clean up
 rm "${BENCH_DIR}/binary_trees_cpp"
