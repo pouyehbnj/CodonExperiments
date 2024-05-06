@@ -25,7 +25,7 @@ log_process_stats() {
     sudo powerjoular -p $pid -f "${BENCH_DIR}/power-python" 1> /dev/null &
     local powerjoular_pid=$!
     sleep 0.1
-    
+    echo $powerjoular_pid
     # # Check if PowerJoular started correctly
     # if ! kill -0 $powerjoular_pid 2> /dev/null; then
     #     echo "Failed to start PowerJoular for PID $pid"
@@ -43,15 +43,15 @@ log_process_stats() {
     # # echo "yoyoyoyoyoyoyoyoyoyoyoyoyoyo"
     # sudo kill -INT $powerjoular_pid
     # # wait $powerjoular_pid
-    # # sudo kill -INT $powerjoular_pid
+    sudo kill -INT $powerjoular_pid
     # sleep 5
     # Stop PowerJoular monitoring
-    if kill -0 $powerjoular_pid 2> /dev/null; then
-        sudo kill -INT $powerjoular_pid
-        wait $powerjoular_pid
-    else
-        echo "PowerJoular process $powerjoular_pid does not exist."
-    fi
+    # if kill -0 $powerjoular_pid 2> /dev/null; then
+    #     sudo kill -INT $powerjoular_pid
+    #     wait $powerjoular_pid
+    # else
+    #     echo "PowerJoular process $powerjoular_pid does not exist."
+    # fi
     sleep 2 
 
     local cpu_avg=$(awk -F',' '{cpu+=$1} END {print cpu/NR}' "$stats_file")
@@ -65,7 +65,7 @@ echo "Run Python program and measure time and resources"
 START_TIME=$(${PYTHON} -c "import time; print(time.time())")
 ${PYTHON} "${BENCH_DIR}/binary_trees.py" ${SIZE} 1> /dev/null &
 PYTHON_PID=$!
-sleep 0.5
+sleep 0.1
 PYTHON_STATS=$(log_process_stats $PYTHON_PID)
 WAIT_TIME=$(${PYTHON} -c "import time; print(time.time())")
 PYTHON_TIME=$(echo "$WAIT_TIME - $START_TIME" | bc)
