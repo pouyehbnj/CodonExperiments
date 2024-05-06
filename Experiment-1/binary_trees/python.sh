@@ -32,13 +32,21 @@ log_process_stats() {
         sleep 1
     done
 
-    sleep 2
-    # Stop PowerJoular monitoring
-    # echo "yoyoyoyoyoyoyoyoyoyoyoyoyoyo"
-    sudo kill -INT $powerjoular_pid
-    # wait $powerjoular_pid
+    # sleep 2
+    # # Stop PowerJoular monitoring
+    # # echo "yoyoyoyoyoyoyoyoyoyoyoyoyoyo"
     # sudo kill -INT $powerjoular_pid
-    sleep 5
+    # # wait $powerjoular_pid
+    # # sudo kill -INT $powerjoular_pid
+    # sleep 5
+    # Stop PowerJoular monitoring
+    if kill -0 $powerjoular_pid 2> /dev/null; then
+        sudo kill -INT $powerjoular_pid
+        wait $powerjoular_pid
+    else
+        echo "PowerJoular process $powerjoular_pid does not exist."
+    fi
+    sleep 2 
 
     local cpu_avg=$(awk -F',' '{cpu+=$1} END {print cpu/NR}' "$stats_file")
     local mem_avg=$(awk '{mem+=$2} END {print mem/NR}' "$stats_file")
