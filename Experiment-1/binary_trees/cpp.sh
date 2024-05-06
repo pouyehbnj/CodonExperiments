@@ -112,8 +112,12 @@ while kill -0 $CPP_PID 2> /dev/null; do
 done
 
 # Finish up PowerJoular monitoring
+sleep 2
+# Stop PowerJoular monitoring
 sudo kill -INT $powerjoular_pid
-sleep 5  # Ensure the PowerJoular process has time to clean up and write to file
+wait $powerjoular_pid
+# sudo kill -INT $powerjoular_pid
+sleep 3
 
 # Calculate averages from logs
 cpu_avg=$(awk -F',' '{cpu+=$1} END {print cpu/NR}' "$stats_file")
