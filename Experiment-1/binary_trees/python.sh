@@ -41,7 +41,7 @@ log_process_stats() {
     local cpu_avg=$(awk -F',' '{cpu+=$1} END {print cpu/NR}' "$stats_file")
     local mem_avg=$(awk '{mem+=$2} END {print mem/NR}' "$stats_file")
     local power_avg=$(awk -F',' 'NR > 1 {power+=$3} END {print power/(NR-1)}' "${BENCH_DIR}/power-python-${pid}.csv")
-    # echo "stats including cpu,memory,power:$cpu_avg,$mem_avg,$power_avg" 
+    echo "power:$power_avg" 
     echo $cpu_avg,$mem_avg,$power_avg
 }
 
