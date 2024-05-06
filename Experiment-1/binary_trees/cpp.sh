@@ -99,7 +99,7 @@ START_TIME=$(${PYTHON} -c "import time; print(time.time())")
 CPP_PID=$!
 
 # Start PowerJoular monitoring for the specific PID and ensure it has time to start
-sudo powerjoular -p $CPP_PID -f "${BENCH_DIR}/power-cpp" &
+sudo powerjoular -tp $CPP_PID -f "${BENCH_DIR}/power-cpp" &
 powerjoular_pid=$!
 # sleep 1  # Sleep to ensure that PowerJoular starts before the process potentially exits
 
