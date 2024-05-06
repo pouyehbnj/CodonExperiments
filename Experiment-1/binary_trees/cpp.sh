@@ -100,7 +100,8 @@ CPP_PID=$!
 
 # Start PowerJoular monitoring for the specific PID and ensure it has time to start
 sudo powerjoular -tp $CPP_PID -f "${BENCH_DIR}/power-cpp" &
-powerjoular_pid=$!
+sleep 0.2
+local powerjoular_pid=$(pgrep -f "powerjoular -p $pid -f ${BENCH_DIR}/power-cpp")
 # sleep 1  # Sleep to ensure that PowerJoular starts before the process potentially exits
 
 # Monitor system stats
@@ -108,16 +109,12 @@ stats_file="${BENCH_DIR}/stats_cpp_pid${CPP_PID}.csv"
 echo "CPU(%),MEM(%)" > "$stats_file"
 while kill -0 $CPP_PID 2> /dev/null; do
     ps -p $CPP_PID -o %cpu,%mem --no-headers >> "$stats_file"
-    sleep 0.01
+    sleep 0.1
 done
 
-# Finish up PowerJoular monitoring
-sleep 2
-# Stop PowerJoular monitoring
+ # Stop PowerJoular monitoring
 sudo kill -INT $powerjoular_pid
-wait $powerjoular_pid
-# sudo kill -INT $powerjoular_pid
-sleep 3
+sleep 2
 
 # Calculate averages from logs
 cpu_avg=$(awk -F',' '{cpu+=$1} END {print cpu/NR}' "$stats_file")

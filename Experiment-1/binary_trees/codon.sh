@@ -24,23 +24,22 @@ log_process_stats() {
 
     # Start PowerJoular monitoring for the specific PID and capture its PID
     sudo powerjoular -tp $pid -f "${BENCH_DIR}/power-codon" &
-    local powerjoular_pid=$!
+    sleep 0.2
+    local powerjoular_pid=$(pgrep -f "powerjoular -p $pid -f ${BENCH_DIR}/power-codon")
 
     echo "CPU(%),MEM(%)" > "$stats_file"
     while kill -0 $pid 2> /dev/null; do
         ps -p $pid -o %cpu,%mem --no-headers >> "$stats_file"
-        sleep 0.01
+        sleep 0.1
     done
     
     # # Stop PowerJoular monitoring
     # sudo kill -INT $powerjoular_pid
     # sleep 5
-    sleep 2
+  
     # Stop PowerJoular monitoring
     sudo kill -INT $powerjoular_pid
-    wait $powerjoular_pid
-    # sudo kill -INT $powerjoular_pid
-    sleep 3
+    sleep 2
 
     local cpu_avg=$(awk -F',' '{cpu+=$1} END {print cpu/NR}' "$stats_file")
     local mem_avg=$(awk '{mem+=$2} END {print mem/NR}' "$stats_file")
