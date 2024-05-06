@@ -23,7 +23,7 @@ log_process_stats() {
     local stats_file="${BENCH_DIR}/stats_codon_pid${pid}.csv"
 
     # Start PowerJoular monitoring for the specific PID and capture its PID
-    sudo powerjoular -tp $pid -f "${BENCH_DIR}/power-codon" &
+    sudo powerjoular -p $pid -f "${BENCH_DIR}/power-codon"  1> /dev/null &
     sleep 0.2
     local powerjoular_pid=$(pgrep -f "powerjoular -p $pid -f ${BENCH_DIR}/power-codon")
 
