@@ -97,7 +97,8 @@ echo "C++ compilation time: ${COMP_TIME}s"
 START_TIME=$(${PYTHON} -c "import time; print(time.time())")
 "${BENCH_DIR}/binary_trees_cpp" ${SIZE} 1> /dev/null &
 CPP_PID=$!
-
+sleep 0.1
+echo $CPP_PID
 # Start PowerJoular monitoring for the specific PID and ensure it has time to start
 sudo powerjoular -p $CPP_PID -f "${BENCH_DIR}/power-cpp"  1> /dev/null &
 sleep 0.2
