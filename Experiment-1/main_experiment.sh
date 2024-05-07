@@ -222,7 +222,7 @@ while [ "$current_runs" -lt "$total_required_runs" ]; do
         current_runs=$((current_runs + 1))
         # sleep 1 
         # kill -INT $pid
-        sleep 3
+        sleep 5
         
     fi
 done
