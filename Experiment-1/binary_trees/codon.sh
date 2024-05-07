@@ -67,5 +67,5 @@ echo "Codon execution time,stats: ${CODON_TIME}s,${CODON_STATS}"
 # Clean up
 rm "${BENCH_DIR}/binary_trees_codon"
 wait
-echo "All background processes completed."
+echo "All background processes completed and cleaned up the run."
 exit 0

@@ -221,9 +221,9 @@ while [ "$current_runs" -lt "$total_required_runs" ]; do
         # Increment the total number of method runs
         current_runs=$((current_runs + 1))
         # sleep 1 
-        kill -INT $pid
+        # kill -INT $pid
         sleep 3
-        echo "cleaned up the run"
+        
     fi
 done
 
