@@ -15,7 +15,7 @@ SCRIPT_DIR=$(cd $(dirname "$0") && pwd)
 # Define the array of subjects (directories) with an array of sizes for each subject
 declare -A subject_sizes
 # subject_sizes["binary_trees"]="18 19 20"
-subject_sizes["fannkuch"]="10 11 12"
+subject_sizes["fannkuch"]="10 11"
 # subject_sizes["fasta"]="10 20 30 40 50 60 70 80 90 100"
 # subject_sizes["float"]="10 20 30 40 50 60 70 80 90 100"
 # subject_sizes["mandelbrot"]="10 20 30 40 50 60 70 80 90 100"
