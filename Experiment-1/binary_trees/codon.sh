@@ -57,7 +57,7 @@ echo "Run Codon Python program and measure time and resources"
 START_TIME=$(${PYTHON} -c "import time; print(time.time())")
 "${BENCH_DIR}/binary_trees_codon" ${SIZE} 1> /dev/null &
 CODON_PID=$!
-sleep 0.1
+sleep 0.01
 CODON_STATS=$(log_process_stats $CODON_PID)
 WAIT_TIME=$(${PYTHON} -c "import time; print(time.time())")
 CODON_TIME=$(echo "$WAIT_TIME - $START_TIME" | bc)
