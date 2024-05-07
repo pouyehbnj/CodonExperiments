@@ -220,7 +220,7 @@ while [ "$current_runs" -lt "$total_required_runs" ]; do
         echo "This was run number" ${execution_counts[$key]} "out of $total_runs"
         # Increment the total number of method runs
         current_runs=$((current_runs + 1))
-        sleep 1 
+        # sleep 1 
         kill -INT $pid
         sleep 3
         echo "cleaned up the run"

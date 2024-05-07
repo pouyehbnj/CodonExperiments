@@ -74,3 +74,6 @@ WAIT_TIME=$(${PYTHON} -c "import time; print(time.time())")
 PYTHON_TIME=$(echo "$WAIT_TIME - $START_TIME" | bc)
 echo "1,python,${PYTHON_TIME},${SIZE},${PYTHON_STATS}" >> "${CSV_FILE}"
 echo "Python execution time,stats: ${PYTHON_TIME}s,${PYTHON_STATS}"
+wait
+echo "All background processes completed."
+exit 0
