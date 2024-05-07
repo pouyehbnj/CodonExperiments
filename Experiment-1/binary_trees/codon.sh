@@ -15,7 +15,10 @@ export PYTHON="${EXE_PYTHON:-python3}"
 export CSV_FILE="${BENCH_DIR}/codon_benchmarks.csv"
 
 # Prepare CSV file with header
-echo "run_number,execution_method,execution_time,compilation_time,SIZE,cpu_usage,mem_usage,power_avg" > "${CSV_FILE}"
+# Check if the CSV file exists and write the header if it does not
+if [ ! -f "$CSV_FILE" ]; then
+    echo "run_number,execution_method,execution_time,SIZE,cpu_usage,mem_usage,power_avg" > "$CSV_FILE"
+fi
 
 # Helper function to log process stats
 log_process_stats() {
