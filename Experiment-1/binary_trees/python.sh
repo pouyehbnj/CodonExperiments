@@ -1,8 +1,8 @@
 #!/bin/bash
 # Ensure a size is passed to the script
-if [ "$#" -ne 1 ]; then
-    echo "Usage: $0 <SIZE>"
-    exit 1
+# Check if the CSV file exists and write the header if it does not
+if [ ! -f "$CSV_FILE" ]; then
+    echo "run_number,execution_method,execution_time,SIZE,cpu_usage,mem_usage,power_avg" > "$CSV_FILE"
 fi
 
 SIZE=$1
