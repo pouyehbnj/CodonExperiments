@@ -210,6 +210,7 @@ while [ "$current_runs" -lt "$total_required_runs" ]; do
         if cd "${SCRIPT_DIR}/$subject"; then
             chmod +x "${method}.sh"  # Ensure the script is executable
             ./${method}.sh $size
+            pid=$!
         else
             echo "Failed to change directory to ${SCRIPT_DIR}/$subject or execute script"
         fi
@@ -219,7 +220,10 @@ while [ "$current_runs" -lt "$total_required_runs" ]; do
         echo "This was run number" ${execution_counts[$key]} "out of $total_runs"
         # Increment the total number of method runs
         current_runs=$((current_runs + 1))
+        sleep 1 
+        kill -INT $pid
         sleep 3
+        echo "cleaned up the run"
     fi
 done
 
