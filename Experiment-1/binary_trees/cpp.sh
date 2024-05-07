@@ -130,4 +130,6 @@ echo "C++ execution time,stats: ${EXECUTION_TIME}s,$cpu_avg,$mem_avg,$power_avg"
 # Clean up
 rm "${BENCH_DIR}/binary_trees_cpp"
 
-
+wait
+echo "All background processes completed."
+exit 0
