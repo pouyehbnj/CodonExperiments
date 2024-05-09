@@ -14,7 +14,7 @@ def nsieve(n):
 
 # if __name__ == '__main__':
     
-n = int(sys.argv[1]) 
+n = int(sys.argv[1])
     # if len(sys.argv) > 1 else 4
 for i in range(0, 3):
     nsieve(10000 << (n-i))
