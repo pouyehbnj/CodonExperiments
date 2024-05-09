@@ -12,7 +12,9 @@ if [ "$#" -ne 1 ]; then
     echo "Usage: $0 <SIZE>"
     exit 1
 fi
-echo "run_number,execution_method,execution_time,compilation_time,SIZE,cpu_usage,mem_usage,power_avg" > "${CSV_FILE}"
+if [ ! -f "$CSV_FILE" ]; then
+    echo "run_number,execution_method,execution_time,SIZE,cpu_usage,mem_usage,power_avg" > "$CSV_FILE"
+fi
 
 # Helper function to log process stats for C++ program
 log_process_stats() {
