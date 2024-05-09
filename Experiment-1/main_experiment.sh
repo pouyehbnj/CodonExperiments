@@ -15,7 +15,7 @@ SCRIPT_DIR=$(cd $(dirname "$0") && pwd)
 # Define the array of subjects (directories) with an array of sizes for each subject
 declare -A subject_sizes
 # subject_sizes["binary_trees"]="18 19 20"
-subject_sizes["fannkuch"]="12 15 20"
+subject_sizes["fannkuch"]="11 12 15"
 # subject_sizes["fasta"]="250000 "
 # subject_sizes["float"]="10 20 30 40 50 60 70 80 90 100"
 # subject_sizes["mandelbrot"]="10 20 30 40 50 60 70 80 90 100"
@@ -58,7 +58,7 @@ total_combinations=0
 for subject in "${subjects[@]}"; do
     sizes=(${subject_sizes[$subject]})
     total_combinations=$((total_combinations + ${#methods[@]} * ${#sizes[@]}))
-    echo $total_combinations
+    # echo $total_combinations
 done
 total_required_runs=$((total_combinations * total_runs))
 current_runs=0
