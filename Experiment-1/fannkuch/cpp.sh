@@ -129,7 +129,7 @@ CPP_STATS=$(log_process_stats $CPP_PID)
 EXECUTION_TIME=$(echo "$(${PYTHON} -c "import time; print(time.time())") - $START_TIME" | bc)
 IFS=',' read cpu_usage mem_usage power_avg <<< "$CPP_STATS"
 echo "1,cpp,${EXECUTION_TIME},${COMP_TIME},${SIZE},${cpu_usage},${mem_usage},${power_avg}" >> "${CSV_FILE}"
-echo "C++ execution time,stats: ${EXECUTION_TIME}s, CPU: $cpu_usage, Mem: $mem_usage, Power: $power_avg"
+echo "C++ execution time: ${EXECUTION_TIME}s, CPU: $cpu_usage, Mem: $mem_usage, Power: $power_avg"
 
 # Clean up
 rm "${BENCH_DIR}/fannkuch_cpp"

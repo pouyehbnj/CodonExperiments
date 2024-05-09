@@ -62,10 +62,11 @@ START_TIME=$(${PYTHON} -c "import time; print(time.time())")
 CODON_PID=$!
 sleep 0.1
 CODON_STATS=$(log_process_stats $CODON_PID)
+IFS=',' read cpu_usage mem_usage power_avg <<< "$CODON_STATS"
 WAIT_TIME=$(${PYTHON} -c "import time; print(time.time())")
 CODON_TIME=$(echo "$WAIT_TIME - $START_TIME" | bc)
 echo "1,codon,${CODON_TIME},${COMP_TIME_CODON},${SIZE},${CODON_STATS}" >> "${CSV_FILE}"
-echo "Codon execution time,stats: ${CODON_TIME}s,${CODON_STATS}"
+echo "Codon execution time,stats: ${CODON_TIME}s,CPU: $cpu_usage, Mem: $mem_usage, Power: $power_avg"
 
 # Clean up
 rm "${BENCH_DIR}/binary_trees_codon"
