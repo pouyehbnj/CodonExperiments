@@ -51,13 +51,13 @@ log_process_stats() {
 
 echo "Compile Codon Python program"
 COMPILE_START_TIME=$(${PYTHON} -c "import time; print(time.time())")
-${CODON} build --release "${BENCH_DIR}/binary_trees_codon.py"
+${CODON} build --release "${BENCH_DIR}/fannkuch.py"
 COMP_TIME_CODON=$(echo "$(${PYTHON} -c "import time; print(time.time())") - $COMPILE_START_TIME" | bc)
 echo "Codon compile time: ${COMP_TIME_CODON}s"
 
 echo "Run Codon Python program and measure time and resources"
 START_TIME=$(${PYTHON} -c "import time; print(time.time())")
-"${BENCH_DIR}/binary_trees_codon" ${SIZE} 1> /dev/null &
+"${BENCH_DIR}/fannkuch" ${SIZE} 1> /dev/null &
 CODON_PID=$!
 sleep 0.1
 CODON_STATS=$(log_process_stats $CODON_PID)
@@ -67,7 +67,7 @@ echo "1,codon,${CODON_TIME},${COMP_TIME_CODON},${SIZE},${CODON_STATS}" >> "${CSV
 echo "Codon execution time,stats: ${CODON_TIME}s,${CODON_STATS}"
 
 # Clean up
-rm "${BENCH_DIR}/binary_trees_codon"
+rm "${BENCH_DIR}/fannkuch"
 wait
 echo "All background processes completed and cleaned up the run."
 exit 0
