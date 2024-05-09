@@ -61,7 +61,7 @@ IFS=',' read cpu_usage mem_usage power_avg <<< "$PYTHON_STATS"
 WAIT_TIME=$(${PYTHON} -c "import time; print(time.time())")
 PYTHON_TIME=$(echo "$WAIT_TIME - $START_TIME" | bc)
 echo "1,python,${PYTHON_TIME},${SIZE},${PYTHON_STATS}" >> "${CSV_FILE}"
-echo "C++ execution time: ${PYTHON_TIME}s, CPU: $cpu_usage, Mem: $mem_usage, Power: $power_avg"
+echo "Codon execution time: ${PYTHON_TIME}s, CPU: $cpu_usage, Mem: $mem_usage, Power: $power_avg"
 wait
 echo "All background processes completed and cleaned up the run."
 exit 0

@@ -85,8 +85,10 @@ export CPP="${EXE_CPP:-clang++}"
 export PYTHON="${EXE_PYTHON:-python3}"
 export CSV_FILE="${BENCH_DIR}/cpp_benchmarks.csv"
 
-echo "run_number,execution_method,execution_time,compilation_time,SIZE,cpu_usage,mem_usage,power_avg" > "${CSV_FILE}"
-
+# Check if the CSV file exists and write the header if it does not
+if [ ! -f "$CSV_FILE" ]; then
+    echo "run_number,execution_method,execution_time,SIZE,cpu_usage,mem_usage,power_avg" > "$CSV_FILE"
+fi
 # Helper function to log process stats for C++ program
 log_process_stats() {
     local pid=$1
