@@ -66,7 +66,7 @@ log_process_stats() {
 
 echo "Run Python program and measure time and resources"
 START_TIME=$(${PYTHON} -c "import time; print(time.time())")
-${PYTHON} "${BENCH_DIR}/mandelbrot.py" ${SIZE} 1> /dev/null &
+${PYTHON} "${BENCH_DIR}/nbody.py" ${SIZE} 1> /dev/null &
 PYTHON_PID=$!
 sleep 0.1
 PYTHON_STATS=$(log_process_stats $PYTHON_PID)
