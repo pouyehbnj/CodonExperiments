@@ -43,13 +43,13 @@ log_process_stats() {
 # Compile C++ program with O3
 echo "Compile C++ program with O3"
 COMPILE_START_TIME=$(${PYTHON} -c "import time; print(time.time())")
-${CPP} -std=c++17 -O3 "${BENCH_DIR}/mandelbrot.cpp" -o "${BENCH_DIR}/mandelbrot_cpp"
+${CPP} -std=c++17 -O3 "${BENCH_DIR}/nbody.cpp" -o "${BENCH_DIR}/nbody_cpp"
 COMP_TIME=$(echo "$(${PYTHON} -c "import time; print(time.time())") - $COMPILE_START_TIME" | bc)
 echo "C++ compilation time: ${COMP_TIME}s"
 
 # Run C++ program and measure time and resources
 START_TIME=$(${PYTHON} -c "import time; print(time.time())")
-"${BENCH_DIR}/mandelbrot_cpp" ${SIZE} 1> /dev/null &
+"${BENCH_DIR}/nbody_cpp" ${SIZE} 1> /dev/null &
 CPP_PID=$!
 sleep 0.1
 CPP_STATS=$(log_process_stats $CPP_PID)
@@ -59,7 +59,7 @@ echo "1,cpp,${EXECUTION_TIME},${COMP_TIME},${SIZE},${cpu_usage},${mem_usage},${p
 echo "C++ execution time: ${EXECUTION_TIME}s, CPU: $cpu_usage, Mem: $mem_usage, Power: $power_avg"
 
 # Clean up
-rm "${BENCH_DIR}/mandelbrot_cpp"
+rm "${BENCH_DIR}/nbody_cpp"
 wait
 echo "All background processes completed and cleaned up the run."
 exit 0
