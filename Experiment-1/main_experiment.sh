@@ -58,6 +58,7 @@ total_combinations=0
 for subject in "${subjects[@]}"; do
     sizes=(${subject_sizes[$subject]})
     total_combinations=$((total_combinations + ${#methods[@]} * ${#sizes[@]}))
+    echo $total_combinations
 done
 total_required_runs=$((total_combinations * total_runs))
 current_runs=0
