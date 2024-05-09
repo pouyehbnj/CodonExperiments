@@ -18,7 +18,7 @@ declare -A subject_sizes
 # subject_sizes["fannkuch"]="11"
 # subject_sizes["fasta"]="20000000 30000000 10000000"
 # subject_sizes["float"]="40000000 30000000 20000000"
-subject_sizes["mandelbrot"]="600 700 500"
+subject_sizes["mandelbrot"]="900 700 800"
 # subject_sizes["nbody"]="10 20 30 40 50 60 70 80 90 100"
 # subject_sizes["nsieve"]="10 20 30 40 50 60 70 80 90 100"
 # subject_sizes["primes"]="10 20 30 40 50 60 70 80 90 100"

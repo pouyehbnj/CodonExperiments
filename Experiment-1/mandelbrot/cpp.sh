@@ -27,7 +27,7 @@ log_process_stats() {
     echo "CPU(%),MEM(%)" > "$stats_file"
     while kill -0 $pid 2> /dev/null; do
         ps -p $pid -o %cpu,%mem --no-headers >> "$stats_file"
-        sleep 0.1
+        sleep 0.01
     done
 
     sudo kill -INT $powerjoular_pid
