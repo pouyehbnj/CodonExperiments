@@ -16,8 +16,8 @@ SCRIPT_DIR=$(cd $(dirname "$0") && pwd)
 declare -A subject_sizes
 # subject_sizes["binary_trees"]="18 19 20"
 # subject_sizes["fannkuch"]="11"
-subject_sizes["fasta"]="20000000 30000000 10000000"
-# subject_sizes["float"]="10 20 30 40 50 60 70 80 90 100"
+# subject_sizes["fasta"]="20000000 30000000 10000000"
+subject_sizes["float"]="20000000 30000000 10000000"
 # subject_sizes["mandelbrot"]="10 20 30 40 50 60 70 80 90 100"
 # subject_sizes["nbody"]="10 20 30 40 50 60 70 80 90 100"
 # subject_sizes["nsieve"]="10 20 30 40 50 60 70 80 90 100"
