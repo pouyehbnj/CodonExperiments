@@ -1,9 +1,6 @@
 #!/bin/bash
 # Ensure a size is passed to the script
 # Check if the CSV file exists and write the header if it does not
-if [ ! -f "$CSV_FILE" ]; then
-    echo "run_number,execution_method,execution_time,SIZE,cpu_usage,mem_usage,power_avg" > "$CSV_FILE"
-fi
 
 SIZE=$1
 
@@ -12,6 +9,9 @@ SCRIPT_PATH=$(readlink -f "$0")
 BENCH_DIR=$(dirname "$SCRIPT_PATH")
 export PYTHON="${EXE_PYTHON:-python3}"
 export CSV_FILE="${BENCH_DIR}/python_benchmarks.csv"
+if [ ! -f "$CSV_FILE" ]; then
+    echo "run_number,execution_method,execution_time,SIZE,cpu_usage,mem_usage,power_avg" > "$CSV_FILE"
+fi
 
 # Prepare CSV file with header
 echo "run_number,execution_method,execution_time,SIZE,cpu_usage,mem_usage,power_avg" > "${CSV_FILE}"
