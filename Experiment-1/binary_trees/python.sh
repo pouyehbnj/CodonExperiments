@@ -70,10 +70,11 @@ ${PYTHON} "${BENCH_DIR}/binary_trees.py" ${SIZE} 1> /dev/null &
 PYTHON_PID=$!
 sleep 0.1
 PYTHON_STATS=$(log_process_stats $PYTHON_PID)
+IFS=',' read cpu_usage mem_usage power_avg <<< "$PYTHON_STATS"
 WAIT_TIME=$(${PYTHON} -c "import time; print(time.time())")
 PYTHON_TIME=$(echo "$WAIT_TIME - $START_TIME" | bc)
 echo "1,python,${PYTHON_TIME},${SIZE},${PYTHON_STATS}" >> "${CSV_FILE}"
-echo "Python execution time,stats: ${PYTHON_TIME}s,${PYTHON_STATS}"
+echo "C++ execution time: ${PYTHON_TIME}s, CPU: $cpu_usage, Mem: $mem_usage, Power: $power_avg"
 wait
 echo "All background processes completed and cleaned up the run."
 exit 0
