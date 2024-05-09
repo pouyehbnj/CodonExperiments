@@ -87,7 +87,7 @@ while [ "$current_runs" -lt "$total_required_runs" ]; do
         # Run the method with the size parameter
         echo "Running $method in $subject with size $size..."
         if cd "${SCRIPT_DIR}/$subject"; then
-            chmod +x "${method}.sh"  # Ensure the script is executable
+            chmod +x "./${method}.sh"  # Ensure the script is executable
             ./${method}.sh $size
             pid=$!
         else
