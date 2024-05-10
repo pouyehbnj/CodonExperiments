@@ -15,14 +15,14 @@ SCRIPT_DIR=$(cd $(dirname "$0") && pwd)
 # Define the array of subjects (directories) with an array of sizes for each subject
 declare -A subject_sizes
 # subject_sizes["binary_trees"]="18 19 20"
-# subject_sizes["fannkuch"]="11"
+# subject_sizes["fannkuch"]="11" #to be decideddd!
 # subject_sizes["fasta"]="20000000 30000000 10000000"
 # subject_sizes["float"]="40000000 30000000 20000000"
 # subject_sizes["mandelbrot"]="900 700 800"
 # subject_sizes["nbody"]="4000000 5000000 4500000"
 # subject_sizes["nsieve"]="13 14 15"
-subject_sizes["primes"]="2006000 2008000 2007000"
-# subject_sizes["reverse_complement"]="10 20 30 40 50 60 70 80 90 100"
+# subject_sizes["primes"]="2006000 2008000 2007000" #to be decideddd!
+subject_sizes["reverse_complement"]="650000 550000 450000"
 # subject_sizes["set_partition"]="10 20 30 40 50 60 70 80 90 100"
 # subject_sizes["spectral_norm"]="10 20 30 40 50 60 70 80 90 100"
 # subject_sizes["taq"]="10 20 30 40 50 60 70 80 90 100"
