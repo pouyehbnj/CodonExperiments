@@ -33,7 +33,7 @@ echo "All subjects: ${subjects[@]}"
 
 # Define the array of methods
 # methods=("cpp" "python" "codon")
-methods=("cpp" "python")
+methods=("cpp")
 # Associative array to track execution counts
 declare -A execution_counts
 
