@@ -8,6 +8,7 @@ SIZE=$1
 SCRIPT_PATH=$(readlink -f "$0")
 BENCH_DIR=$(dirname "$SCRIPT_PATH")
 export PYTHON="${EXE_PYTHON:-python3}"
+export CPP="${EXE_CPP:-clang++}"
 export CSV_FILE="${BENCH_DIR}/python_benchmarks.csv"
 # Prepare CSV file with header
 # Check if the CSV file exists and write the header if it does not
