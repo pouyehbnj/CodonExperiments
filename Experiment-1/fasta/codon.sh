@@ -17,9 +17,8 @@ export CSV_FILE="${BENCH_DIR}/codon_benchmarks.csv"
 # Prepare CSV file with header
 # Check if the CSV file exists and write the header if it does not
 if [ ! -f "$CSV_FILE" ]; then
-    echo "run_number,execution_method,execution_time,SIZE,cpu_usage,mem_usage,power_avg" > "$CSV_FILE"
+    echo "execution_method,SIZE,execution_time,compile_time,cpu_usage,mem_usage,power_avg" > "$CSV_FILE"
 fi
-
 # Helper function to log process stats
 log_process_stats() {
     local pid=$1
@@ -65,7 +64,7 @@ CODON_STATS=$(log_process_stats $CODON_PID)
 IFS=',' read cpu_usage mem_usage power_avg <<< "$CODON_STATS"
 WAIT_TIME=$(${PYTHON} -c "import time; print(time.time())")
 CODON_TIME=$(echo "$WAIT_TIME - $START_TIME" | bc)
-echo "1,codon,${CODON_TIME},${COMP_TIME_CODON},${SIZE},${CODON_STATS}" >> "${CSV_FILE}"
+echo "codon,${SIZE},${CODON_TIME},${COMP_TIME_CODON},${CODON_STATS}" >> "${CSV_FILE}"
 echo "Codon execution time,stats: ${CODON_TIME}s,CPU: $cpu_usage, Mem: $mem_usage, Power: $power_avg"
 
 # Clean up
