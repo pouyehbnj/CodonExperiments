@@ -10,11 +10,10 @@ BENCH_DIR=$(dirname "$SCRIPT_PATH")
 export PYTHON="${EXE_PYTHON:-python3}"
 export CSV_FILE="${BENCH_DIR}/python_benchmarks.csv"
 if [ ! -f "$CSV_FILE" ]; then
-    echo "run_number,execution_method,execution_time,SIZE,cpu_usage,mem_usage,power_avg" > "$CSV_FILE"
+    echo "execution_method,execution_time,SIZE,cpu_usage,mem_usage,power_avg" > "$CSV_FILE"
 fi
 
-# Prepare CSV file with header
-echo "run_number,execution_method,execution_time,SIZE,cpu_usage,mem_usage,power_avg" > "${CSV_FILE}"
+
 
 # Helper function to log process stats
 log_process_stats() {
@@ -66,7 +65,7 @@ log_process_stats() {
 
 echo "Run Python program and measure time and resources"
 START_TIME=$(${PYTHON} -c "import time; print(time.time())")
-${PYTHON} "${BENCH_DIR}/nsieve.py" ${SIZE} 1> /dev/null &
+${PYTHON} "${BENCH_DIR}/primes.py" ${SIZE} 1> /dev/null &
 PYTHON_PID=$!
 sleep 0.1
 PYTHON_STATS=$(log_process_stats $PYTHON_PID)
