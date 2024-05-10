@@ -24,7 +24,7 @@ declare -A subject_sizes
 # subject_sizes["primes"]="2006000 2008000 2007000" #to be decideddd!
 # subject_sizes["reverse_complement"]="35000000" #to be decideddd!
 # subject_sizes["set_partition"]="16 14 15"
-subject_sizes["spectral_norm"]="80 90 100"
+subject_sizes["spectral_norm"]="400 300 200"
 # subject_sizes["taq"]="10 20 30 40 50 60 70 80 90 100"
 
 # Create an array from the keys of the associative array for random selection
