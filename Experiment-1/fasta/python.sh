@@ -9,12 +9,14 @@ SCRIPT_PATH=$(readlink -f "$0")
 BENCH_DIR=$(dirname "$SCRIPT_PATH")
 export PYTHON="${EXE_PYTHON:-python3}"
 export CSV_FILE="${BENCH_DIR}/python_benchmarks.csv"
-if [ ! -f "$CSV_FILE" ]; then
-    echo "run_number,execution_method,execution_time,SIZE,cpu_usage,mem_usage,power_avg" > "$CSV_FILE"
-fi
+
 
 # Prepare CSV file with header
-echo "run_number,execution_method,execution_time,SIZE,cpu_usage,mem_usage,power_avg" > "${CSV_FILE}"
+# Check if the CSV file exists and write the header if it does not
+if [ ! -f "$CSV_FILE" ]; then
+    echo "execution_method,SIZE,execution_time,compile_time,cpu_usage,mem_usage,power_avg" > "$CSV_FILE"
+fi
+
 
 # Helper function to log process stats
 log_process_stats() {
@@ -73,7 +75,7 @@ PYTHON_STATS=$(log_process_stats $PYTHON_PID)
 IFS=',' read cpu_usage mem_usage power_avg <<< "$PYTHON_STATS"
 WAIT_TIME=$(${PYTHON} -c "import time; print(time.time())")
 PYTHON_TIME=$(echo "$WAIT_TIME - $START_TIME" | bc)
-echo "1,python,${PYTHON_TIME},${SIZE},${PYTHON_STATS}" >> "${CSV_FILE}"
+echo "python,${SIZE},${PYTHON_TIME},0,${PYTHON_STATS}" >> "${CSV_FILE}"
 echo "Python execution time: ${PYTHON_TIME}s, CPU: $cpu_usage, Mem: $mem_usage, Power: $power_avg"
 wait
 echo "All background processes completed and cleaned up the run."
