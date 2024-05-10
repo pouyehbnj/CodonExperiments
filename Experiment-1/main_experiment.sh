@@ -21,7 +21,7 @@ declare -A subject_sizes
 # subject_sizes["mandelbrot"]="900 700 800"
 # subject_sizes["nbody"]="4000000 5000000 4500000"
 # subject_sizes["nsieve"]="13 14 15"
-subject_sizes["primes"]="100000 200000 300000"
+subject_sizes["primes"]="1000000 2000000 3000000"
 # subject_sizes["reverse_complement"]="10 20 30 40 50 60 70 80 90 100"
 # subject_sizes["set_partition"]="10 20 30 40 50 60 70 80 90 100"
 # subject_sizes["spectral_norm"]="10 20 30 40 50 60 70 80 90 100"
