@@ -20,7 +20,6 @@ if [ ! -f "$CSV_FILE" ]; then
     echo "execution_method,SIZE,execution_time,compile_time,cpu_usage,mem_usage,power_avg" > "$CSV_FILE"
 fi
 
-
 # Helper function to log process stats
 log_process_stats() {
     local pid=$1
@@ -51,15 +50,21 @@ log_process_stats() {
     echo "$cpu_avg,$mem_avg,$power_avg" 
 }
 
+
+
+echo "Creating Input with size ${SIZE}."
+"${CPP}" -std=c++17 -O3 "${BENCH_DIR}/fasta.cpp" -o "${BENCH_DIR}/fasta_cpp"
+"${BENCH_DIR}/fasta_cpp" "${SIZE}"
+
 echo "Compile Codon Python program"
 COMPILE_START_TIME=$(${PYTHON} -c "import time; print(time.time())")
-${CODON} build --release "${BENCH_DIR}/nsieve.py"
+${CODON} build --release "${BENCH_DIR}/reverse_complement.py"
 COMP_TIME_CODON=$(echo "$(${PYTHON} -c "import time; print(time.time())") - $COMPILE_START_TIME" | bc)
 echo "Codon compile time: ${COMP_TIME_CODON}s"
 
 echo "Run Codon Python program and measure time and resources"
 START_TIME=$(${PYTHON} -c "import time; print(time.time())")
-"${BENCH_DIR}/nsieve" ${SIZE} 1> /dev/null &
+"${BENCH_DIR}/reverse_complement" 1> /dev/null &
 CODON_PID=$!
 sleep 0.1
 CODON_STATS=$(log_process_stats $CODON_PID)
@@ -70,7 +75,7 @@ echo "codon,${SIZE},${CODON_TIME},${COMP_TIME_CODON},${CODON_STATS}" >> "${CSV_F
 echo "Codon execution time,stats: ${CODON_TIME}s,CPU: $cpu_usage, Mem: $mem_usage, Power: $power_avg"
 
 # Clean up
-rm "${BENCH_DIR}/nsieve"
+rm "${BENCH_DIR}/reverse_complement"
 wait
 echo "All background processes completed and cleaned up the run."
 exit 0

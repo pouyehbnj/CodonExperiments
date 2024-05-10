@@ -14,8 +14,7 @@ export CSV_FILE="${BENCH_DIR}/python_benchmarks.csv"
 if [ ! -f "$CSV_FILE" ]; then
     echo "execution_method,SIZE,execution_time,compile_time,cpu_usage,mem_usage,power_avg" > "$CSV_FILE"
 fi
-# Prepare CSV file with header
-# echo "run_number,execution_method,execution_time,SIZE,cpu_usage,mem_usage,power_avg" > "${CSV_FILE}"
+
 
 # Helper function to log process stats
 log_process_stats() {
@@ -65,9 +64,14 @@ log_process_stats() {
     echo $cpu_avg,$mem_avg,$power_avg
 }
 
+
+echo "Creating Input with size ${SIZE}."
+"${CPP}" -std=c++17 -O3 "${BENCH_DIR}/fasta.cpp" -o "${BENCH_DIR}/fasta_cpp"
+"${BENCH_DIR}/fasta_cpp" "${SIZE}"
+
 echo "Run Python program and measure time and resources"
 START_TIME=$(${PYTHON} -c "import time; print(time.time())")
-${PYTHON} "${BENCH_DIR}/nsieve.py" ${SIZE} 1> /dev/null &
+${PYTHON} "${BENCH_DIR}/reverse_complement.py" 1> /dev/null &
 PYTHON_PID=$!
 sleep 0.1
 PYTHON_STATS=$(log_process_stats $PYTHON_PID)

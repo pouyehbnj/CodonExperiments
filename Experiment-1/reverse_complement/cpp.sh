@@ -42,16 +42,20 @@ log_process_stats() {
     echo "$cpu_avg,$mem_avg,$power_avg"
 }
 
+
+echo "Creating Input with size ${SIZE}."
+"${CPP}" -std=c++17 -O3 "${BENCH_DIR}/fasta.cpp" -o "${BENCH_DIR}/fasta_cpp"
+"${BENCH_DIR}/fasta_cpp" "${SIZE}"
 # Compile C++ program with O3
 echo "Compile C++ program with O3"
 COMPILE_START_TIME=$(${PYTHON} -c "import time; print(time.time())")
-${CPP} -std=c++17 -O3 "${BENCH_DIR}/nsieve.cpp" -o "${BENCH_DIR}/nsieve_cpp"
+${CPP} -std=c++17 -O3 "${BENCH_DIR}/reverse_complement.cpp" -o "${BENCH_DIR}/reverse_complement_cpp"
 COMP_TIME=$(echo "$(${PYTHON} -c "import time; print(time.time())") - $COMPILE_START_TIME" | bc)
 echo "C++ compilation time: ${COMP_TIME}s"
 
 # Run C++ program and measure time and resources
 START_TIME=$(${PYTHON} -c "import time; print(time.time())")
-"${BENCH_DIR}/nsieve_cpp" ${SIZE} 1> /dev/null &
+"${BENCH_DIR}/reverse_complement_cpp" 1> /dev/null &
 CPP_PID=$!
 sleep 0.1
 CPP_STATS=$(log_process_stats $CPP_PID)
@@ -61,7 +65,7 @@ echo "cpp,${SIZE},${EXECUTION_TIME},${COMP_TIME},${cpu_usage},${mem_usage},${pow
 echo "C++ execution time: ${EXECUTION_TIME}s, CPU: $cpu_usage, Mem: $mem_usage, Power: $power_avg"
 
 # Clean up
-rm "${BENCH_DIR}/nsieve_cpp"
+rm "${BENCH_DIR}/reverse_complement_cpp"
 wait
 echo "All background processes completed and cleaned up the run."
 exit 0
