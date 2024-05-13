@@ -21,7 +21,7 @@ declare -A subject_sizes
 # subject_sizes["mandelbrot"]="900 700 800"
 # subject_sizes["nbody"]="4000000 5000000 4500000"
 # subject_sizes["nsieve"]="13 14 15"
-# subject_sizes["primes"]="2006000 2008000 2007000" #to be decideddd!
+# subject_sizes["primes"]="6500000 6400000 6300000" #to be decideddd!
 # subject_sizes["reverse_complement"]="35000000" #to be decideddd!
 # subject_sizes["set_partition"]="16 14 15"
 # subject_sizes["spectral_norm"]="400 300 500"
@@ -99,6 +99,8 @@ while [ "$current_runs" -lt "$total_required_runs" ]; do
         echo "This was run number" ${execution_counts[$key]} "out of $total_runs"
         # Increment the total number of method runs
         current_runs=$((current_runs + 1))
+        remaining_runs=$((${total_required_runs}-${current_runs}))
+        echo "remaining runs in total:${remaining_runs}"
         # sleep 1 
         # kill -INT $pid
         sleep 5

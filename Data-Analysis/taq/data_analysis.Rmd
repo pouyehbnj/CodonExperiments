@@ -1,0 +1,53 @@
+options(repos = c(CRAN = "https://cran.rstudio.com/"))
+if (!require("tidyverse")) install.packages("tidyverse")
+library(tidyverse)
+
+# Read and combine data
+codon_data <- read_csv("./codon_benchmarks.csv", show_col_types = FALSE)
+python_data <- read_csv("./python_benchmarks.csv", show_col_types = FALSE)
+cpp_data <- read_csv("./cpp_benchmarks.csv", show_col_types = FALSE)
+combined_data <- bind_rows(codon_data, python_data, cpp_data)
+
+# Prepare data for visualization
+groups_long <- combined_data %>%
+  gather(key = "metric", value = "response", execution_time, compile_time, cpu_usage, mem_usage, power_avg)
+# filter(execution_method == "codon")  # Filter for one execution method for focus
+
+# Check the data
+# print(n=1000,groups_long)
+
+
+# Create a plot to visualize and compare all execution methods# Assuming 'groups_long' is your prepared data frame
+plots <- groups_long %>%
+  ggplot(aes(x = as.factor(SIZE), y = response, color = execution_method, fill = execution_method)) +
+  geom_jitter(position = position_dodge(width = 0.8), alpha = 0.6, size = 2) +
+  geom_boxplot(alpha = 0.4, outlier.shape = NA, position = position_dodge(width = 0.8)) +
+  facet_grid(metric ~ execution_method, scales = "free_y") +
+  labs(title = "Performance Metrics by Execution Method and Size",
+       x = "Size of Dataframe",
+       y = "Metric Value") +
+  theme_minimal() +  # Clean theme with minimal distractions
+  theme(
+    plot.title = element_text(face = "bold", size = 14, color = "black"),
+    axis.title = element_text(color = "black"),  # X and Y axis titles
+    axis.text = element_text(color = "black"),  # X and Y axis text
+    axis.ticks = element_line(color = "black"),  # Ticks on axes
+    legend.title = element_text(color = "black"),  # Legend title
+    legend.text = element_text(color = "black"),  # Legend text
+    strip.text = element_text(color = "black", face = "bold"),  # Facet labels
+    strip.background = element_rect(fill = "lightgray"),  # Light gray for contrast on facet labels
+    panel.background = element_rect(fill = "white"),  # White background for panels
+    panel.grid.major = element_line(color = "gray"),  # Subtle gray grid lines
+    panel.grid.minor = element_line(color = "lightgray"),
+    legend.position = "bottom",
+    legend.background = element_rect(fill = "white")  # White background for legend
+  )
+
+# Display the plot
+print(plots)
+
+# Save the plot
+ggsave("metrics_visualization_all_methods_white.png", plots, width = 16, height = 10)
+
+
+
