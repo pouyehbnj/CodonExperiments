@@ -25,7 +25,7 @@ declare -A subject_sizes
 # subject_sizes["reverse_complement"]="35000000" #to be decideddd!
 # subject_sizes["set_partition"]="16 14 15"
 # subject_sizes["spectral_norm"]="400 300 500"
-subject_sizes["taq"]="100 1000 10000"
+subject_sizes["taq"]="1000 10000 100000"
 
 # Create an array from the keys of the associative array for random selection
 subjects=(${!subject_sizes[@]})
@@ -51,7 +51,7 @@ done
 echo "Execution counts initialized."
 
 # Total runs for each specific size
-total_runs=1
+total_runs=10
 
 # Calculate total combinations and required runs
 total_combinations=0
