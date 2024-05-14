@@ -5,6 +5,9 @@ library(ggbeeswarm)
 library(ggplot2)
 library(tidyr)
 library(dplyr)
+library(scales)
+library(RColorBrewer)
+library(viridis)
 # Read and combine data
 codon_data <- read_csv("./codon_benchmarks.csv", show_col_types = FALSE)
 python_data <- read_csv("./python_benchmarks.csv", show_col_types = FALSE)
@@ -48,6 +51,7 @@ plots <- groups_long %>%
   geom_jitter(position = position_dodge(width = 0.8), alpha = 0.6, size = 2) +
   geom_boxplot(alpha = 0.4, outlier.shape = NA, position = position_dodge(width = 0.8)) +
   facet_grid(metric ~ execution_method, scales = "free_y") +
+  scale_y_continuous(trans = 'pseudo_log', labels = scales::comma) +
   labs(title = "Performance Metrics by Execution Method and Size",
        x = "Size of Dataframe",
        y = "Metric Value")
@@ -59,8 +63,13 @@ dotplot <- groups_long %>%
   geom_quasirandom(shape = 21, color = "black", alpha = 0.8, size = 3) +
   scale_fill_brewer(palette = "Dark2") +
   facet_wrap(~ metric, scales = "free_y", ncol = 3) +
-  labs(x = "Group", y = "Response", caption = "Response distribution across groups") +
-  ggtitle("Dot Plot of Response by Group")
+  labs(x = "", y = "Response", caption = "Response distribution across groups") +
+  ggtitle("Dot Plot of Response by Group")+
+   theme(
+    axis.text.x = element_text(color = "white"),  # Change text color to white to effectively hide it
+    axis.ticks.x = element_blank(),  # Hide x-axis ticks
+    axis.title.x = element_blank()  # Ensure x-axis title is also not shown
+  )
 
 # Save the plots (if saving is needed)
 ggsave("metrics_visualization_all_methods.png", plots, width = 16, height = 10,units = "in", bg = "white")
@@ -70,19 +79,53 @@ ggsave("dotplot_all_methods.png", dotplot, width = 16, height = 10,units = "in",
 print(plots)
 print(dotplot)
 
+# Calculate Energy # Adjust combined_data to include energy in Joules
+combined_data <- combined_data %>%
+  mutate(energy_joules = power_avg * execution_time,
+  SIZE = factor(SIZE) 
+  )  # Energy in Joules
+
+# Plotting using Joules with colors automatically assigned to each SIZE
+energy_plots <- ggplot(combined_data, aes(x = as.factor(SIZE), y = energy_joules, color = SIZE, fill = SIZE)) +
+  geom_jitter(position = position_dodge(width = 0.75), alpha = 0.6, size = 2) +  # Using jitter for overlap
+  geom_boxplot(alpha = 0.4, outlier.shape = NA, position = position_dodge(width = 0.75)) +  # Boxplot for distribution
+  facet_wrap(~ execution_method, scales = "free_y") +  # Separate plots for each execution method
+  scale_color_viridis_d() +  # Use viridis discrete colors for distinction
+  scale_fill_viridis_d() + 
+  labs(
+    title = "Individual Energy Consumption by Execution Method and Size",
+    x = "Size of Dataframe",
+    y = "Energy (Joules)",
+    caption = "Data points are colored by data size."
+  ) +
+  theme_minimal() +  # Minimal theme for clean presentation
+  theme(
+    plot.background = element_rect(fill = "white"),
+    panel.background = element_rect(fill = "white"),
+    strip.background = element_rect(fill = "white", color = "black"),
+    legend.position = "right",
+    legend.background = element_rect(fill = "white"),
+    legend.title = element_text(size = 12, face = "bold"),
+    legend.text = element_text(size = 10)
+  )
+
+# Display the plot to see automatic color assignment
+print(energy_plots)
+
+# Optionally save the plot
+ggsave("energy_consumption_by_size_and_method.png", energy_plots, width = 16, height = 10, units = "in", bg = "white")
 
 
 # Ensure data types are correct
 combined_data <- combined_data %>%
   mutate(execution_time = as.numeric(execution_time),  # Convert execution time to numeric if not already
          SIZE = as.factor(SIZE))  # Ensure SIZE is treated as a factor
-
-# Plotting power consumption over time, separated by execution method and colored by SIZE
+# Creating the power consumption plot without the linear regression line
 power_plot <- combined_data %>%
   ggplot(aes(x = execution_time, y = power_avg, color = SIZE)) +  # Map SIZE to color
-  geom_point() +  # Scatter plot points
-  geom_smooth(method = "lm", se = FALSE) +  # Linear regression line without confidence interval
-  facet_wrap(~ execution_method, scales = "free_y") +  # Separate plots for each execution method
+  geom_point() +  # Scatter plot points only
+  facet_wrap(~ execution_method, scales = "free_x") + 
+  scale_x_continuous(trans = 'pseudo_log', labels = scales::comma) + # Separate plots for each execution method
   labs(
     title = "Power Consumption vs. Execution Time",
     x = "Execution Time (s)",
@@ -98,23 +141,14 @@ power_plot <- combined_data %>%
     legend.text = element_text(size = 10)
   )
 
-# Display the plot
+# Print the plot to see the modifications
 print(power_plot)
 
-# Save the plot with specified dimensions and background
-ggsave("power_plot_by_execution_method.png", power_plot, width = 16, height = 10, units = "in", bg = "white")
+# Optionally save the plot if needed
+ggsave("power_plot.png", power_plot, width = 16, height = 10, units = "in", bg = "white")
 
 
-# Energy Consumption
-# combined_data <- combined_data %>%
-#  mutate(energy_joules = power_avg * execution_time,  # Energy in Joules
-#         energy_kwh = (power_avg * execution_time) / 3600 / 1000)  # Energy in kWh
 
-# Summarize total energy per group
-# energy_summary <- combined_data %>%
-#  group_by(execution_method) %>%
-#  summarise(total_energy_joules = sum(energy_joules),
-#            total_energy_kwh = sum(energy_kwh))
 
-# Print the summary
-# print(energy_summary)
+
+
