@@ -25,7 +25,7 @@ declare -A subject_sizes
 # subject_sizes["reverse_complement"]="35000000" #to be decideddd!
 # subject_sizes["set_partition"]="16 14 15"
 # subject_sizes["spectral_norm"]="400 300 500"
-subject_sizes["taq"]="10 11 12"
+subject_sizes["taq"]="10 20 30"
 
 # Create an array from the keys of the associative array for random selection
 subjects=(${!subject_sizes[@]})
