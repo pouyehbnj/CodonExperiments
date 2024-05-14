@@ -2,6 +2,9 @@ options(repos = c(CRAN = "https://cran.rstudio.com/"))
 if (!require("tidyverse")) install.packages("tidyverse")
 library(tidyverse)
 library(ggbeeswarm)
+library(ggplot2)
+library(tidyr)
+library(dplyr)
 # Read and combine data
 codon_data <- read_csv("./codon_benchmarks.csv", show_col_types = FALSE)
 python_data <- read_csv("./python_benchmarks.csv", show_col_types = FALSE)
@@ -21,7 +24,7 @@ groups_long <- combined_data %>%
 # Set a default theme for all plots
 theme_set(
   theme_minimal(base_size = 14) + 
-  theme(
+   theme(
     plot.title = element_text(face = "bold", color = "black"),
     axis.title = element_text(color = "black"),
     axis.text = element_text(color = "black"),
@@ -30,11 +33,11 @@ theme_set(
     legend.text = element_text(color = "black"),
     strip.text = element_text(color = "black", face = "bold"),
     strip.background = element_rect(fill = "white"),
-    panel.background = element_rect(fill = "white"),
+    plot.background = element_rect(fill = "white"), # Ensure plot background is white
+    panel.background = element_rect(fill = "white"), # Ensure panel background is white
     panel.grid.major = element_line(color = "gray"),
     panel.grid.minor = element_line(color = "lightgray"),
-    legend.position = "bottom",
-    legend.background = element_rect(fill = "white")
+    legend.position = "bottom"
   )
 )
 
@@ -50,6 +53,7 @@ plots <- groups_long %>%
        y = "Metric Value")
 
 # Dot plot
+
 dotplot <- groups_long %>%
   ggplot(aes(x = group, y = response, fill = group)) +
   geom_quasirandom(shape = 21, color = "black", alpha = 0.8, size = 3) +
@@ -59,9 +63,58 @@ dotplot <- groups_long %>%
   ggtitle("Dot Plot of Response by Group")
 
 # Save the plots (if saving is needed)
-ggsave("metrics_visualization_all_methods.png", plots, width = 16, height = 10)
-ggsave("dotplot_all_methods.png", dotplot, width = 16, height = 10)
+ggsave("metrics_visualization_all_methods.png", plots, width = 16, height = 10,units = "in", bg = "white")
+ggsave("dotplot_all_methods.png", dotplot, width = 16, height = 10,units = "in", bg = "white")
 
 # Print the plots to verify the output
 print(plots)
 print(dotplot)
+
+
+
+# Ensure data types are correct
+combined_data <- combined_data %>%
+  mutate(execution_time = as.numeric(execution_time),  # Convert execution time to numeric if not already
+         SIZE = as.factor(SIZE))  # Ensure SIZE is treated as a factor
+
+# Plotting power consumption over time, separated by execution method and colored by SIZE
+power_plot <- combined_data %>%
+  ggplot(aes(x = execution_time, y = power_avg, color = SIZE)) +  # Map SIZE to color
+  geom_point() +  # Scatter plot points
+  geom_smooth(method = "lm", se = FALSE) +  # Linear regression line without confidence interval
+  facet_wrap(~ execution_method, scales = "free_y") +  # Separate plots for each execution method
+  labs(
+    title = "Power Consumption vs. Execution Time",
+    x = "Execution Time (s)",
+    y = "Average Power (Watts)",
+    caption = "Data points are colored by data size."
+  ) +
+  theme_minimal() +
+  theme(
+    plot.background = element_rect(fill = "white"),
+    panel.background = element_rect(fill = "white"),
+    legend.position = "right",
+    legend.title = element_text(size = 12, face = "bold"),
+    legend.text = element_text(size = 10)
+  )
+
+# Display the plot
+print(power_plot)
+
+# Save the plot with specified dimensions and background
+ggsave("power_plot_by_execution_method.png", power_plot, width = 16, height = 10, units = "in", bg = "white")
+
+
+# Energy Consumption
+# combined_data <- combined_data %>%
+#  mutate(energy_joules = power_avg * execution_time,  # Energy in Joules
+#         energy_kwh = (power_avg * execution_time) / 3600 / 1000)  # Energy in kWh
+
+# Summarize total energy per group
+# energy_summary <- combined_data %>%
+#  group_by(execution_method) %>%
+#  summarise(total_energy_joules = sum(energy_joules),
+#            total_energy_kwh = sum(energy_kwh))
+
+# Print the summary
+# print(energy_summary)
