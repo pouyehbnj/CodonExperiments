@@ -51,7 +51,7 @@ done
 echo "Execution counts initialized."
 
 # Total runs for each specific size
-total_runs=10
+total_runs=1
 
 # Calculate total combinations and required runs
 total_combinations=0
