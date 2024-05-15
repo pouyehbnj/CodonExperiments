@@ -65,7 +65,7 @@ IFS=',' read cpu_usage mem_usage power_avg <<< "$CODON_STATS"
 WAIT_TIME=$(${PYTHON} -c "import time; print(time.time())")
 CODON_TIME=$(echo "$WAIT_TIME - $START_TIME" | bc)
 echo "codon,${SIZE},${CODON_TIME},${COMP_TIME_CODON},${CODON_STATS}" >> "${CSV_FILE}"
-echo "C++ execution time: ${CODON_TIME}s, CPU: $cpu_usage, Mem: $mem_usage, Power: $power_avg"
+echo "codon execution time: ${CODON_TIME}s, CPU: $cpu_usage, Mem: $mem_usage, Power: $power_avg"
 
 # Clean up
 rm "${BENCH_DIR}/fannkuch"
