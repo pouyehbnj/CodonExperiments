@@ -1,6 +1,0 @@
->ONE Homo sapiens alu
-GGCCGGGCGCGGTGGCTCAC
->TWO IUB ambiguity codes
-cttBtatcatatgctaKggNcataaaSatg
->THREE Homo sapiens frequency
-taaatcttgtgcttcgttagaagtctcgactacgtgtagcctagtgtttg
