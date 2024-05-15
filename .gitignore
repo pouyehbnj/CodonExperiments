@@ -76,6 +76,7 @@ _*
 *.png
 # But allow CSV files in the Data-Analysis folder
 !/Data-Analysis/*/power-data/*.csv
+!/Data-Analysis/*/power-data-analysis/*.csv
 ################# large data input file
 /Experiment-1/taq/data
 /Experiment-1/taq/data.gz
