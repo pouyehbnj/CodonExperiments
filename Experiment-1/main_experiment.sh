@@ -15,7 +15,7 @@ SCRIPT_DIR=$(cd $(dirname "$0") && pwd)
 # Define the array of subjects (directories) with an array of sizes for each subject
 declare -A subject_sizes
 # subject_sizes["binary_trees"]="18 19 20"
-# subject_sizes["fannkuch"]="10 11 12" #to be decideddd!
+subject_sizes["fannkuch"]="10 11 12" #to be decideddd!
 # subject_sizes["fasta"]="20000000 30000000 10000000"
 # subject_sizes["float"]="40000000 30000000 20000000"
 # subject_sizes["mandelbrot"]="900 700 800"
@@ -26,7 +26,7 @@ declare -A subject_sizes
 # subject_sizes["set_partition"]="16 14 15"
 # subject_sizes["spectral_norm"]="400 300 500"
 # subject_sizes["taq"]="1000 10000 100000"
-subject_sizes["taq"]="100000"
+# subject_sizes["taq"]="100000"
 # Create an array from the keys of the associative array for random selection
 subjects=(${!subject_sizes[@]})
 echo "All subjects: ${subjects[@]}"

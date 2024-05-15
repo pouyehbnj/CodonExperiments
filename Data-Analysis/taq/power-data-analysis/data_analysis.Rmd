@@ -1,21 +1,32 @@
 # Load necessary libraries
 library(tidyverse)
-library(lubridate)  # for date-time parsing
+library(lubridate)
 
 # List files in the current directory that match the pattern
 file_list <- list.files(pattern = "^power-.*-\\d+\\.csv$")
 
 # Function to process and plot each file
 process_and_plot_file <- function(file) {
-  data <- read_csv(file) %>%
-    mutate(
-      Time = ymd_hms(Date),  # Convert Date to POSIXct/POSIXlt
-      Source = file  # Keep track of the source file
-    ) %>%
-    select(Time, CPU_Power = `CPU Power`, Source)
-
+  # Read the data and check if it is loaded correctly
+  data <- tryCatch({
+    read_csv(file) %>%
+      mutate(
+        Time = ymd_hms(Date),  # Convert Date to POSIXct/POSIXlt
+        Time_Seconds = as.numeric(difftime(ymd_hms(Date), min(ymd_hms(Date)), units = "secs")),  # Calculate time in seconds relative to the first timestamp
+        Source = file  # Keep track of the source file
+      ) %>%
+      select(Time_Seconds, CPU_Power = `CPU Power`, Source)
+  }, error = function(e) {
+    message("Error reading file: ", file, "\n", e)
+    return(NULL)
+  })
+  
+  if (is.null(data)) {
+    return()  # Skip to the next file if there was an error
+  }
+  
   # Create plot for the current file
-  p <- ggplot(data, aes(x = Time, y = CPU_Power)) +
+  p <- ggplot(data, aes(x = Time_Seconds, y = CPU_Power)) +
     geom_line() +  # Connect points with lines
     labs(
       title = paste("CPU Power Consumption Over Time -", file),
@@ -28,9 +39,13 @@ process_and_plot_file <- function(file) {
 
   # Print the plot to RStudio's viewer or equivalent
   print(p)
-
+  
+  # Construct filename
+  file_name <- paste0("cpu_power_", tools::file_path_sans_ext(basename(file)), ".png")
+  print(paste("Saving to:", file_name))  # Debug: Check the file path
+  
   # Save the plot to a file
-  ggsave(paste0("cpu_power_", tools::file_path_sans_ext(basename(file)), ".png"), p, width = 10, height = 5, units = "in", bg="white")
+  ggsave(file_name, plot = p, width = 10, height = 5, units = "in", bg = "white")
 }
 
 # Apply the function to each file in the list
