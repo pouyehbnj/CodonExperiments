@@ -73,6 +73,8 @@ scratch*.*
 _*
 #################  result files
 *.csv
+# But allow CSV files in the Data-Analysis folder
+!/Data-Analysis/*.csv
 ################# large data input file
 /Experiment-1/taq/data
 /Experiment-1/taq/data.gz
