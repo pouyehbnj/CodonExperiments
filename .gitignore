@@ -73,6 +73,7 @@ scratch*.*
 _*
 #################  result files
 *.csv
+*.png
 # But allow CSV files in the Data-Analysis folder
 !/Data-Analysis/*/power-data/*.csv
 ################# large data input file
