@@ -1,0 +1,37 @@
+# Load necessary libraries
+library(tidyverse)
+library(lubridate)  # for date-time parsing
+
+# List files in the current directory that match the pattern
+file_list <- list.files(pattern = "^power-.*-\\d+\\.csv$")
+
+# Function to process and plot each file
+process_and_plot_file <- function(file) {
+  data <- read_csv(file) %>%
+    mutate(
+      Time = ymd_hms(Date),  # Convert Date to POSIXct/POSIXlt
+      Source = file  # Keep track of the source file
+    ) %>%
+    select(Time, CPU_Power = `CPU Power`, Source)
+
+  # Create plot for the current file
+  p <- ggplot(data, aes(x = Time, y = CPU_Power)) +
+    geom_line() +  # Connect points with lines
+    labs(
+      title = paste("CPU Power Consumption Over Time -", file),
+      x = "Time (seconds)",
+      y = "CPU Power (Watts)",
+      caption = paste("Data sourced from", file)
+    ) +
+    theme_minimal() +
+    theme(legend.position = "none")  # No legend needed for single file
+
+  # Print the plot to RStudio's viewer or equivalent
+  print(p)
+
+  # Save the plot to a file
+  ggsave(paste0("cpu_power_", tools::file_path_sans_ext(basename(file)), ".png"), p, width = 10, height = 5, units = "in", bg="white")
+}
+
+# Apply the function to each file in the list
+invisible(lapply(file_list, process_and_plot_file))
