@@ -11,127 +11,54 @@ fi
 # Define the base directory relative to the script's location
 SCRIPT_DIR=$(cd $(dirname "$0") && pwd)
 
-# Define the size ranges for each subject-method-category combination
-declare -A size_ranges
-# size_ranges["binary_trees_cpp_small"]="20-22" #under 1 minute (under 60)
-# size_ranges["binary_trees_cpp_medium"]="23-24" # >1 and <4 minutes (>60 and <240)
-# size_ranges["binary_trees_cpp_large"]="25" # >=4 minutes (240s) - (4 to 5) minutes  (25 was 8 minutes 26 was 19 minutes!) 
-# size_ranges["binary_trees_python_small"]="15-17"
-size_ranges["binary_trees_python_medium"]="20-20"
-# size_ranges["binary_trees_python_large"]="20-22"
-# size_ranges["binary_trees_codon_small"]="15-17"
-# size_ranges["binary_trees_codon_medium"]="18-20"
-# size_ranges["binary_trees_codon_large"]="21-23"
-# size_ranges["fannkuch_cpp_small"]="10-12"
-# size_ranges["fannkuch_cpp_medium"]="13-15"
-# size_ranges["fannkuch_cpp_large"]="16-18"
-# size_ranges["fannkuch_python_small"]="8-10"
-# size_ranges["fannkuch_python_medium"]="11-13"
-# size_ranges["fannkuch_python_large"]="14-16"
-# size_ranges["fannkuch_codon_small"]="9-11"
-# size_ranges["fannkuch_codon_medium"]="12-14"
-# size_ranges["fannkuch_codon_large"]="15-17"
-# size_ranges["fasta_cpp_small"]="10000000"
-# size_ranges["fasta_cpp_medium"]="20000000"
-# size_ranges["fasta_cpp_large"]="30000000"
-# size_ranges["fasta_python_small"]="10000000"
-# size_ranges["fasta_python_medium"]="20000000"
-# size_ranges["fasta_python_large"]="30000000"
-# size_ranges["fasta_codon_small"]="10000000"
-# size_ranges["fasta_codon_medium"]="20000000"
-# size_ranges["fasta_codon_large"]="30000000"
-# size_ranges["float_cpp_small"]="20000000"
-# size_ranges["float_cpp_medium"]="30000000"
-# size_ranges["float_cpp_large"]="40000000"
-# size_ranges["float_python_small"]="20000000"
-# size_ranges["float_python_medium"]="30000000"
-# size_ranges["float_python_large"]="40000000"
-# size_ranges["float_codon_small"]="20000000"
-# size_ranges["float_codon_medium"]="30000000"
-# size_ranges["float_codon_large"]="40000000"
-# size_ranges["mandelbrot_cpp_small"]="700"
-# size_ranges["mandelbrot_cpp_medium"]="800"
-# size_ranges["mandelbrot_cpp_large"]="900"
-# size_ranges["mandelbrot_python_small"]="700"
-# size_ranges["mandelbrot_python_medium"]="800"
-# size_ranges["mandelbrot_python_large"]="900"
-# size_ranges["mandelbrot_codon_small"]="700"
-# size_ranges["mandelbrot_codon_medium"]="800"
-# size_ranges["mandelbrot_codon_large"]="900"
-# size_ranges["nbody_cpp_small"]="4000000"
-# size_ranges["nbody_cpp_medium"]="4500000"
-# size_ranges["nbody_cpp_large"]="5000000"
-# size_ranges["nbody_python_small"]="4000000"
-# size_ranges["nbody_python_medium"]="4500000"
-# size_ranges["nbody_python_large"]="5000000"
-# size_ranges["nbody_codon_small"]="4000000"
-# size_ranges["nbody_codon_medium"]="4500000"
-# size_ranges["nbody_codon_large"]="5000000"
-# size_ranges["nsieve_cpp_small"]="13"
-# size_ranges["nsieve_cpp_medium"]="14"
-# size_ranges["nsieve_cpp_large"]="15"
-# size_ranges["nsieve_python_small"]="13"
-# size_ranges["nsieve_python_medium"]="14"
-# size_ranges["nsieve_python_large"]="15"
-# size_ranges["nsieve_codon_small"]="13"
-# size_ranges["nsieve_codon_medium"]="14"
-# size_ranges["nsieve_codon_large"]="15"
-# size_ranges["primes_cpp_small"]="6300000"
-# size_ranges["primes_cpp_medium"]="6400000"
-# size_ranges["primes_cpp_large"]="6500000"
-# size_ranges["primes_python_small"]="6300000"
-# size_ranges["primes_python_medium"]="6400000"
-# size_ranges["primes_python_large"]="6500000"
-# size_ranges["primes_codon_small"]="6300000"
-# size_ranges["primes_codon_medium"]="6400000"
-# size_ranges["primes_codon_large"]="6500000"
-# size_ranges["reverse_complement_cpp_small"]="35000000"
-# size_ranges["reverse_complement_cpp_medium"]="35000000"
-# size_ranges["reverse_complement_cpp_large"]="35000000"
-# size_ranges["reverse_complement_python_small"]="35000000"
-# size_ranges["reverse_complement_python_medium"]="35000000"
-# size_ranges["reverse_complement_python_large"]="35000000"
-# size_ranges["reverse_complement_codon_small"]="35000000"
-# size_ranges["reverse_complement_codon_medium"]="35000000"
-# size_ranges["reverse_complement_codon_large"]="35000000"
-# size_ranges["set_partition_cpp_small"]="14"
-# size_ranges["set_partition_cpp_medium"]="15"
-# size_ranges["set_partition_cpp_large"]="16"
-# size_ranges["set_partition_python_small"]="14"
-# size_ranges["set_partition_python_medium"]="15"
-# size_ranges["set_partition_python_large"]="16"
-# size_ranges["set_partition_codon_small"]="14"
-# size_ranges["set_partition_codon_medium"]="15"
-# size_ranges["set_partition_codon_large"]="16"
-# size_ranges["spectral_norm_cpp_small"]="300"
-# size_ranges["spectral_norm_cpp_medium"]="400"
-# size_ranges["spectral_norm_cpp_large"]="500"
-# size_ranges["spectral_norm_python_small"]="300"
-# size_ranges["spectral_norm_python_medium"]="400"
-# size_ranges["spectral_norm_python_large"]="500"
-# size_ranges["spectral_norm_codon_small"]="300"
-# size_ranges["spectral_norm_codon_medium"]="400"
-# size_ranges["spectral_norm_codon_large"]="500"
-# size_ranges["taq_cpp_small"]="1000"
-# size_ranges["taq_cpp_medium"]="10000"
-# size_ranges["taq_cpp_large"]="100000"
-# size_ranges["taq_python_small"]="1000"
-# size_ranges["taq_python_medium"]="10000"
-# size_ranges["taq_python_large"]="100000"
-# size_ranges["taq_codon_small"]="1000"
-# size_ranges["taq_codon_medium"]="10000"
-# size_ranges["taq_codon_large"]="100000"
+# Define the size values for each subject and category (same for all methods)
+declare -A size_values
+size_values["binary_trees_small"]="15 16 17" # under 1 minute
+# size_values["binary_trees_medium"]="18 19 20" # 1-4 minutes
+# size_values["binary_trees_large"]="21 22 23" # 4-5 minutes
+# size_values["fannkuch_small"]="10 11 12"
+# size_values["fannkuch_medium"]="13 14 15"
+# size_values["fannkuch_large"]="16 17 18"
+# size_values["fasta_small"]="10000000 15000000 20000000"
+# size_values["fasta_medium"]="25000000 30000000 35000000"
+# size_values["fasta_large"]="40000000 45000000 50000000"
+# size_values["float_small"]="10000000 15000000 20000000"
+# size_values["float_medium"]="25000000 30000000 35000000"
+# size_values["float_large"]="40000000 45000000 50000000"
+# size_values["mandelbrot_small"]="700 750 800"
+# size_values["mandelbrot_medium"]="850 900 950"
+# size_values["mandelbrot_large"]="1000 1050 1100"
+# size_values["nbody_small"]="4000000 4500000 5000000"
+# size_values["nbody_medium"]="5500000 6000000 6500000"
+# size_values["nbody_large"]="7000000 7500000 8000000"
+# size_values["nsieve_small"]="10 11 12"
+# size_values["nsieve_medium"]="13 14 15"
+# size_values["nsieve_large"]="16 17 18"
+# size_values["primes_small"]="6000000 6100000 6200000"
+# size_values["primes_medium"]="6300000 6400000 6500000"
+# size_values["primes_large"]="6600000 6700000 6800000"
+# size_values["reverse_complement_small"]="10000000 15000000 20000000"
+# size_values["reverse_complement_medium"]="25000000 30000000 35000000"
+# size_values["reverse_complement_large"]="40000000 45000000 50000000"
+# size_values["set_partition_small"]="10 11 12"
+# size_values["set_partition_medium"]="13 14 15"
+# size_values["set_partition_large"]="16 17 18"
+# size_values["spectral_norm_small"]="200 250 300"
+# size_values["spectral_norm_medium"]="350 400 450"
+# size_values["spectral_norm_large"]="500 550 600"
+# size_values["taq_small"]="1000 2000 3000"
+# size_values["taq_medium"]="4000 5000 6000"
+# size_values["taq_large"]="7000 8000 9000"
 
 # Create an array of unique subjects for random selection
-subjects=($(echo ${!size_ranges[@]} | sed 's/_[^_]*_[^_]*$//g' | uniq))
+subjects=("binary_trees" "fannkuch" "fasta" "float" "mandelbrot" "nbody" "nsieve" "primes" "reverse_complement" "set_partition" "spectral_norm" "taq")
 echo "All subjects: ${subjects[@]}"
 
 # Define the array of methods
-# methods=("cpp" "python" "codon")
-methods=("python")
+methods=("cpp" "python" "codon")
 # Define the array of size categories
-# size_categories=("small" "medium" "large")
-size_categories=("medium")
+size_categories=("small" "medium" "large")
+size_categories=("small")
 
 # Associative array to track execution counts
 declare -A execution_counts
@@ -149,7 +76,7 @@ done
 echo "Execution counts initialized."
 
 # Total runs for each specific size
-total_runs=1
+total_runs=10
 
 # Calculate total combinations and required runs
 total_combinations=0
@@ -162,12 +89,10 @@ total_required_runs=$((total_combinations * total_runs))
 current_runs=0
 echo "Number of runs required: $total_required_runs"
 
-# Helper function to generate a random number within a range
-generate_random_size() {
-    local range=$1
-    local min=$(echo $range | cut -d'-' -f1)
-    local max=$(echo $range | cut -d'-' -f2)
-    echo $((RANDOM % (max - min + 1) + min))
+# Helper function to select a random size from a space-separated list of sizes
+select_random_size() {
+    local sizes=($1)
+    echo ${sizes[$RANDOM % ${#sizes[@]}]}
 }
 
 # Main loop
@@ -185,8 +110,8 @@ while [ "$current_runs" -lt "$total_required_runs" ]; do
     random_size_category_index=$((RANDOM % ${#size_categories[@]}))
     size_category=${size_categories[random_size_category_index]}
 
-    size_range=${size_ranges["${subject}_${method}_${size_category}"]}
-    size=$(generate_random_size $size_range)
+    size_list=${size_values["${subject}_${size_category}"]}
+    size=$(select_random_size "$size_list")
 
     key="$subject|$method|$size_category"
 
