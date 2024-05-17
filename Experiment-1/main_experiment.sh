@@ -125,11 +125,11 @@ SCRIPT_DIR=$(cd $(dirname "$0") && pwd)
 
 # Define the size ranges for each subject-method-category combination
 declare -A size_ranges
-# size_ranges["binary_trees_cpp_small"]="20-22"
-# size_ranges["binary_trees_cpp_medium"]="23-24"
-size_ranges["binary_trees_cpp_large"]="25-27"
-# size_ranges["binary_trees_python_small"]="14-16"
-# size_ranges["binary_trees_python_medium"]="17-19"
+# size_ranges["binary_trees_cpp_small"]="20-22" #under 1 minute
+# size_ranges["binary_trees_cpp_medium"]="23-24" #2-4
+size_ranges["binary_trees_cpp_large"]="25-26" # 5-10 minutes
+# size_ranges["binary_trees_python_small"]="15-17"
+# size_ranges["binary_trees_python_medium"]="18-19"
 # size_ranges["binary_trees_python_large"]="20-22"
 # size_ranges["binary_trees_codon_small"]="15-17"
 # size_ranges["binary_trees_codon_medium"]="18-20"
