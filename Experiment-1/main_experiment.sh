@@ -13,11 +13,11 @@ SCRIPT_DIR=$(cd $(dirname "$0") && pwd)
 
 # Define the size ranges for each subject-method-category combination
 declare -A size_ranges
-# size_ranges["binary_trees_cpp_small"]="20-22" #under 1 minute
-# size_ranges["binary_trees_cpp_medium"]="23-24" #2-4
-# size_ranges["binary_trees_cpp_large"]="25" # >=5 minutes - 5-10 minutes  (26 was 19 minutes!)
+# size_ranges["binary_trees_cpp_small"]="20-22" #under 1 minute (under 60)
+# size_ranges["binary_trees_cpp_medium"]="23-24" # >1 and <4 minutes (>60 and <240)
+# size_ranges["binary_trees_cpp_large"]="25" # >=4 minutes (240s) - (4 to 5) minutes  (25 was 8 minutes 26 was 19 minutes!) 
 # size_ranges["binary_trees_python_small"]="15-17"
-size_ranges["binary_trees_python_medium"]="18-20"
+size_ranges["binary_trees_python_medium"]="20-20"
 # size_ranges["binary_trees_python_large"]="20-22"
 # size_ranges["binary_trees_codon_small"]="15-17"
 # size_ranges["binary_trees_codon_medium"]="18-20"
@@ -149,7 +149,7 @@ done
 echo "Execution counts initialized."
 
 # Total runs for each specific size
-total_runs=2
+total_runs=1
 
 # Calculate total combinations and required runs
 total_combinations=0
