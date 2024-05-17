@@ -16,8 +16,8 @@ declare -A size_ranges
 # size_ranges["binary_trees_cpp_small"]="20-22" #under 1 minute
 # size_ranges["binary_trees_cpp_medium"]="23-24" #2-4
 # size_ranges["binary_trees_cpp_large"]="25" # >=5 minutes - 5-10 minutes  (26 was 19 minutes!)
-size_ranges["binary_trees_python_small"]="15-17"
-# size_ranges["binary_trees_python_medium"]="18-19"
+# size_ranges["binary_trees_python_small"]="15-17"
+size_ranges["binary_trees_python_medium"]="18-20"
 # size_ranges["binary_trees_python_large"]="20-22"
 # size_ranges["binary_trees_codon_small"]="15-17"
 # size_ranges["binary_trees_codon_medium"]="18-20"
@@ -131,7 +131,7 @@ echo "All subjects: ${subjects[@]}"
 methods=("python")
 # Define the array of size categories
 # size_categories=("small" "medium" "large")
-size_categories=("small")
+size_categories=("medium")
 
 # Associative array to track execution counts
 declare -A execution_counts
