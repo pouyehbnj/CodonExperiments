@@ -240,10 +240,10 @@ echo "All subjects: ${subjects[@]}"
 
 # Define the array of methods
 # methods=("cpp" "python" "codon")
-methods=("cpp")
+methods=("python")
 # Define the array of size categories
 # size_categories=("small" "medium" "large")
-size_categories=("large")
+size_categories=("small")
 
 # Associative array to track execution counts
 declare -A execution_counts
