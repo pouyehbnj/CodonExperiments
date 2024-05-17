@@ -125,7 +125,7 @@ SCRIPT_DIR=$(cd $(dirname "$0") && pwd)
 
 # Define the size ranges for each subject-method-category combination
 declare -A size_ranges
-size_ranges["binary_trees_cpp_small"]="20-22"
+# size_ranges["binary_trees_cpp_small"]="20-22"
 size_ranges["binary_trees_cpp_medium"]="23-26"
 # size_ranges["binary_trees_cpp_large"]="24-26"
 # size_ranges["binary_trees_python_small"]="14-16"
@@ -243,7 +243,7 @@ echo "All subjects: ${subjects[@]}"
 methods=("cpp")
 # Define the array of size categories
 # size_categories=("small" "medium" "large")
-size_categories=("small")
+size_categories=("medium")
 
 # Associative array to track execution counts
 declare -A execution_counts
