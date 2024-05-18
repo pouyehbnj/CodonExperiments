@@ -51,7 +51,7 @@ declare -A size_values
 # size_values["nbody_medium"]="5500000 6000000 6500000"
 # size_values["nbody_large"]="7000000 7500000 8000000"
 
-size_values["spectral_norm_small"]="440 370 200"
+size_values["spectral_norm_small"]="440 370 500"
 # size_values["spectral_norm_medium"]="350 400 450"
 # size_values["spectral_norm_large"]="500 550 600"
 
