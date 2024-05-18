@@ -19,7 +19,7 @@ export CSV_FILE="${BENCH_DIR}/python_benchmarks.csv"
 # Prepare CSV file with header
 # Check if the CSV file exists and write the header if it does not
 if [ ! -f "$CSV_FILE" ]; then
-    echo "execution_method,SIZE,SIZE_CATEGOR,execution_time,compile_time,cpu_usage,mem_usage,power_avg" > "$CSV_FILE"
+    echo "execution_method,SIZE,SIZE_CATEGORY,execution_time,compile_time,cpu_usage,mem_usage,power_avg" > "$CSV_FILE"
 fi
 
 
