@@ -1,6 +1,6 @@
 #!/bin/bash
 # Ensure a size is passed to the script
-if [ "$#" -ne 1 ]; then
+if [ "$#" -ne 2 ]; then
     echo "Usage: $0 <SIZE> <CATEGORY>"
     exit 1
 fi
