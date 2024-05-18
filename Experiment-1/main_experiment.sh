@@ -52,8 +52,8 @@ declare -A size_values
 # size_values["nbody_large"]="7000000 7500000 8000000"
 
 # size_values["spectral_norm_small"]="440 370 468"
-size_values["spectral_norm_medium"]="630 540 500"
-# size_values["spectral_norm_large"]="720 760 802"
+# size_values["spectral_norm_medium"]="630 540 500"
+size_values["spectral_norm_large"]="720 760 802"
 
 # size_values["taq_small"]="40000 35000 70000"
 # size_values["taq_medium"]="100000 230000 345000"
@@ -69,7 +69,7 @@ methods=("cpp" "python" "codon")
 # methods=("python")
 # Define the array of size categories
 # size_categories=("small" "medium" "large")
-size_categories=("medium")
+size_categories=("large")
 
 # Associative array to track execution counts
 declare -A execution_counts
