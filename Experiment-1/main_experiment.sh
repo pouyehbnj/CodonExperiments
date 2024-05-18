@@ -59,8 +59,8 @@ size_values["taq_small"]="20000 10000 30000"
 # size_values["taq_medium"]="100000 200000 300000"
 # size_values["taq_large"]="1000000 2000000 3000000"
 
-# Create an array of unique subjects for random selection
-subjects=("binary_trees" "fannkuch" "fasta" "float" "mandelbrot" "nbody" "nsieve" "primes" "reverse_complement" "set_partition" "spectral_norm" "taq")
+# Create an array of unique subjects from size_values keys
+subjects=($(for key in "${!size_values[@]}"; do echo $key | cut -d'_' -f1; done | sort | uniq))
 echo "All subjects: ${subjects[@]}"
 
 # Define the array of methods
