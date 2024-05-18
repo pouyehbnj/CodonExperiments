@@ -55,21 +55,21 @@ declare -A size_values
 # size_values["spectral_norm_medium"]="350 400 450"
 # size_values["spectral_norm_large"]="500 550 600"
 
-# size_values["taq_small"]="20000 10000 30000"
-# size_values["taq_medium"]="100000 200000 300000"
-size_values["taq_large"]="1000000 2000000 3000000"
+size_values["taq_small"]="40000 35000 70000"
+size_values["taq_medium"]="100000 230000 345000"
+size_values["taq_large"]="900000 800000 1000000"
 
 # Create an array of unique subjects from size_values keys
 subjects=($(for key in "${!size_values[@]}"; do echo $key | cut -d'_' -f1; done | sort | uniq))
 echo "All subjects: ${subjects[@]}"
 
 # Define the array of methods
-# methods=("cpp" "python" "codon")
+methods=("cpp" "python" "codon")
 # Define the array of methods
-methods=("python")
+# methods=("python")
 # Define the array of size categories
-# size_categories=("small" "medium" "large")
-size_categories=("large")
+size_categories=("small" "medium" "large")
+# size_categories=("large")
 
 # Associative array to track execution counts
 declare -A execution_counts
