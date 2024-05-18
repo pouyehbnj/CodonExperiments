@@ -55,8 +55,8 @@ declare -A size_values
 # size_values["spectral_norm_medium"]="350 400 450"
 # size_values["spectral_norm_large"]="500 550 600"
 
-size_values["taq_small"]="20000 10000 30000"
-# size_values["taq_medium"]="100000 200000 300000"
+# size_values["taq_small"]="20000 10000 30000"
+size_values["taq_medium"]="100000 200000 300000"
 # size_values["taq_large"]="1000000 2000000 3000000"
 
 # Create an array of unique subjects from size_values keys
