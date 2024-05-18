@@ -12,43 +12,52 @@ fi
 SCRIPT_DIR=$(cd $(dirname "$0") && pwd)
 
 # Define the size values for each subject and category (same for all methods)
-declare -A size_values
-size_values["binary_trees_small"]="15 16 17" # under 1 minute
-# size_values["binary_trees_medium"]="18 19 20" # 1-4 minutes
-# size_values["binary_trees_large"]="21 22 23" # 4-5 minutes
 # size_values["fannkuch_small"]="10 11 12"
 # size_values["fannkuch_medium"]="13 14 15"
 # size_values["fannkuch_large"]="16 17 18"
-# size_values["fasta_small"]="10000000 15000000 20000000"
-# size_values["fasta_medium"]="25000000 30000000 35000000"
-# size_values["fasta_large"]="40000000 45000000 50000000"
-# size_values["float_small"]="10000000 15000000 20000000"
-# size_values["float_medium"]="25000000 30000000 35000000"
-# size_values["float_large"]="40000000 45000000 50000000"
-# size_values["mandelbrot_small"]="700 750 800"
-# size_values["mandelbrot_medium"]="850 900 950"
-# size_values["mandelbrot_large"]="1000 1050 1100"
-# size_values["nbody_small"]="4000000 4500000 5000000"
-# size_values["nbody_medium"]="5500000 6000000 6500000"
-# size_values["nbody_large"]="7000000 7500000 8000000"
-# size_values["nsieve_small"]="10 11 12"
-# size_values["nsieve_medium"]="13 14 15"
-# size_values["nsieve_large"]="16 17 18"
-# size_values["primes_small"]="6000000 6100000 6200000"
-# size_values["primes_medium"]="6300000 6400000 6500000"
-# size_values["primes_large"]="6600000 6700000 6800000"
 # size_values["reverse_complement_small"]="10000000 15000000 20000000"
 # size_values["reverse_complement_medium"]="25000000 30000000 35000000"
 # size_values["reverse_complement_large"]="40000000 45000000 50000000"
-# size_values["set_partition_small"]="10 11 12"
-# size_values["set_partition_medium"]="13 14 15"
-# size_values["set_partition_large"]="16 17 18"
-# size_values["spectral_norm_small"]="200 250 300"
+# size_values["primes_small"]="6000000 6100000 6200000"
+# size_values["primes_medium"]="6300000 6400000 6500000"
+# size_values["primes_large"]="6600000 6700000 6800000"
+
+declare -A size_values
+size_values["binary_trees_small"]="18 19" # under 1 minute
+size_values["binary_trees_medium"]="20 21" # 1-4 minutes
+size_values["binary_trees_large"]="22 23" # 4-5 minutes
+
+# size_values["set_partition_small"]="14 15"
+# size_values["set_partition_medium"]="16 17"
+# size_values["set_partition_large"]="18 19"
+
+# size_values["nsieve_small"]="10 11"
+# size_values["nsieve_medium"]="12 13"
+# size_values["nsieve_large"]="14 15"
+
+# size_values["fasta_small"]="15000000 10000000"
+# size_values["fasta_medium"]="20000000 25000000"
+# size_values["fasta_large"]="30000000 35000000"
+
+# size_values["float_small"]="25000000 20000000"
+# size_values["float_medium"]="30000000 35000000"
+# size_values["float_large"]="40000000 45000000"
+
+# size_values["mandelbrot_small"]="900 700 800"
+# size_values["mandelbrot_medium"]="850 900 950"
+# size_values["mandelbrot_large"]="1000 1050 1100"
+
+# size_values["nbody_small"]="4000000 5000000 4500000"
+# size_values["nbody_medium"]="5500000 6000000 6500000"
+# size_values["nbody_large"]="7000000 7500000 8000000"
+
+# size_values["spectral_norm_small"]="400 300 350"
 # size_values["spectral_norm_medium"]="350 400 450"
 # size_values["spectral_norm_large"]="500 550 600"
-# size_values["taq_small"]="1000 2000 3000"
-# size_values["taq_medium"]="4000 5000 6000"
-# size_values["taq_large"]="7000 8000 9000"
+
+# size_values["taq_small"]="20000 10000 30000"
+# size_values["taq_medium"]="100000 200000 300000"
+# size_values["taq_large"]="1000000 2000000 3000000"
 
 # Create an array of unique subjects for random selection
 subjects=("binary_trees" "fannkuch" "fasta" "float" "mandelbrot" "nbody" "nsieve" "primes" "reverse_complement" "set_partition" "spectral_norm" "taq")
