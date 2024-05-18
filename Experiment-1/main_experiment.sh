@@ -60,7 +60,7 @@ size_values["spectral_norm_small"]="400 300 350"
 # size_values["taq_large"]="900000 800000 1000000"
 
 # Create an array of unique subjects from size_values keys
-subjects=($(for key in "${!size_values[@]}"; do echo $key | cut -d'_' -f1; done | sort | uniq))
+subjects=($(for key in "${!size_values[@]}"; do echo $key | rev | cut -d'_' -f2- | rev; done | sort | uniq))
 echo "All subjects: ${subjects[@]}"
 
 # Define the array of methods
