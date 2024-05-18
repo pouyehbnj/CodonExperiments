@@ -1,8 +1,13 @@
 #!/bin/bash
 # Ensure a size is passed to the script
-
+if [ "$#" -ne 1 ]; then
+    echo "Usage: $0 <SIZE> <CATEGORY>"
+    exit 1
+fi
 
 SIZE=$1
+CATEGORY=$2
+
 SCRIPT_PATH=$(readlink -f "$0")
 BENCH_DIR=$(dirname "$SCRIPT_PATH")
 export CPP="${EXE_CPP:-clang++}"
@@ -13,7 +18,7 @@ if [ "$#" -ne 1 ]; then
     exit 1
 fi
 if [ ! -f "$CSV_FILE" ]; then
-    echo "execution_method,SIZE,execution_time,compile_time,cpu_usage,mem_usage,power_avg" > "$CSV_FILE"
+    echo "execution_method,SIZE,SIZE_CATEGORY,,execution_time,compile_time,cpu_usage,mem_usage,power_avg" > "$CSV_FILE"
 fi
 
 # Helper function to log process stats for C++ program
@@ -57,7 +62,7 @@ sleep 0.1
 CPP_STATS=$(log_process_stats $CPP_PID)
 EXECUTION_TIME=$(echo "$(${PYTHON} -c "import time; print(time.time())") - $START_TIME" | bc)
 IFS=',' read cpu_usage mem_usage power_avg <<< "$CPP_STATS"
-echo "cpp,${SIZE},${EXECUTION_TIME},${COMP_TIME},${cpu_usage},${mem_usage},${power_avg}" >> "${CSV_FILE}"
+echo "cpp,${SIZE},${CATEGORY},${EXECUTION_TIME},${COMP_TIME},${cpu_usage},${mem_usage},${power_avg}" >> "${CSV_FILE}"
 echo "C++ execution time: ${EXECUTION_TIME}s, CPU: $cpu_usage, Mem: $mem_usage, Power: $power_avg"
 
 # Clean up
