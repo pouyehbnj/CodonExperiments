@@ -67,7 +67,7 @@ echo "All subjects: ${subjects[@]}"
 methods=("cpp" "python" "codon")
 # Define the array of size categories
 # size_categories=("small" "medium" "large")
-size_categories=("small")
+size_categories=("medium")
 
 # Associative array to track execution counts
 declare -A execution_counts
