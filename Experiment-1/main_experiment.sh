@@ -47,8 +47,8 @@ declare -A size_values
 # size_values["mandelbrot_medium"]="850 900 950"
 # size_values["mandelbrot_large"]="1000 1050 1100"
 
-size_values["nbody_small"]="4000000 5000000 4500000"
-# size_values["nbody_medium"]="5500000 6000000 6500000"
+size_values["nbody_small"]="6000000 8000000 9000000"
+# size_values["nbody_medium"]="50000000 6000000 6500000"
 # size_values["nbody_large"]="7000000 7500000 8000000"
 
 # size_values["spectral_norm_small"]="440 370 468"
