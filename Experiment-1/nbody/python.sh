@@ -2,7 +2,14 @@
 # Ensure a size is passed to the script
 # Check if the CSV file exists and write the header if it does not
 
+
+if [ "$#" -ne 2 ]; then
+    echo "Usage: $0 <SIZE> <CATEGORY>"
+    exit 1
+fi
+
 SIZE=$1
+CATEGORY=$2
 
 # Setup environment variables
 SCRIPT_PATH=$(readlink -f "$0")
@@ -13,7 +20,7 @@ export CSV_FILE="${BENCH_DIR}/python_benchmarks.csv"
 # Prepare CSV file with header
 # Check if the CSV file exists and write the header if it does not
 if [ ! -f "$CSV_FILE" ]; then
-    echo "execution_method,SIZE,execution_time,compile_time,cpu_usage,mem_usage,power_avg" > "$CSV_FILE"
+    echo "execution_method,SIZE,SIZE_CATEGORY,PID,execution_time,compile_time,cpu_usage,mem_usage,power_avg" > "$CSV_FILE"
 fi
 
 # Helper function to log process stats
@@ -73,7 +80,7 @@ PYTHON_STATS=$(log_process_stats $PYTHON_PID)
 IFS=',' read cpu_usage mem_usage power_avg <<< "$PYTHON_STATS"
 WAIT_TIME=$(${PYTHON} -c "import time; print(time.time())")
 PYTHON_TIME=$(echo "$WAIT_TIME - $START_TIME" | bc)
-echo "python,${SIZE},${PYTHON_TIME},0,${PYTHON_STATS}" >> "${CSV_FILE}"
+echo "python,${SIZE},${CATEGORY},${PYTHON_PID},${PYTHON_TIME},0,${PYTHON_STATS}" >> "${CSV_FILE}"
 echo "Python execution time: ${PYTHON_TIME}s, CPU: $cpu_usage, Mem: $mem_usage, Power: $power_avg"
 wait
 echo "All background processes completed and cleaned up the run."
