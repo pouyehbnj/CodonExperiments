@@ -48,8 +48,8 @@ declare -A size_values
 # size_values["mandelbrot_large"]="1000 1050 1100"
 
 # size_values["nbody_small"]="6000000 8000000 9000000"
-size_values["nbody_medium"]="15000000 24000000 30000000"
-# size_values["nbody_large"]="50000000 70000000 50000000"
+# size_values["nbody_medium"]="15000000 24000000 30000000"
+size_values["nbody_large"]="50000000 70000000 50000000"
 
 # size_values["spectral_norm_small"]="440 370 468"
 # size_values["spectral_norm_medium"]="630 540 500"
@@ -69,7 +69,7 @@ methods=("cpp" "python" "codon")
 # methods=("python")
 # Define the array of size categories
 # size_categories=("small" "medium" "large")
-size_categories=("medium")
+size_categories=("large")
 
 # Associative array to track execution counts
 declare -A execution_counts
