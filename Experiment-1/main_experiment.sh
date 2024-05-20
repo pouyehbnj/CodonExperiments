@@ -43,7 +43,7 @@ declare -A size_values
 # size_values["float_medium"]="30000000 35000000"
 # size_values["float_large"]="40000000 45000000"
 
-size_values["mandelbrot_small"]="590 640 780"
+size_values["mandelbrot_small"]="820 690 750"
 # size_values["mandelbrot_medium"]="850 900 950"
 # size_values["mandelbrot_large"]="1000 1050 1100"
 
