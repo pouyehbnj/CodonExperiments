@@ -39,7 +39,7 @@ declare -A size_values
 # size_values["fasta_medium"]="20000000 25000000"
 # size_values["fasta_large"]="30000000 35000000"
 
-size_values["float_small"]="25000000 20000000 30000000"
+size_values["float_small"]="25000000 33000000 30000000"
 # size_values["float_medium"]="30000000 35000000"
 # size_values["float_large"]="40000000 45000000"
 
