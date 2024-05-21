@@ -39,13 +39,13 @@ declare -A size_values
 # size_values["fasta_medium"]="20000000 25000000"
 # size_values["fasta_large"]="30000000 35000000"
 
-# size_values["float_small"]="25000000 20000000"
+size_values["float_small"]="25000000 20000000 30000000"
 # size_values["float_medium"]="30000000 35000000"
 # size_values["float_large"]="40000000 45000000"
 
-size_values["mandelbrot_small"]="820 900 750"
-size_values["mandelbrot_medium"]="1000 1270 1590"
-size_values["mandelbrot_large"]="1750 1900 1840"
+# size_values["mandelbrot_small"]="820 900 750"
+# size_values["mandelbrot_medium"]="1000 1270 1590"
+# size_values["mandelbrot_large"]="1750 1900 1840"
 
 # size_values["nbody_small"]="6000000 8000000 9000000"
 # size_values["nbody_medium"]="15000000 24000000 30000000"
@@ -68,8 +68,8 @@ methods=("cpp" "python" "codon")
 # Define the array of methods
 # methods=("python")
 # Define the array of size categories
-size_categories=("small" "medium" "large")
-# size_categories=("large")
+# size_categories=("small" "medium" "large")
+size_categories=("small")
 
 # Associative array to track execution counts
 declare -A execution_counts
