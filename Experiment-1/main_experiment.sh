@@ -39,9 +39,9 @@ declare -A size_values
 # size_values["fasta_medium"]="20000000 25000000"
 # size_values["fasta_large"]="30000000 35000000"
 
-# size_values["float_small"]="25000000 33000000 30000000"
-size_values["float_medium"]="40000000 47000000 54000000"
-# size_values["float_large"]="40000000 45000000"
+# size_values["float_small"]="25000000 2800000 26000000"
+size_values["float_medium"]="3300000 3000000 37000000"
+# size_values["float_large"]="41000000 45000000 42500000"
 
 # size_values["mandelbrot_small"]="820 900 750"
 # size_values["mandelbrot_medium"]="1000 1270 1590"
