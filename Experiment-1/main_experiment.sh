@@ -40,8 +40,8 @@ declare -A size_values
 # size_values["fasta_large"]="30000000 35000000"
 
 # size_values["float_small"]="41000000 35000000 40000000"
-size_values["float_medium"]="52000000 51400000 50000000"
-# size_values["float_large"]="60000000 65000000 63000000"
+# size_values["float_medium"]="60000000 56000000 50000000"
+size_values["float_large"]="70000000 90000000 80000000"
 
 # size_values["mandelbrot_small"]="820 900 750"
 # size_values["mandelbrot_medium"]="1000 1270 1590"
