@@ -35,7 +35,7 @@ declare -A size_values
 # size_values["nsieve_medium"]="12 13"
 # size_values["nsieve_large"]="14 15"
 
-size_values["fasta_small"]="15000000 10000000 17000000"
+size_values["fasta_small"]="20000000 25000000 17000000"
 # size_values["fasta_medium"]="20000000 25000000"
 # size_values["fasta_large"]="30000000 35000000"
 
