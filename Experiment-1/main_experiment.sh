@@ -31,7 +31,7 @@ declare -A size_values
 # size_values["set_partition_medium"]="16 17"
 # size_values["set_partition_large"]="18 19"
 
-# size_values["nsieve_small"]="10 11"
+size_values["nsieve_small"]="10 11 12"
 # size_values["nsieve_medium"]="12 13"
 # size_values["nsieve_large"]="14 15"
 
@@ -51,9 +51,9 @@ declare -A size_values
 # size_values["nbody_medium"]="15000000 24000000 30000000"
 # size_values["nbody_large"]="50000000 70000000 50000000"
 
-size_values["spectral_norm_small"]="440 370 468"
-size_values["spectral_norm_medium"]="630 540 500"
-size_values["spectral_norm_large"]="720 760 802"
+# size_values["spectral_norm_small"]="440 370 468"
+# size_values["spectral_norm_medium"]="630 540 500"
+# size_values["spectral_norm_large"]="720 760 802"
 #test
 # size_values["taq_small"]="40000 35000 70000"
 # size_values["taq_medium"]="100000 230000 345000"
@@ -68,8 +68,8 @@ methods=("cpp" "python" "codon")
 # Define the array of methods
 # methods=("cpp")
 # Define the array of size categories
-size_categories=("small" "medium" "large")
-# size_categories=("large")
+# size_categories=("small" "medium" "large")
+# size_categories=("small")
 
 # Associative array to track execution counts
 declare -A execution_counts
