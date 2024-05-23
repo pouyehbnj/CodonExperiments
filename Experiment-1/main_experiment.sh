@@ -31,9 +31,9 @@ declare -A size_values
 # size_values["set_partition_medium"]="16 17"
 # size_values["set_partition_large"]="18 19"
 
-size_values["nsieve_small"]="12 11 10"
-# size_values["nsieve_medium"]="14 12 13"
-# size_values["nsieve_large"]="16 17 15"
+size_values["nsieve_small"]="14 15 13"
+size_values["nsieve_medium"]="16 17 18"
+size_values["nsieve_large"]="19 20 21"
 
 # size_values["fasta_small"]="20000000 25000000 17000000"
 # size_values["fasta_medium"]="31000000 36000000 38000000"
@@ -69,7 +69,7 @@ methods=("cpp" "python" "codon")
 # methods=("cpp")
 # Define the array of size categories
 # size_categories=("small" "medium" "large")
-size_categories=("small")
+size_categories=("medium")
 
 # Associative array to track execution counts
 declare -A execution_counts
