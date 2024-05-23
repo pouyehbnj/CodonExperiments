@@ -13,10 +13,7 @@ BENCH_DIR=$(dirname "$SCRIPT_PATH")
 export CPP="${EXE_CPP:-clang++}"
 export PYTHON="${EXE_PYTHON:-python3}"
 export CSV_FILE="${BENCH_DIR}/cpp_benchmarks.csv"
-if [ "$#" -ne 1 ]; then
-    echo "Usage: $0 <SIZE>"
-    exit 1
-fi
+
 if [ ! -f "$CSV_FILE" ]; then
     echo "execution_method,SIZE,SIZE_CATEGORY,PID,execution_time,compile_time,cpu_usage,mem_usage,power_avg" > "$CSV_FILE"
 fi
