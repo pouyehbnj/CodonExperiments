@@ -31,7 +31,7 @@ declare -A size_values
 # size_values["set_partition_medium"]="16 17"
 # size_values["set_partition_large"]="18 19"
 
-size_values["nsieve_small"]="11 12 13"
+size_values["nsieve_small"]="14 15 13"
 # size_values["nsieve_medium"]="12 13"
 # size_values["nsieve_large"]="14 15"
 
