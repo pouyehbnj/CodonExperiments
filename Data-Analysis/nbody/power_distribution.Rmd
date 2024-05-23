@@ -1,0 +1,77 @@
+# Load necessary libraries
+options(repos = c(CRAN = "https://cran.rstudio.com/"))
+if (!require("tidyverse")) install.packages("tidyverse")
+if (!require("lubridate")) install.packages("lubridate")
+if (!require("pracma")) install.packages("pracma")
+library(tidyverse)
+library(lubridate)
+library(pracma)
+# List files in the current directory that match the pattern
+file_list <- list.files(pattern = "^power-.*-\\d+\\.csv$")
+
+# Initialize the energy consumption data frame
+energy_data <- data.frame(
+  Source = character(),
+  Energy_Consumption_Joules = numeric(),
+  stringsAsFactors = FALSE
+)
+
+# Function to process and plot each file
+process_and_plot_file <- function(file) {
+  # Read the data and check if it is loaded correctly
+  data <- tryCatch({
+    read_csv(file) %>%
+      mutate(
+        Time = ymd_hms(Date),  # Convert Date to POSIXct/POSIXlt
+        Time_Seconds = as.numeric(difftime(ymd_hms(Date), min(ymd_hms(Date)), units = "secs")),  # Calculate time in seconds relative to the first timestamp
+        Source = file  # Keep track of the source file
+      ) %>%
+      select(Time_Seconds, CPU_Power = `CPU Power`, Source)
+  }, error = function(e) {
+    message("Error reading file: ", file, "\n", e)
+    return(NULL)
+  })
+  
+  if (is.null(data)) {
+    return()  # Skip to the next file if there was an error
+  }
+  
+  # Calculate energy consumption using the trapezoidal rule
+  energy_consumption <- trapz(data$Time_Seconds, data$CPU_Power)
+  message("Energy consumption for ", file, ": ", energy_consumption, " Joules")
+  
+  # Append the energy consumption to the energy data frame
+  energy_data <<- bind_rows(energy_data, data.frame(Source = file, Energy_Consumption_Joules = energy_consumption))
+  
+  # Create plot for the current file
+  p <- ggplot(data, aes(x = Time_Seconds, y = CPU_Power)) +
+    geom_line() +  # Connect points with lines
+    labs(
+      title = paste("CPU Power Consumption Over Time -", file),
+      x = "Time (seconds)",
+      y = "CPU Power (Watts)",
+      caption = paste("Data sourced from", file, "\nEnergy consumption: ", round(energy_consumption, 2), " Joules")
+    ) +
+    theme_minimal() +
+    theme(legend.position = "none")  # No legend needed for single file
+
+  # Print the plot to RStudio's viewer or equivalent
+  print(p)
+  
+  # Construct filename
+  file_name <- paste0("cpu_power_", tools::file_path_sans_ext(basename(file)), ".png")
+  print(paste("Saving to:", file_name))  # Debug: Check the file path
+  
+
+  # Save the plot to a file
+  ggsave(paste0("cpu_power_", tools::file_path_sans_ext(basename(file)), ".png"), p, width = 10, height = 5, units = "in", bg="white")
+}
+
+# Apply the function to each file in the list
+invisible(lapply(file_list, process_and_plot_file))
+print(energy_data)
+
+# Save the energy consumption data frame to a CSV file
+write_csv(energy_data, "energy_consumption.csv")
+
+# Print confirmation message
