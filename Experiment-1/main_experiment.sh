@@ -69,7 +69,7 @@ methods=("cpp" "python" "codon")
 # methods=("cpp")
 # Define the array of size categories
 # size_categories=("small" "medium" "large")
-# size_categories=("small")
+size_categories=("small")
 
 # Associative array to track execution counts
 declare -A execution_counts
