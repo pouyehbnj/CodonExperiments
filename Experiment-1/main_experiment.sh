@@ -51,9 +51,9 @@ size_values["nsieve_large"]="19 20 21"
 # size_values["nbody_medium"]="15000000 24000000 30000000"
 # size_values["nbody_large"]="50000000 70000000 50000000"
 
-size_values["spectral_norm_small"]="440 370 468"
-size_values["spectral_norm_medium"]="630 540 500"
-size_values["spectral_norm_large"]="720 760 802"
+# size_values["spectral_norm_small"]="440 370 468"
+# size_values["spectral_norm_medium"]="630 540 500"
+# size_values["spectral_norm_large"]="720 760 802"
 #test
 # size_values["taq_small"]="40000 35000 70000"
 # size_values["taq_medium"]="100000 230000 345000"
