@@ -1,0 +1,54 @@
+library(tidyverse)
+library(readr)
+library(ggplot2)
+library(here)
+
+# Set working directory to the project root
+setwd(here())
+
+# Find all 'improvement.csv' files in subdirectories under 'Data-Analysis'
+improvement_files <- list.files(path = here("Data-Analysis"), pattern = "improvement.csv", recursive = TRUE, full.names = TRUE)
+
+# Extract the list of subdirectories under 'Data-Analysis'
+sub_dirs <- list.dirs(path = here("Data-Analysis"), recursive = FALSE, full.names = TRUE)
+
+# Extract the subject names from the directories
+subject_names <- basename(sub_dirs)
+
+# Map subject names to the improvement files
+subject_files <- tibble(filepath = improvement_files) %>%
+  mutate(subject = map_chr(filepath, function(x) {
+    subdir <- dirname(x)
+    subject <- basename(subdir)
+    return(subject)
+  }))
+
+# Print out unique subjects to confirm correct extraction
+print(unique(subject_files$subject))
+# Read data and add a column to identify the subject or subfolder
+improvements <- map_df(subject_files$filepath, read_csv, .id = "subject") %>%
+  mutate(subject = subject_files$subject[as.integer(subject)])
+
+# Split the data by metric and generate plots
+metrics <- unique(improvements$Metric)
+
+# Create and save plots for each metric
+plots <- lapply(metrics, function(metric) {
+  data_subset <- filter(improvements, Metric == metric)
+  
+  plot <- ggplot(data_subset, aes(x = subject, y = Improvement, fill = SIZE_CATEGORY)) +
+    geom_bar(stat = "identity", position = position_dodge(), width = 0.7) +
+    geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
+    theme_minimal(base_size = 12) +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1),
+          plot.background = element_rect(fill = "white"),
+          panel.background = element_rect(fill = "white")) +
+    labs(title = paste("Improvement in", metric, "across subjects"),
+         x = "Subject",
+         y = "Improvement (%)",
+         fill = "Size Category") +
+    facet_wrap(~ Comparison, scales = "free_y")  # Separate plots by comparison type with free y scales
+  
+  # Save the plot
+  ggsave(filename = here("Data-Analysis", "output", paste0("Improvement_", metric, ".png")), plot = plot, width = 10, height = 8, units = "in", bg="white")
+})
