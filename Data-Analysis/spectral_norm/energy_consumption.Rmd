@@ -1,0 +1,53 @@
+options(repos = c(CRAN = "https://cran.rstudio.com/"))
+if (!require("tidyverse")) install.packages("tidyverse")
+if (!require("ggbeeswarm")) install.packages("readr")
+if (!require("pracma")) install.packages("pracma")
+
+library(tidyverse)
+library(readr)
+library(pracma)
+
+# Function to process each data file
+process_data_file <- function(file_name) {
+  data <- read_csv(file_name, show_col_types = FALSE)
+
+  # Initialize a column for energy consumption
+  data$energy_consumption <- NA
+
+  # Process each row to calculate energy consumption
+  for (i in 1:nrow(data)) {
+    pid <- data$PID[i]
+    execution_method <- tolower(data$execution_method[i])
+    power_file_name <- sprintf("power-%s-%s.csv", execution_method, pid)
+
+    if (file.exists(power_file_name)) {
+      power_data <- read_csv(power_file_name, show_col_types = FALSE) %>%
+        mutate(
+          Time = ymd_hms(Date),  # Convert Date to POSIXct/POSIXlt
+          Time_Seconds = as.numeric(difftime(Time, min(Time), units = "secs"))  # Calculate time in seconds relative to the first timestamp
+        ) %>%
+        arrange(Time)  # Ensure the data is ordered by time
+
+      # Filter out invalid power values (negative or infinite)
+      valid_power_data <- power_data %>%
+        filter(`CPU Power` >= 0, is.finite(`CPU Power`))
+
+      # Check if there are enough valid data points to perform integration
+      if (nrow(valid_power_data) > 1) {
+        # Calculate energy consumption using the trapezoidal rule
+        energy <- pracma::trapz(valid_power_data$Time_Seconds, valid_power_data$`CPU Power`)
+        data$energy_consumption[i] <- energy
+      }
+    }
+  }
+
+ # Save the updated data file with reordered data
+  data %>%
+    arrange(SIZE_CATEGORY, SIZE, PID) %>%
+    write_csv(file_name)
+}
+
+# Process each benchmarks file
+file_names <- c("codon_benchmarks.csv", "cpp_benchmarks.csv", "python_benchmarks.csv")
+# file_names <- c("cpp_benchmarks.csv")
+lapply(file_names, process_data_file)
