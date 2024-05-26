@@ -27,9 +27,9 @@ declare -A size_values
 # size_values["binary_trees_medium"]="20 21" # 1-4 minutes
 # size_values["binary_trees_large"]="22 23" # 4-5 minutes
 
-size_values["set_partition_small"]="14 15 16"
+# size_values["set_partition_small"]="14 15 16"
 # # size_values["set_partition_medium"]="16 17"
-# size_values["set_partition_large"]="17 18 19"
+size_values["set_partition_large"]="17 18 19"
 
 # size_values["nsieve_small"]="14 15 13"
 # # size_values["nsieve_medium"]="16 17 18"
@@ -64,9 +64,9 @@ subjects=($(for key in "${!size_values[@]}"; do echo $key | rev | cut -d'_' -f2-
 echo "All subjects: ${subjects[@]}"
 
 # Define the array of methods
-methods=("cpp" "python" "codon")
+# methods=("cpp" "python" "codon")
 # Define the array of methods
-# methods=("cpp")
+methods=("python")
 # Define the array of size categories
 # size_categories=("small" "medium" "large")
 size_categories=("small")
