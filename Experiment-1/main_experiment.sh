@@ -29,7 +29,7 @@ declare -A size_values
 
 # size_values["set_partition_small"]="14 15 16"
 # # size_values["set_partition_medium"]="16 17"
-# size_values["set_partition_large"]="17 18 19"
+size_values["set_partition_large"]="17 18 19"
 
 # size_values["nsieve_small"]="14 15 13"
 # # size_values["nsieve_medium"]="16 17 18"
