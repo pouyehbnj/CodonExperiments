@@ -29,7 +29,7 @@ declare -A size_values
 
 size_values["set_partition_small"]="14 15 13"
 # # size_values["set_partition_medium"]="16 17"
-# size_values["set_partition_large"]="17 15 16"
+# size_values["set_partition_large"]="17 18 16"
 
 # size_values["nsieve_small"]="14 15 13"
 # # size_values["nsieve_medium"]="16 17 18"
@@ -64,9 +64,9 @@ subjects=($(for key in "${!size_values[@]}"; do echo $key | rev | cut -d'_' -f2-
 echo "All subjects: ${subjects[@]}"
 
 # Define the array of methods
-methods=("cpp" "python" "codon")
+# methods=("cpp" "python" "codon")
 # Define the array of methods
-# methods=("python")
+methods=("cpp" "codon")
 # Define the array of size categories
 # size_categories=("small" "medium" "large")
 size_categories=("small")
