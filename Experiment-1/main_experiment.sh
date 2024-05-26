@@ -27,7 +27,7 @@ declare -A size_values
 # size_values["binary_trees_medium"]="20 21" # 1-4 minutes
 # size_values["binary_trees_large"]="22 23" # 4-5 minutes
 
-size_values["set_partition_small"]="14 12 13"
+size_values["set_partition_small"]="14 15 13"
 # # size_values["set_partition_medium"]="16 17"
 # size_values["set_partition_large"]="17 15 16"
 
