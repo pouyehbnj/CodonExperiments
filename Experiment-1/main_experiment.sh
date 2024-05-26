@@ -27,13 +27,13 @@ declare -A size_values
 # size_values["binary_trees_medium"]="20 21" # 1-4 minutes
 # size_values["binary_trees_large"]="22 23" # 4-5 minutes
 
-# size_values["set_partition_small"]="14 15"
-# size_values["set_partition_medium"]="16 17"
-# size_values["set_partition_large"]="18 19"
+size_values["set_partition_small"]="14 15 16"
+# # size_values["set_partition_medium"]="16 17"
+# size_values["set_partition_large"]="17 18 19"
 
-size_values["nsieve_small"]="14 15 13"
-size_values["nsieve_medium"]="16 17 18"
-size_values["nsieve_large"]="19 20 21"
+# size_values["nsieve_small"]="14 15 13"
+# # size_values["nsieve_medium"]="16 17 18"
+# size_values["nsieve_large"]="16 17 18"
 
 # size_values["fasta_small"]="20000000 25000000 17000000"
 # size_values["fasta_medium"]="31000000 36000000 38000000"
@@ -68,8 +68,8 @@ methods=("cpp" "python" "codon")
 # Define the array of methods
 # methods=("cpp")
 # Define the array of size categories
-size_categories=("small" "medium" "large")
-# size_categories=("medium")
+# size_categories=("small" "medium" "large")
+size_categories=("small")
 
 # Associative array to track execution counts
 declare -A execution_counts
