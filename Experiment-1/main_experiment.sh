@@ -27,9 +27,9 @@ declare -A size_values
 # size_values["binary_trees_medium"]="19" # 1-4 minutes
 # size_values["binary_trees_large"]="20 21" # 4-5 minutes
 
-size_values["set_partition_small"]="14"
-size_values["set_partition_medium"]="15"
-size_values["set_partition_large"]="17 16"
+size_values["set_partition_small"]="15"
+size_values["set_partition_medium"]="16"
+size_values["set_partition_large"]="17"
 
 # size_values["nsieve_small"]="14"
 # size_values["nsieve_medium"]="15"
@@ -66,7 +66,7 @@ echo "All subjects: ${subjects[@]}"
 # Define the array of methods
 methods=("cpp" "python" "codon")
 # Define the array of methods
-methods=("python")
+# methods=("python")
 # Define the array of size categories
 size_categories=("small" "medium" "large")
 # size_categories=("small")
