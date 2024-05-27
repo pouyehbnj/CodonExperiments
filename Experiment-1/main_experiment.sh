@@ -23,7 +23,7 @@ SCRIPT_DIR=$(cd $(dirname "$0") && pwd)
 # size_values["primes_large"]="6600000 6700000 6800000"
 
 declare -A size_values
-# size_values["binary_trees_small"]="18 19" # under 1 minute
+size_values["binary_trees_small"]="17 18 19" # under 1 minute
 # size_values["binary_trees_medium"]="20 21" # 1-4 minutes
 # size_values["binary_trees_large"]="22 23" # 4-5 minutes
 
@@ -43,9 +43,9 @@ declare -A size_values
 # size_values["float_medium"]="60000000 66500000 70000000"
 # size_values["float_large"]="85000000 90000000 80000000"
 
-size_values["mandelbrot_small"]="1000 1270 1590"
-size_values["mandelbrot_medium"]="1750 1900 1840"
-size_values["mandelbrot_large"]="2310 2100 2240"
+# size_values["mandelbrot_small"]="1000 1270 1590"
+# size_values["mandelbrot_medium"]="1750 1900 1840"
+# size_values["mandelbrot_large"]="2310 2100 2240"
 
 # size_values["nbody_small"]="6000000 8000000 9000000"
 # size_values["nbody_medium"]="15000000 24000000 30000000"
@@ -68,8 +68,8 @@ methods=("cpp" "python" "codon")
 # Define the array of methods
 # methods=("python")
 # Define the array of size categories
-size_categories=("small" "medium" "large")
-# size_categories=("large")
+# size_categories=("small" "medium" "large")
+size_categories=("small")
 
 # Associative array to track execution counts
 declare -A execution_counts
