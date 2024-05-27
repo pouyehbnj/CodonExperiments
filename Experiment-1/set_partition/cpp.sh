@@ -8,8 +8,6 @@ fi
 SIZE=$1
 CATEGORY=$2
 
-
-SIZE=$1
 SCRIPT_PATH=$(readlink -f "$0")
 BENCH_DIR=$(dirname "$SCRIPT_PATH")
 export CPP="${EXE_CPP:-clang++}"
