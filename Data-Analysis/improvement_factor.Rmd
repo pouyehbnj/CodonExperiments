@@ -1,3 +1,9 @@
+options(repos = c(CRAN = "https://cran.rstudio.com/"))
+if (!require("tidyverse")) install.packages("tidyverse")
+if (!require("readr")) install.packages("readr")
+if (!require("ggplot2")) install.packages("ggplot2")
+if (!require("here")) install.packages("here")
+
 library(tidyverse)
 library(readr)
 library(ggplot2)
