@@ -1,0 +1,161 @@
+options(repos = c(CRAN = "https://cran.rstudio.com/"))
+if (!require("tidyverse")) install.packages("tidyverse")
+if (!require("ggbeeswarm")) install.packages("ggbeeswarm")
+if (!require("ggplot2")) install.packages("ggplot2")
+if (!require("tidyr")) install.packages("tidyr")
+if (!require("dplyr")) install.packages("dplyr")
+if (!require("scales")) install.packages("scales")
+if (!require("RColorBrewer")) install.packages("RColorBrewer")
+if (!require("viridis")) install.packages("viridis")
+library(tidyverse)
+library(ggbeeswarm)
+library(ggplot2)
+library(tidyr)
+library(dplyr)
+library(scales)
+library(RColorBrewer)
+library(viridis)
+# Read and combine data
+codon_data <- read_csv("./codon_benchmarks.csv", show_col_types = FALSE)
+python_data <- read_csv("./python_benchmarks.csv", show_col_types = FALSE)
+cpp_data <- read_csv("./cpp_benchmarks.csv", show_col_types = FALSE)
+combined_data <- bind_rows(codon_data, python_data, cpp_data)
+
+# Prepare data for visualization
+groups_long <- combined_data %>%
+  gather(key = "metric", value = "response", execution_time, compile_time, cpu_usage, mem_usage, power_avg) %>%
+  mutate(group = interaction(execution_method, SIZE))
+# filter(execution_method == "codon")  # Filter for one execution method for focus
+
+# Check the data
+# print(n=1000,groups_long)
+
+
+# Set a default theme for all plots
+theme_set(
+  theme_minimal(base_size = 14) + 
+   theme(
+    plot.title = element_text(face = "bold", color = "black"),
+    axis.title = element_text(color = "black"),
+    axis.text = element_text(color = "black"),
+    axis.ticks = element_line(color = "black"),
+    legend.title = element_text(color = "black"),
+    legend.text = element_text(color = "black"),
+    strip.text = element_text(color = "black", face = "bold"),
+    strip.background = element_rect(fill = "white"),
+    plot.background = element_rect(fill = "white"), # Ensure plot background is white
+    panel.background = element_rect(fill = "white"), # Ensure panel background is white
+    panel.grid.major = element_line(color = "gray"),
+    panel.grid.minor = element_line(color = "lightgray"),
+    legend.position = "bottom"
+  )
+)
+
+# Verify themes are applied by creating the plots as usual
+# Metrics visualization plot
+plots <- groups_long %>%
+  ggplot(aes(x = as.factor(SIZE), y = response, color = execution_method, fill = execution_method)) +
+  geom_jitter(position = position_dodge(width = 0.8), alpha = 0.6, size = 2) +
+  geom_boxplot(alpha = 0.4, outlier.shape = NA, position = position_dodge(width = 0.8)) +
+  facet_grid(metric ~ execution_method, scales = "free_y") +
+  scale_y_continuous(trans = 'pseudo_log', labels = scales::comma) +
+  labs(title = "Performance Metrics by Execution Method and Size",
+       x = "Size of Dataframe",
+       y = "Metric Value")
+
+# Dot plot
+
+dotplot <- groups_long %>%
+  ggplot(aes(x = group, y = response, fill = group)) +
+  geom_quasirandom(shape = 21, color = "black", alpha = 0.8, size = 3) +
+  scale_fill_brewer(palette = "Dark2") +
+  facet_wrap(~ metric, scales = "free_y", ncol = 3) +
+  labs(x = "", y = "Response", caption = "Response distribution across groups") +
+  ggtitle("Dot Plot of Response by Group")+
+   theme(
+    axis.text.x = element_text(color = "white"),  # Change text color to white to effectively hide it
+    axis.ticks.x = element_blank(),  # Hide x-axis ticks
+    axis.title.x = element_blank()  # Ensure x-axis title is also not shown
+  )
+
+# Save the plots (if saving is needed)
+ggsave("metrics_visualization_all_methods.png", plots, width = 16, height = 10,units = "in", bg = "white")
+ggsave("dotplot_all_methods.png", dotplot, width = 16, height = 10,units = "in", bg = "white")
+
+# Print the plots to verify the output
+print(plots)
+print(dotplot)
+
+# Calculate Energy # Adjust combined_data to include energy in Joules
+combined_data <- combined_data %>%
+  mutate(energy_joules = power_avg * execution_time,
+  SIZE = factor(SIZE) 
+  )  # Energy in Joules
+
+# Plotting using Joules with colors automatically assigned to each SIZE
+energy_plots <- ggplot(combined_data, aes(x = as.factor(SIZE), y = energy_joules, color = SIZE, fill = SIZE)) +
+  geom_jitter(position = position_dodge(width = 0.75), alpha = 0.6, size = 2) +  # Using jitter for overlap
+  geom_boxplot(alpha = 0.4, outlier.shape = NA, position = position_dodge(width = 0.75)) +  # Boxplot for distribution
+  facet_wrap(~ execution_method, scales = "free_y") +  # Separate plots for each execution method
+  scale_color_viridis_d() +  # Use viridis discrete colors for distinction
+  scale_fill_viridis_d() + 
+  labs(
+    title = "Individual Energy Consumption by Execution Method and Size",
+    x = "Size of Dataframe",
+    y = "Energy (Joules)",
+    caption = "Data points are colored by data size."
+  ) +
+  theme_minimal() +  # Minimal theme for clean presentation
+  theme(
+    plot.background = element_rect(fill = "white"),
+    panel.background = element_rect(fill = "white"),
+    strip.background = element_rect(fill = "white", color = "black"),
+    legend.position = "right",
+    legend.background = element_rect(fill = "white"),
+    legend.title = element_text(size = 12, face = "bold"),
+    legend.text = element_text(size = 10)
+  )
+
+# Display the plot to see automatic color assignment
+print(energy_plots)
+
+# Optionally save the plot
+ggsave("energy_consumption_by_size_and_method.png", energy_plots, width = 16, height = 10, units = "in", bg = "white")
+
+
+# Ensure data types are correct
+combined_data <- combined_data %>%
+  mutate(execution_time = as.numeric(execution_time),  # Convert execution time to numeric if not already
+         SIZE = as.factor(SIZE))  # Ensure SIZE is treated as a factor
+# Creating the power consumption plot without the linear regression line
+power_plot <- combined_data %>%
+  ggplot(aes(x = execution_time, y = power_avg, color = SIZE)) +  # Map SIZE to color
+  geom_point() +  # Scatter plot points only
+  facet_wrap(~ execution_method, scales = "free_x") + 
+  scale_x_continuous(trans = 'pseudo_log', labels = scales::comma) + # Separate plots for each execution method
+  labs(
+    title = "Power Consumption vs. Execution Time",
+    x = "Execution Time (s)",
+    y = "Average Power (Watts)",
+    caption = "Data points are colored by data size."
+  ) +
+  theme_minimal() +
+  theme(
+    plot.background = element_rect(fill = "white"),
+    panel.background = element_rect(fill = "white"),
+    legend.position = "right",
+    legend.title = element_text(size = 12, face = "bold"),
+    legend.text = element_text(size = 10)
+  )
+
+# Print the plot to see the modifications
+print(power_plot)
+
+# Optionally save the plot if needed
+ggsave("power_plot.png", power_plot, width = 16, height = 10, units = "in", bg = "white")
+
+
+
+
+
+
