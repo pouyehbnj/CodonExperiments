@@ -32,8 +32,8 @@ declare -A size_values
 # size_values["set_partition_large"]="16"
 
 # size_values["nsieve_small"]="14 15"
-size_values["nsieve_medium"]="16 17"
-# size_values["nsieve_large"]="19 18"
+# size_values["nsieve_medium"]="16 17"
+size_values["nsieve_large"]="19 18"
 
 # size_values["fasta_small"]="20000000 25000000 17000000"
 # size_values["fasta_medium"]="31000000 36000000 38000000"
@@ -69,7 +69,7 @@ echo "All subjects: ${subjects[@]}"
 methods=("python")
 # Define the array of size categories
 # size_categories=("small" "medium" "large")
-size_categories=("medium")
+size_categories=("large")
 
 # Associative array to track execution counts
 declare -A execution_counts
