@@ -35,9 +35,9 @@ declare -A size_values
 # size_values["set_partition_medium"]="15"
 # size_values["set_partition_large"]="16"
 
-size_values["nsieve_small"]="12 13"
-# size_values["nsieve_medium"]="16 15"
-# size_values["nsieve_large"]="17 18"
+size_values["nsieve_small"]="15"
+size_values["nsieve_medium"]="16"
+size_values["nsieve_large"]="17"
 
 # size_values["fasta_small"]="20000000 25000000 17000000"
 # size_values["fasta_medium"]="31000000 36000000 38000000"
