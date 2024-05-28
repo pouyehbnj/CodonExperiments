@@ -27,17 +27,17 @@ declare -A size_values
 # size_values["reverse_complement_medium"]="25000000 30000000 35000000"
 # size_values["reverse_complement_large"]="40000000 45000000 50000000"
 
-# size_values["binary_trees_small"]="18 17" # under 1 minute
-# size_values["binary_trees_medium"]="19" # 1-4 minutes
+size_values["binary_trees_small"]="16 17" # under 1 minute
+# size_values["binary_trees_medium"]="19 28" # 1-4 minutes
 # size_values["binary_trees_large"]="20 21" # 4-5 minutes
 
 # size_values["set_partition_small"]="14"
 # size_values["set_partition_medium"]="15"
 # size_values["set_partition_large"]="16"
 
-size_values["nsieve_small"]="15"
-size_values["nsieve_medium"]="16"
-size_values["nsieve_large"]="17"
+# size_values["nsieve_small"]="15"
+# size_values["nsieve_medium"]="16"
+# size_values["nsieve_large"]="17"
 
 # size_values["fasta_small"]="20000000 25000000 17000000"
 # size_values["fasta_medium"]="31000000 36000000 38000000"
@@ -68,12 +68,12 @@ subjects=($(for key in "${!size_values[@]}"; do echo $key | rev | cut -d'_' -f2-
 echo "All subjects: ${subjects[@]}"
 
 # Define the array of methods
-methods=("cpp" "python" "codon")
+# methods=("cpp" "python" "codon")
 # Define the array of methods
-# methods=("cpp")
+methods=("cpp")
 # Define the array of size categories
-size_categories=("small" "medium" "large")
-# size_categories=("small")
+# size_categories=("small" "medium" "large")
+size_categories=("small")
 
 # Associative array to track execution counts
 declare -A execution_counts
