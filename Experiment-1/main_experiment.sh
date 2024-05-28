@@ -31,9 +31,9 @@ declare -A size_values
 # size_values["set_partition_medium"]="15"
 # size_values["set_partition_large"]="16"
 
-# size_values["nsieve_small"]="14 15"
-# size_values["nsieve_medium"]="16 17"
-size_values["nsieve_large"]="19 18"
+size_values["nsieve_small"]="14 13"
+# size_values["nsieve_medium"]="16 15"
+# size_values["nsieve_large"]="17 18"
 
 # size_values["fasta_small"]="20000000 25000000 17000000"
 # size_values["fasta_medium"]="31000000 36000000 38000000"
@@ -66,7 +66,7 @@ echo "All subjects: ${subjects[@]}"
 # Define the array of methods
 # methods=("cpp" "python" "codon")
 # Define the array of methods
-methods=("python")
+methods=("cpp" "codon")
 # Define the array of size categories
 # size_categories=("small" "medium" "large")
 size_categories=("large")
