@@ -27,9 +27,9 @@ SCRIPT_DIR=$(cd $(dirname "$0") && pwd)
 
 declare -A size_values
 
-size_values["fannkuch_small"]="10 11 12"
-# size_values["fannkuch_medium"]="13 14 15"
-# size_values["fannkuch_large"]="16 17 18"
+size_values["reverse_complement_small"]="10000000"
+# size_values["reverse_complement_medium"]="25000000 30000000 35000000"
+# size_values["reverse_complement_large"]="40000000 45000000 50000000"
 
 # size_values["binary_trees_small"]="18" 
 # size_values["binary_trees_medium"]="19" 
