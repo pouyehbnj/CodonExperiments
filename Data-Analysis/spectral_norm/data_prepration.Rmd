@@ -1,0 +1,47 @@
+library(tidyverse)
+library(ggplot2)
+
+# Load and combine data
+codon_data <- read_csv("./codon_benchmarks.csv", show_col_types = FALSE)
+python_data <- read_csv("./python_benchmarks.csv", show_col_types = FALSE)
+cpp_data <- read_csv("./cpp_benchmarks.csv", show_col_types = FALSE)
+combined_data <- bind_rows(codon_data, python_data, cpp_data)
+
+# Prepare data for visualization
+groups_long <- combined_data %>%
+  gather(key = "metric", value = "response", execution_time, compile_time, cpu_usage, mem_usage, power_avg) %>%
+  mutate(group = interaction(execution_method, SIZE_CATEGORY))
+
+# Removing outliers using Median and MAD
+groups_long <- groups_long %>%
+  group_by(metric, execution_method, SIZE_CATEGORY) %>%
+  mutate(
+    median_response = median(response),
+    mad_response = mad(response)
+  ) %>%
+  filter(
+    response > (median_response - 3 * mad_response) & response < (median_response + 3 * mad_response)
+  ) %>%
+  select(-median_response, -mad_response)
+
+# Split plots by metric for clearer visualizations
+metrics <- unique(groups_long$metric)
+
+plots <- list()
+for (metric in metrics) {
+  metric_data <- filter(groups_long, metric == !!metric)
+  
+  plots[[metric]] <- ggplot(metric_data, aes(x = as.factor(SIZE_CATEGORY), y = response, color = execution_method, fill = execution_method)) +
+    geom_jitter(position = position_dodge(width = 0.8), alpha = 0.6, size = 2) +
+    geom_boxplot(alpha = 0.4, outlier.shape = NA, position = position_dodge(width = 0.8)) +
+    facet_wrap(~ execution_method, scales = "free_y") +
+    labs(title = paste("Performance Metrics:", metric, "by Execution Method and Size Category"),
+         x = "Size Category",
+         y = "Metric Value") +
+    theme_minimal()
+
+  # Display the plot
+  print(plots[[metric]])
+  # Optionally save the plot
+  ggsave(paste0("metrics_visualization_", metric, "_by_category.png"), plots[[metric]], width = 16, height = 10, units = "in", bg = "white")
+}

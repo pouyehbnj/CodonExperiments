@@ -1,47 +1,100 @@
+# Set repository for package installation
+options(repos = c(CRAN = "https://cran.rstudio.com/"))
+
+# Install necessary libraries if not already installed
+if (!require("ggplot2")) install.packages("ggplot2")
+if (!require("tidyverse")) install.packages("tidyverse")
+
+# Load necessary libraries
 library(tidyverse)
 library(ggplot2)
 
-# Load and combine data
-codon_data <- read_csv("./codon_benchmarks.csv", show_col_types = FALSE)
-python_data <- read_csv("./python_benchmarks.csv", show_col_types = FALSE)
-cpp_data <- read_csv("./cpp_benchmarks.csv", show_col_types = FALSE)
-combined_data <- bind_rows(codon_data, python_data, cpp_data)
+# Load data
+codon_data <- read_csv("codon_benchmarks.csv")
+python_data <- read_csv("python_benchmarks.csv")
+cpp_data <- read_csv("cpp_benchmarks.csv")
 
-# Prepare data for visualization
-groups_long <- combined_data %>%
-  gather(key = "metric", value = "response", execution_time, compile_time, cpu_usage, mem_usage, power_avg) %>%
-  mutate(group = interaction(execution_method, SIZE_CATEGORY))
+# Combine data into a single dataframe
+all_data <- bind_rows(codon_data, python_data, cpp_data)
 
-# Removing outliers using Median and MAD
-groups_long <- groups_long %>%
-  group_by(metric, execution_method, SIZE_CATEGORY) %>%
-  mutate(
-    median_response = median(response),
-    mad_response = mad(response)
+# Total time calculation including 5 seconds cooldown between each run
+total_experiment_time <- (sum(all_data$execution_time, all_data$compile_time, na.rm = TRUE) + (nrow(all_data) - 1) * 5)/3600
+
+# Print total experiment time
+cat("Total Experiment Time (including 5-second delays):", total_experiment_time, "hours\n")
+
+# Descriptive Analysis
+
+descriptive_stats <- all_data %>%
+  group_by(execution_method, SIZE_CATEGORY) %>%
+  summarise(
+    mean_energy = mean(energy_consumption, na.rm = TRUE),
+    median_energy = median(energy_consumption, na.rm = TRUE),
+    sd_energy = sd(energy_consumption, na.rm = TRUE),
+    mean_execution_time = mean(execution_time, na.rm = TRUE),
+    median_execution_time = median(execution_time, na.rm = TRUE),
+    sd_execution_time = sd(execution_time, na.rm = TRUE),
+    mean_cpu_usage = mean(cpu_usage, na.rm = TRUE),
+    median_cpu_usage = median(cpu_usage, na.rm = TRUE),
+    sd_cpu_usage = sd(cpu_usage, na.rm = TRUE),
+    mean_memory_usage = mean(mem_usage, na.rm = TRUE),
+    median_memory_usage = median(mem_usage, na.rm = TRUE),
+    sd_memory_usage = sd(mem_usage, na.rm = TRUE),
+    .groups = 'drop'
   ) %>%
-  filter(
-    response > (median_response - 3 * mad_response) & response < (median_response + 3 * mad_response)
-  ) %>%
-  select(-median_response, -mad_response)
+  arrange(SIZE_CATEGORY)
 
-# Split plots by metric for clearer visualizations
-metrics <- unique(groups_long$metric)
+write_csv(descriptive_stats, "descriptive_stats.csv")
 
-plots <- list()
-for (metric in metrics) {
-  metric_data <- filter(groups_long, metric == !!metric)
-  
-  plots[[metric]] <- ggplot(metric_data, aes(x = as.factor(SIZE_CATEGORY), y = response, color = execution_method, fill = execution_method)) +
-    geom_jitter(position = position_dodge(width = 0.8), alpha = 0.6, size = 2) +
-    geom_boxplot(alpha = 0.4, outlier.shape = NA, position = position_dodge(width = 0.8)) +
-    facet_wrap(~ execution_method, scales = "free_y") +
-    labs(title = paste("Performance Metrics:", metric, "by Execution Method and Size Category"),
-         x = "Size Category",
-         y = "Metric Value") +
-    theme_minimal()
 
-  # Display the plot
-  print(plots[[metric]])
-  # Optionally save the plot
-  ggsave(paste0("metrics_visualization_", metric, "_by_category.png"), plots[[metric]], width = 16, height = 10, units = "in", bg = "white")
+# Check for output folder_path
+folder_path <- "plots/"
+if (!dir.exists(folder_path)) {
+  dir.create(folder_path)
 }
+
+# Function to create and save violin and box plots for each metric
+create_plots <- function(metric) {
+  # Filter out Python if the metric is 'compile_time'
+  data_filtered <- if (metric == "compile_time") {
+    all_data %>% filter(execution_method != "python")
+  } else {
+    all_data
+  }
+  n_cols <- if (metric == "compile_time") 2 else 3  
+  # Create violin plot
+  violin_plot <- ggplot(data_filtered, aes_string(x = "execution_method", y = metric, fill = "execution_method")) +
+    geom_violin() +
+    facet_wrap(~SIZE_CATEGORY + execution_method, scales = "free_y", ncol = n_cols) +
+    labs(title = paste("Violin Plot of", metric, "by Compilation Method"), x = "Compilation Method", y = metric) +
+    theme_minimal() +
+    theme(plot.background = element_rect(fill = "white"), panel.background = element_rect(fill = "white"))
+
+  # Save violin plot
+  ggsave(paste0(folder_path, "violin_", metric, ".png"), violin_plot, width = 10, height = 8, bg = "white")
+
+  # Create box plot
+  box_plot <- ggplot(data_filtered, aes_string(x = "execution_method", y = metric, fill = "execution_method")) +
+    geom_boxplot() +
+    facet_wrap(~SIZE_CATEGORY + execution_method, scales = "free_y", ncol = n_cols) +
+    labs(title = paste("Box Plot of", metric, "by Compilation Method"), x = "Compilation Method", y = metric) +
+    theme_minimal() +
+    theme(plot.background = element_rect(fill = "white"), panel.background = element_rect(fill = "white"))
+
+  # Save box plot
+  ggsave(paste0(folder_path, "boxplot_", metric, ".png"), box_plot, width = 10, height = 8, bg = "white")
+}
+
+# Apply the function to each metric
+metrics <- c("energy_consumption", "execution_time", "cpu_usage", "mem_usage", "compile_time")
+lapply(metrics, create_plots)
+
+# Scatter plot for execution time vs energy consumption
+scatter_plot <- ggplot(all_data, aes(x = execution_time, y = energy_consumption, color = execution_method)) +
+  geom_point(alpha = 0.6) +
+  facet_wrap(~SIZE_CATEGORY + execution_method, scales = "free",ncol=3) +
+  labs(title = "Execution Time vs Energy Consumption", x = "Execution Time (Seconds)", y = "Energy Consumption (Joules)") +
+  theme_minimal()
+
+# Save scatter plot
+ggsave(paste0(folder_path, "energy_exetime", ".png"), scatter_plot, width = 10, height = 8, bg = "white")
