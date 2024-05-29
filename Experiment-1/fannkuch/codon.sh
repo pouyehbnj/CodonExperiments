@@ -1,11 +1,12 @@
 #!/bin/bash
 # Ensure a size is passed to the script
-if [ "$#" -ne 1 ]; then
-    echo "Usage: $0 <SIZE>"
+if [ "$#" -ne 2 ]; then
+    echo "Usage: $0 <SIZE> <CATEGORY>"
     exit 1
 fi
 
 SIZE=$1
+CATEGORY=$2
 
 # Setup environment variables
 SCRIPT_PATH=$(readlink -f "$0")
@@ -16,7 +17,7 @@ export CSV_FILE="${BENCH_DIR}/codon_benchmarks.csv"
 
 # Check if the CSV file exists and write the header if it does not
 if [ ! -f "$CSV_FILE" ]; then
-    echo "execution_method,SIZE,execution_time,compile_time,cpu_usage,mem_usage,power_avg" > "$CSV_FILE"
+    echo "execution_method,SIZE,SIZE_CATEGORY,PID,execution_time,compile_time,cpu_usage,mem_usage,power_avg" > "$CSV_FILE"
 fi
 
 # Helper function to log process stats
@@ -64,7 +65,7 @@ CODON_STATS=$(log_process_stats $CODON_PID)
 IFS=',' read cpu_usage mem_usage power_avg <<< "$CODON_STATS"
 WAIT_TIME=$(${PYTHON} -c "import time; print(time.time())")
 CODON_TIME=$(echo "$WAIT_TIME - $START_TIME" | bc)
-echo "codon,${SIZE},${CODON_TIME},${COMP_TIME_CODON},${CODON_STATS}" >> "${CSV_FILE}"
+echo "codon,${SIZE},${CATEGORY},${CODON_PID},${CODON_TIME},${COMP_TIME_CODON},${CODON_STATS}" >> "${CSV_FILE}"
 echo "codon execution time: ${CODON_TIME}s, CPU: $cpu_usage, Mem: $mem_usage, Power: $power_avg"
 
 # Clean up
