@@ -27,9 +27,9 @@ declare -A size_values
 # size_values["reverse_complement_medium"]="25000000 30000000 35000000"
 # size_values["reverse_complement_large"]="40000000 45000000 50000000"
 
-# size_values["binary_trees_small"]="19 18" # under 1 minute
-# size_values["binary_trees_medium"]="20 21" # 1-4 minutes
-size_values["binary_trees_large"]="23 22" # 4-5 minutes
+size_values["binary_trees_small"]="18" # under 1 minute
+size_values["binary_trees_medium"]="19" # 1-4 minutes
+size_values["binary_trees_large"]="20" # 4-5 minutes
 
 # size_values["set_partition_small"]="14"
 # size_values["set_partition_medium"]="15"
@@ -68,12 +68,12 @@ subjects=($(for key in "${!size_values[@]}"; do echo $key | rev | cut -d'_' -f2-
 echo "All subjects: ${subjects[@]}"
 
 # Define the array of methods
-# methods=("cpp" "python" "codon")
+methods=("cpp" "python" "codon")
 # Define the array of methods
-methods=("python")
+# methods=("python")
 # Define the array of size categories
-# size_categories=("small" "medium" "large")
-size_categories=("large")
+size_categories=("small" "medium" "large")
+# size_categories=("large")
 
 # Associative array to track execution counts
 declare -A execution_counts
