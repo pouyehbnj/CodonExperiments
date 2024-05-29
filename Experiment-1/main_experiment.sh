@@ -27,9 +27,9 @@ declare -A size_values
 # size_values["reverse_complement_medium"]="25000000 30000000 35000000"
 # size_values["reverse_complement_large"]="40000000 45000000 50000000"
 
-size_values["binary_trees_small"]="18" # under 1 minute
-size_values["binary_trees_medium"]="19" # 1-4 minutes
-size_values["binary_trees_large"]="20" # 4-5 minutes
+size_values["binary_trees_small"]="19" # under 1 minute
+size_values["binary_trees_medium"]="20" # 1-4 minutes
+size_values["binary_trees_large"]="21" # 4-5 minutes
 
 # size_values["set_partition_small"]="14"
 # size_values["set_partition_medium"]="15"
