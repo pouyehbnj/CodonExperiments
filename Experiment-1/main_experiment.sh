@@ -72,9 +72,9 @@ subjects=($(for key in "${!size_values[@]}"; do echo $key | rev | cut -d'_' -f2-
 echo "All subjects: ${subjects[@]}"
 
 # Define the array of methods
-methods=("cpp" "python" "codon")
+# methods=("cpp" "python" "codon")
 # Define the array of methods
-# methods=("python")
+methods=("cpp")
 # Define the array of size categories
 # size_categories=("small" "medium" "large")
 size_categories=("small")
