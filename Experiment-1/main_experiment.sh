@@ -73,7 +73,7 @@ echo "All subjects: ${subjects[@]}"
 
 # Define the array of methods
 methods=("cpp" "python" "codon")
-# Define the array of methods
+# Define the array of methods mfkd
 # methods=("cpp")
 # Define the array of size categories
 # size_categories=("small" "medium" "large")
