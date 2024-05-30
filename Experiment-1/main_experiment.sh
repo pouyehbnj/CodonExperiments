@@ -27,8 +27,8 @@ SCRIPT_DIR=$(cd $(dirname "$0") && pwd)
 
 declare -A size_values
 
-size_values["fannkuch_small"]="10"
-# size_values["fannkuch_medium"]="13 14 15"
+# size_values["fannkuch_small"]="10"
+size_values["fannkuch_medium"]="12"
 # size_values["fannkuch_large"]="16 17 18"
 
 # size_values["binary_trees_small"]="18" 
@@ -77,7 +77,7 @@ methods=("cpp" "python" "codon")
 # methods=("cpp")
 # Define the array of size categories
 # size_categories=("small" "medium" "large")
-size_categories=("small")
+size_categories=("medium")
 
 # Associative array to track execution counts
 declare -A execution_counts
