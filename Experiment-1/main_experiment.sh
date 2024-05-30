@@ -27,7 +27,7 @@ SCRIPT_DIR=$(cd $(dirname "$0") && pwd)
 
 declare -A size_values
 
-size_values["reverse_complement_small"]="8500000"
+size_values["reverse_complement_small"]="8700000"
 # size_values["reverse_complement_medium"]="13000000"
 # size_values["reverse_complement_large"]="14000000"
 
