@@ -32,8 +32,8 @@ declare -A size_values
 # size_values["fannkuch_large"]="13"
 
 size_values["reverse_complement_small"]="12000000"
-size_values["reverse_complement_medium"]="1250"
-size_values["reverse_complement_large"]="1300"
+size_values["reverse_complement_medium"]="12500000"
+size_values["reverse_complement_large"]="13000000"
 
 # size_values["binary_trees_small"]="18" 
 # size_values["binary_trees_medium"]="19" 
