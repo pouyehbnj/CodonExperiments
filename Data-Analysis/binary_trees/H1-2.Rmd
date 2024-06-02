@@ -1,18 +1,26 @@
 # Set repository for package installation
 options(repos = c(CRAN = "https://cran.rstudio.com/"))
-
+options(warn = -1)
 # Install necessary libraries if not already installed
 if (!require("ggplot2")) install.packages("ggplot2")
 if (!require("tidyverse")) install.packages("tidyverse")
 if (!require("ggfortify")) install.packages("ggfortify")
 if (!require("MASS")) install.packages("MASS")
+if (!require("stats")) install.packages("stats")
+if (!require("effsize")) install.packages("effsize")
 if (!require("moments")) install.packages("moments")
+if (!require("brunnermunzel")) install.packages("brunnermunzel")
+if (!require("coin")) install.packages("coin")
 # Load necessary libraries
 library(tidyverse)
 library(ggplot2)
 library(ggfortify)
 library(MASS)
-library(moments)
+library(stats)
+library(effsize) 
+library(moments) 
+library(brunnermunzel)
+library(coin)
 # Load data
 codon_data <- read_csv("codon_benchmarks.csv", show_col_types = FALSE)
 python_data <- read_csv("python_benchmarks.csv", show_col_types = FALSE)
@@ -89,9 +97,10 @@ results_list <- list()
 
 # Define execution methods, size categories, and metrics
 execution_pairs <- list(c("codon", "python"), c("codon", "cpp"))
+# execution_pairs <- list(c("codon", "cpp"))
 size_categories <- c("small", "medium", "large")
-metrics <- c("energy_consumption", "execution_time", "cpu_usage", "mem_usage", "compile_time")
-
+# metrics <- c("energy_consumption", "execution_time", "cpu_usage", "mem_usage", "compile_time")
+metrics <- c("energy_consumption")
 # Loop through each combination
 index <- 1
 for (metric in metrics) {
@@ -125,7 +134,40 @@ for (metric in metrics) {
   }
 }
 
-# Loop through the results list and print Method1, Method2, and Test Type
 for (result in results_list) {
   print(paste(result$Method1, "vs", result$Method2, "in", result$Size, "size category with metric", result$Metric, ":", result$TestType))
+  
+   if (result$TestType == "t-test") {
+    # Perform t-test
+    test_result <- t.test(result$Group1Data, result$Group2Data)
+ 
+    print(paste("T-test result for", result$Metric, "in", result$Size, "size category: p-value =", test_result$p.value))
+    
+    # Calculate Cohen's d if null hypothesis is rejected
+    if (test_result$p.value < 0.05) {
+      print("Decision:Reject the null hypothesis")
+      cohen_d <- effsize::cohen.d(result$Group1Data, result$Group2Data)
+      print(paste("Cohen's d:", cohen_d$estimate))
+    }else{
+      print("Decision:Fail to reject the null hypothesis") 
+    }
+   } else {
+    # Perform Wilcoxon test
+     test_result <- wilcox.test(result$Group1Data, result$Group2Data, alternative = "two.sided")
+     print(paste("Wilcoxon test result for", result$Metric, "in", result$Size, "size category: p-value =", test_result$p.value))
+  #  # Perform Brunner-Munzel test
+  #  test_result <- brunnermunzel.test(result$Group1Data, result$Group2Data)
+  #  print(paste("Brunner-Munzel test result for", result$Metric, "in", result$Size, "size category: p-value =", test_result$p.value))
+ 
+    # Calculate Cliff's Delta if null hypothesis is rejected
+    if (test_result$p.value < 0.05) {
+      print("Decision:Reject the null hypothesis")
+        cliffs_delta <- effsize::cliff.delta(result$Group1Data, result$Group2Data)
+        print(paste("Cliff's Delta:", cliffs_delta$estimate))
+  #    print(paste("Effect size:", test_result$estimate))
+    }else{
+      print("Decision:Fail to reject the null hypothesis") 
+    }
+  }
 }
+
