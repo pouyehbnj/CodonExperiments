@@ -8,7 +8,10 @@ calculate_improvement <- function(codon, other) {
     if (!is.na(codon[i]) && !is.na(other[i])) {
       if (other[i] == 0 && codon[i] == 0) {
         improvement[i] <- 0  # Return 0 if both values are zero
-      } else if (other[i] != 0) {
+      } else if(other[i] = 0 &&  codon[i]!=0){
+         improvement[i] <- 100
+      }
+      else if (other[i] != 0) {
         improvement[i] <- (other[i] - codon[i]) / other[i] * 100  # Standard improvement calculation
       } else {
         improvement[i] <- NA_real_  # Return NA if other is zero

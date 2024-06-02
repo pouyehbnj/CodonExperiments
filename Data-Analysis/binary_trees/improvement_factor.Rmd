@@ -1,0 +1,161 @@
+
+# Set repository for package installation
+options(repos = c(CRAN = "https://cran.rstudio.com/"))
+
+# Install necessary libraries if not already installed
+if (!require("ggplot2")) install.packages("ggplot2")
+if (!require("tidyverse")) install.packages("tidyverse")
+if (!require("readr")) install.packages("readr")
+if (!require("dplyr")) install.packages("dplyr")
+
+library(tidyverse)
+library(readr)
+library(ggplot2)
+library(dplyr)
+
+
+# Adjusted function to handle vectorized improvement calculation
+calculate_improvement <- function(codon, other) {
+  improvement <- vector("numeric", length(codon))
+  for (i in seq_along(codon)) {
+    if (!is.na(codon[i]) && !is.na(other[i])) {
+      if (other[i] == 0 && codon[i] == 0) {
+        improvement[i] <- 0  # Return 0 if both values are zero
+      } else if(other[i] == 0 &&  codon[i]!=0){
+         improvement[i] <- -100
+      }
+      else if (other[i] != 0) {
+        improvement[i] <- (other[i] - codon[i]) / other[i] * 100  # Standard improvement calculation
+      } else {
+        improvement[i] <- NA_real_  # Return NA if other is zero
+      }
+    } else {
+      improvement[i] <- NA_real_  # Return NA for NA cases
+    }
+  }
+  return(improvement)
+}
+
+# Process improvements across different size categories and metrics
+process_improvements <- function(codon_data, other_data, comparison_name) {
+  # Define the metrics to calculate improvements
+  metrics <- c("energy_consumption", "execution_time", "cpu_usage", "mem_usage")
+  if (comparison_name == "codon_cpp") {
+    metrics <- c(metrics, "compile_time")
+  }
+  
+  # Bind data and calculate median for each SIZE_CATEGORY within each metric
+  improvements <- bind_rows(lapply(metrics, function(metric) {
+    median_codon <- codon_data %>%
+      group_by(SIZE_CATEGORY) %>%
+      summarize(Median_Codon = median(!!sym(metric), na.rm = TRUE), .groups = 'drop')
+    
+    median_other <- other_data %>%
+      group_by(SIZE_CATEGORY) %>%
+      summarize(Median_Other = median(!!sym(metric), na.rm = TRUE), .groups = 'drop')
+
+    combined_data <- left_join(median_codon, median_other, by = "SIZE_CATEGORY") %>%
+      mutate(Improvement = calculate_improvement(Median_Codon, Median_Other),
+             Metric = metric,
+             Comparison = comparison_name)
+    
+    select(combined_data, Comparison, SIZE_CATEGORY, Metric, Improvement)
+  }))
+  
+  return(improvements)
+}
+
+# Example usage:
+codon_data <- read_csv("codon_benchmarks.csv")
+cpp_data <- read_csv("cpp_benchmarks.csv")
+python_data <- read_csv("python_benchmarks.csv")
+
+# Calculate improvements
+improvements_codon_python <- process_improvements(codon_data, python_data, "codon_python")
+improvements_codon_cpp <- process_improvements(codon_data, cpp_data, "codon_cpp")
+
+# Combine and save results
+all_improvements <- bind_rows(improvements_codon_python, improvements_codon_cpp)
+write_csv(all_improvements, "improvement.csv")
+
+folder_path <- "plots/"
+if (!dir.exists(folder_path)) {
+  dir.create(folder_path)
+}
+# Load the improvements data
+all_improvements <- read_csv("improvement.csv",show_col_types = FALSE)
+
+create_improvement_plots <- function(data) {
+  data$SIZE_CATEGORY <- factor(data$SIZE_CATEGORY)
+  data$Comparison <- factor(data$Comparison)
+  data$Improvement <- as.numeric(data$Improvement)
+
+  plot <- ggplot(data, aes(x = SIZE_CATEGORY, y = Improvement, fill = SIZE_CATEGORY)) +
+    geom_bar(stat = "identity", position = position_dodge(width = 0.9), width = 0.8) +
+    # scale_fill_manual(values = "lightblue")+
+    facet_wrap(~ Metric, scales = "free_y") +
+    labs(title = paste("Improvement Percentage of ", data$Comparison , "by Metric and Size Category"),
+         x = "Size Category",
+         y = "Improvement (%)",
+         fill = "Comparison") +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1), plot.title = element_text(hjust = 0.5))
+
+  return(plot)
+}
+# Create and save plots for Codon vs Python
+improvement_plot_python <- create_improvement_plots(all_improvements %>% filter(Comparison == "codon_python"))
+ggsave(paste0(folder_path, "improvement_plot_codon_vs_python.png"), improvement_plot_python, width = 12, height = 8, bg = "white")
+
+# Create and save plots for Codon vs CPP
+improvement_plot_cpp <- create_improvement_plots(all_improvements %>% filter(Comparison == "codon_cpp"))
+ggsave(paste0(folder_path, "improvement_plot_codon_vs_cpp.png"), improvement_plot_cpp, width = 12, height = 8, bg = "white")
+
+# Create a new column that combines Metric and Comparison for the heatmap
+all_improvements <- all_improvements %>%
+  mutate(MetricComparison = paste(Metric, Comparison, sep = " - ")) %>%
+  mutate(MetricComparison = factor(MetricComparison, levels = c(
+    "energy_consumption - codon_cpp", "execution_time - codon_cpp", "cpu_usage - codon_cpp", 
+    "mem_usage - codon_cpp", "compile_time - codon_cpp", 
+    "energy_consumption - codon_python", "execution_time - codon_python", 
+    "cpu_usage - codon_python", "mem_usage - codon_python"
+  )))
+
+# Create the heatmap
+heatmap_plot <- ggplot(all_improvements, aes(x = SIZE_CATEGORY, y = MetricComparison, fill = Improvement)) +
+  geom_tile() +
+  geom_text(aes(label = sprintf("%.1f%%", Improvement)), color = "black", size = 3, vjust = 1.5) +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white", midpoint = 0, limit = c(-100, 100), name = "Improvement (%)") +
+  labs(title = "Heatmap of Improvement Percentages", x = "Size Category", y = "Metric and Comparison") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.text.y = element_text(size = 10),
+        plot.title = element_text(hjust = 0.5),
+        panel.spacing = unit(1, "lines"))
+
+
+
+ggsave(paste0(folder_path, "improvement_heatmap.png"), heatmap_plot, width = 10, height = 8, bg = "white")
+
+
+
+
+# Stacked plots for all the metrics
+
+metrics <- unique(all_improvements$Metric)
+for (metric in metrics) {
+    metric_data <- all_improvements %>% filter(Metric == metric)
+
+    # Create a grouped bar chart
+    metric_plot <- ggplot(metric_data, aes(x = SIZE_CATEGORY, y = Improvement, fill = Comparison)) +
+      geom_bar(stat = "identity", position = position_dodge(), width = 0.7) +
+      labs(title = paste("Improvement Percentage of", metric, "by Size Category and Comparison"),
+           x = "Size Category", y = "Improvement (%)") +
+      scale_fill_brewer(palette = "Set1") +
+      theme_minimal() +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1),
+            plot.title = element_text(hjust = 0.5))
+
+    plot_filename <- paste0(folder_path, "grouped_improvement_", gsub(" ", "_", tolower(metric)), ".png")
+    ggsave(plot_filename, metric_plot, width = 12, height = 8, bg = "white")
+}

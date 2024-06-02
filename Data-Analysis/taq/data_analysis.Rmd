@@ -18,34 +18,64 @@ cpp_data <- read_csv("cpp_benchmarks.csv")
 all_data <- bind_rows(codon_data, python_data, cpp_data)
 
 # Total time calculation including 5 seconds cooldown between each run
-total_experiment_time <- (sum(all_data$execution_time, all_data$compile_time, na.rm = TRUE) + (nrow(all_data) - 1) * 5)/3600
+total_experiment_time <- (sum(all_data$execution_time, all_data$compile_time, na.rm = TRUE) + (nrow(all_data) - 1) * 5) / 3600
 
 # Print total experiment time
 cat("Total Experiment Time (including 5-second delays):", total_experiment_time, "hours\n")
 
+# Function to remove outliers using IQR method
+remove_outliers <- function(data, metric) {
+  Q1 <- quantile(data[[metric]], 0.25, na.rm = TRUE)
+  Q3 <- quantile(data[[metric]], 0.75, na.rm = TRUE)
+  IQR <- Q3 - Q1
+  lower_bound <- Q1 - 1.5 * IQR
+  upper_bound <- Q3 + 1.5 * IQR
+  data %>% filter(data[[metric]] >= lower_bound & data[[metric]] <= upper_bound)
+}
 # Descriptive Analysis
-
 descriptive_stats <- all_data %>%
   group_by(execution_method, SIZE_CATEGORY) %>%
   summarise(
-    mean_energy = mean(energy_consumption, na.rm = TRUE),
+    min_energy = min(energy_consumption, na.rm = TRUE),
+    q1_energy = quantile(energy_consumption, 0.25, na.rm = TRUE),
     median_energy = median(energy_consumption, na.rm = TRUE),
+    mean_energy = mean(energy_consumption, na.rm = TRUE),
+    q3_energy = quantile(energy_consumption, 0.75, na.rm = TRUE),
+    max_energy = max(energy_consumption, na.rm = TRUE),
     sd_energy = sd(energy_consumption, na.rm = TRUE),
-    mean_execution_time = mean(execution_time, na.rm = TRUE),
+    min_execution_time = min(execution_time, na.rm = TRUE),
+    q1_execution_time = quantile(execution_time, 0.25, na.rm = TRUE),
     median_execution_time = median(execution_time, na.rm = TRUE),
+    mean_execution_time = mean(execution_time, na.rm = TRUE),
+    q3_execution_time = quantile(execution_time, 0.75, na.rm = TRUE),
+    max_execution_time = max(execution_time, na.rm = TRUE),
     sd_execution_time = sd(execution_time, na.rm = TRUE),
-    mean_cpu_usage = mean(cpu_usage, na.rm = TRUE),
+    min_cpu_usage = min(cpu_usage, na.rm = TRUE),
+    q1_cpu_usage = quantile(cpu_usage, 0.25, na.rm = TRUE),
     median_cpu_usage = median(cpu_usage, na.rm = TRUE),
+    mean_cpu_usage = mean(cpu_usage, na.rm = TRUE),
+    q3_cpu_usage = quantile(cpu_usage, 0.75, na.rm = TRUE),
+    max_cpu_usage = max(cpu_usage, na.rm = TRUE),
     sd_cpu_usage = sd(cpu_usage, na.rm = TRUE),
-    mean_memory_usage = mean(mem_usage, na.rm = TRUE),
-    median_memory_usage = median(mem_usage, na.rm = TRUE),
-    sd_memory_usage = sd(mem_usage, na.rm = TRUE),
+    min_mem_usage = min(mem_usage, na.rm = TRUE),
+    q1_mem_usage = quantile(mem_usage, 0.25, na.rm = TRUE),
+    median_mem_usage = median(mem_usage, na.rm = TRUE),
+    mean_mem_usage = mean(mem_usage, na.rm = TRUE),
+    q3_mem_usage = quantile(mem_usage, 0.75, na.rm = TRUE),
+    max_mem_usage = max(mem_usage, na.rm = TRUE),
+    sd_mem_usage = sd(mem_usage, na.rm = TRUE),
+    min_compile_time = min(compile_time, na.rm = TRUE),
+    q1_compile_time = quantile(compile_time, 0.25, na.rm = TRUE),
+    median_compile_time = median(compile_time, na.rm = TRUE),
+    mean_compile_time = mean(compile_time, na.rm = TRUE),
+    q3_compile_time = quantile(compile_time, 0.75, na.rm = TRUE),
+    max_compile_time = max(compile_time, na.rm = TRUE),
+    sd_compile_time = sd(compile_time, na.rm = TRUE),
     .groups = 'drop'
   ) %>%
   arrange(SIZE_CATEGORY)
 
 write_csv(descriptive_stats, "descriptive_stats.csv")
-
 
 # Check for output folder_path
 folder_path <- "plots/"
@@ -53,7 +83,7 @@ if (!dir.exists(folder_path)) {
   dir.create(folder_path)
 }
 
-# Function to create and save violin and box plots for each metric
+# Function to create and save box and dot plots for each metric
 create_plots <- function(metric) {
   # Filter out Python if the metric is 'compile_time'
   data_filtered <- if (metric == "compile_time") {
@@ -62,39 +92,20 @@ create_plots <- function(metric) {
     all_data
   }
   n_cols <- if (metric == "compile_time") 2 else 3  
-  # Create violin plot
-  violin_plot <- ggplot(data_filtered, aes_string(x = "execution_method", y = metric, fill = "execution_method")) +
-    geom_violin() +
+
+  # Create box and dot plot
+  plot <- ggplot(data_filtered, aes_string(x = "execution_method", y = metric, fill = "execution_method")) +
+    geom_boxplot(outlier.shape = NA, alpha = 0.6) +
+    geom_jitter(color = "black", size = 0.4, alpha = 0.6) +
     facet_wrap(~SIZE_CATEGORY + execution_method, scales = "free_y", ncol = n_cols) +
-    labs(title = paste("Violin Plot of", metric, "by Compilation Method"), x = "Compilation Method", y = metric) +
+    labs(title = paste("Box and Dot Plot of", metric, "by Compilation Method"), x = "Compilation Method", y = metric) +
     theme_minimal() +
     theme(plot.background = element_rect(fill = "white"), panel.background = element_rect(fill = "white"))
 
-  # Save violin plot
-  ggsave(paste0(folder_path, "violin_", metric, ".png"), violin_plot, width = 10, height = 8, bg = "white")
-
-  # Create box plot
-  box_plot <- ggplot(data_filtered, aes_string(x = "execution_method", y = metric, fill = "execution_method")) +
-    geom_boxplot() +
-    facet_wrap(~SIZE_CATEGORY + execution_method, scales = "free_y", ncol = n_cols) +
-    labs(title = paste("Box Plot of", metric, "by Compilation Method"), x = "Compilation Method", y = metric) +
-    theme_minimal() +
-    theme(plot.background = element_rect(fill = "white"), panel.background = element_rect(fill = "white"))
-
-  # Save box plot
-  ggsave(paste0(folder_path, "boxplot_", metric, ".png"), box_plot, width = 10, height = 8, bg = "white")
+  # Save plot
+  ggsave(paste0(folder_path, "box_dot_plot_", metric, ".png"), plot, width = 10, height = 8, bg = "white")
 }
 
 # Apply the function to each metric
 metrics <- c("energy_consumption", "execution_time", "cpu_usage", "mem_usage", "compile_time")
 lapply(metrics, create_plots)
-
-# Scatter plot for execution time vs energy consumption
-scatter_plot <- ggplot(all_data, aes(x = execution_time, y = energy_consumption, color = execution_method)) +
-  geom_point(alpha = 0.6) +
-  facet_wrap(~SIZE_CATEGORY + execution_method, scales = "free",ncol=3) +
-  labs(title = "Execution Time vs Energy Consumption", x = "Execution Time (Seconds)", y = "Energy Consumption (Joules)") +
-  theme_minimal()
-
-# Save scatter plot
-ggsave(paste0(folder_path, "energy_exetime", ".png"), scatter_plot, width = 10, height = 8, bg = "white")

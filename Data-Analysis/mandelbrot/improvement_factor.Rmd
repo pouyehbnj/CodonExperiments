@@ -8,7 +8,10 @@ calculate_improvement <- function(codon, other) {
     if (!is.na(codon[i]) && !is.na(other[i])) {
       if (other[i] == 0 && codon[i] == 0) {
         improvement[i] <- 0  # Return 0 if both values are zero
-      } else if (other[i] != 0) {
+      } else if(other[i] == 0 &&  codon[i]!=0){
+         improvement[i] <- -100
+      }
+      else if (other[i] != 0) {
         improvement[i] <- (other[i] - codon[i]) / other[i] * 100  # Standard improvement calculation
       } else {
         improvement[i] <- NA_real_  # Return NA if other is zero
@@ -28,15 +31,15 @@ process_improvements <- function(codon_data, other_data, comparison_name) {
     metrics <- c(metrics, "compile_time")
   }
   
-  # Ensure valid data points are used to calculate medians
+  # Bind data and calculate median for each SIZE_CATEGORY within each metric
   improvements <- bind_rows(lapply(metrics, function(metric) {
     median_codon <- codon_data %>%
       group_by(SIZE_CATEGORY) %>%
-      summarize(Median_Codon = ifelse(all(is.na(!!sym(metric))), NA, median(!!sym(metric), na.rm = TRUE)), .groups = 'drop')
+      summarize(Median_Codon = median(!!sym(metric), na.rm = TRUE), .groups = 'drop')
     
     median_other <- other_data %>%
       group_by(SIZE_CATEGORY) %>%
-      summarize(Median_Other = ifelse(all(is.na(!!sym(metric))), NA, median(!!sym(metric), na.rm = TRUE)), .groups = 'drop')
+      summarize(Median_Other = median(!!sym(metric), na.rm = TRUE), .groups = 'drop')
 
     combined_data <- left_join(median_codon, median_other, by = "SIZE_CATEGORY") %>%
       mutate(Improvement = calculate_improvement(Median_Codon, Median_Other),

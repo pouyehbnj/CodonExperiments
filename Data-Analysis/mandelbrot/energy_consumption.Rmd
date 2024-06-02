@@ -26,11 +26,12 @@ process_data_file <- function(file_name) {
           Time = ymd_hms(Date),  # Convert Date to POSIXct/POSIXlt
           Time_Seconds = as.numeric(difftime(Time, min(Time), units = "secs"))  # Calculate time in seconds relative to the first timestamp
         ) %>%
+      
         arrange(Time)  # Ensure the data is ordered by time
 
       # Filter out invalid power values (negative or infinite)
-      valid_power_data <- power_data %>%
-        filter(`CPU Power` >= 0, is.finite(`CPU Power`))
+       valid_power_data <- power_data %>%
+        filter(`CPU Power` >= 0, is.finite(`CPU Power`)) 
 
       # Check if there are enough valid data points to perform integration
       if (nrow(valid_power_data) > 1) {

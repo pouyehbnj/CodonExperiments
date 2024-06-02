@@ -1,0 +1,161 @@
+# Set repository for package installation
+options(repos = c(CRAN = "https://cran.rstudio.com/"))
+
+# Install necessary libraries if not already installed
+if (!require("ggplot2")) install.packages("ggplot2")
+if (!require("tidyverse")) install.packages("tidyverse")
+if (!require("ggfortify")) install.packages("ggfortify")
+if (!require("MASS")) install.packages("MASS")
+if (!require("moments")) install.packages("moments")
+# Load necessary libraries
+library(tidyverse)
+library(ggplot2)
+library(ggfortify)
+library(MASS)
+library(moments)
+# Load data
+codon_data <- read_csv("codon_benchmarks.csv", show_col_types = FALSE)
+python_data <- read_csv("python_benchmarks.csv", show_col_types = FALSE)
+cpp_data <- read_csv("cpp_benchmarks.csv", show_col_types = FALSE)
+all_data <- bind_rows(codon_data, python_data, cpp_data)
+
+# Remove outliers function
+remove_outliers <- function(data, metric) {
+  data %>%
+    group_by(execution_method, SIZE_CATEGORY) %>%
+    filter({
+      Q1 <- quantile(.data[[metric]], 0.25, na.rm = TRUE)
+      Q3 <- quantile(.data[[metric]], 0.75, na.rm = TRUE)
+      IQR <- Q3 - Q1
+      lower_bound <- Q1 - 1.5 * IQR
+      upper_bound <- Q3 + 1.5 * IQR
+      .data[[metric]] >= lower_bound & .data[[metric]] <= upper_bound
+    }) %>%
+    ungroup()
+}
+
+
+# Apply outlier removal
+ metrics <- c("energy_consumption", "execution_time", "cpu_usage", "mem_usage", "compile_time")
+ for (metric in metrics) {
+  all_data <- remove_outliers(all_data, metric)
+  codon_data <- remove_outliers(codon_data, metric)
+  python_data <- remove_outliers(python_data, metric)
+  cpp_data <- remove_outliers(cpp_data, metric)
+ }
+
+
+# Descriptive Analysis
+descriptive_stats <- all_data %>%
+  group_by(execution_method, SIZE_CATEGORY) %>%
+  summarise(
+    min_energy = min(energy_consumption, na.rm = TRUE),
+    q1_energy = quantile(energy_consumption, 0.25, na.rm = TRUE),
+    median_energy = median(energy_consumption, na.rm = TRUE),
+    mean_energy = mean(energy_consumption, na.rm = TRUE),
+    q3_energy = quantile(energy_consumption, 0.75, na.rm = TRUE),
+    max_energy = max(energy_consumption, na.rm = TRUE),
+    sd_energy = sd(energy_consumption, na.rm = TRUE),
+    min_execution_time = min(execution_time, na.rm = TRUE),
+    q1_execution_time = quantile(execution_time, 0.25, na.rm = TRUE),
+    median_execution_time = median(execution_time, na.rm = TRUE),
+    mean_execution_time = mean(execution_time, na.rm = TRUE),
+    q3_execution_time = quantile(execution_time, 0.75, na.rm = TRUE),
+    max_execution_time = max(execution_time, na.rm = TRUE),
+    sd_execution_time = sd(execution_time, na.rm = TRUE),
+    min_cpu_usage = min(cpu_usage, na.rm = TRUE),
+    q1_cpu_usage = quantile(cpu_usage, 0.25, na.rm = TRUE),
+    median_cpu_usage = median(cpu_usage, na.rm = TRUE),
+    mean_cpu_usage = mean(cpu_usage, na.rm = TRUE),
+    q3_cpu_usage = quantile(cpu_usage, 0.75, na.rm = TRUE),
+    max_cpu_usage = max(cpu_usage, na.rm = TRUE),
+    sd_cpu_usage = sd(cpu_usage, na.rm = TRUE),
+    min_mem_usage = min(mem_usage, na.rm = TRUE),
+    q1_mem_usage = quantile(mem_usage, 0.25, na.rm = TRUE),
+    median_mem_usage = median(mem_usage, na.rm = TRUE),
+    mean_mem_usage = mean(mem_usage, na.rm = TRUE),
+    q3_mem_usage = quantile(mem_usage, 0.75, na.rm = TRUE),
+    max_mem_usage = max(mem_usage, na.rm = TRUE),
+    sd_mem_usage = sd(mem_usage, na.rm = TRUE),
+    min_compile_time = min(compile_time, na.rm = TRUE),
+    q1_compile_time = quantile(compile_time, 0.25, na.rm = TRUE),
+    median_compile_time = median(compile_time, na.rm = TRUE),
+    mean_compile_time = mean(compile_time, na.rm = TRUE),
+    q3_compile_time = quantile(compile_time, 0.75, na.rm = TRUE),
+    max_compile_time = max(compile_time, na.rm = TRUE),
+    sd_compile_time = sd(compile_time, na.rm = TRUE),
+    .groups = 'drop'
+  ) %>%
+  arrange(SIZE_CATEGORY)
+
+write_csv(descriptive_stats, "descriptive_stats.csv")
+
+# Check for output folder_path
+folder_path <- "plots/"
+if (!dir.exists(folder_path)) {
+  dir.create(folder_path)
+}
+
+# Function to create and save box and dot plots for each metric
+create_plots <- function(metric) {
+  # Filter out Python if the metric is 'compile_time'
+  data_filtered <- if (metric == "compile_time") {
+    all_data %>% filter(execution_method != "python")
+  } else {
+    all_data
+  }
+  n_cols <- if (metric == "compile_time") 2 else 3  
+
+  # Create box and dot plot
+  plot <- ggplot(data_filtered, aes_string(x = "execution_method", y = metric, fill = "execution_method")) +
+    geom_boxplot(width = 0.1, outlier.shape = NA, alpha = 0.6) +  # Add box plot
+    geom_jitter(color = "black", size = 0.4, width = 0.1, alpha = 0.7) +  # Add dot plot for data points
+    facet_wrap(~SIZE_CATEGORY + execution_method, scales = "free_y", ncol = n_cols) +
+    labs(title = paste("Combined Plot of", metric, "by Execution Method"), x = "Compilation Method", y = metric) +
+    theme_minimal() +
+    theme(plot.background = element_rect(fill = "white"), panel.background = element_rect(fill = "white"))
+
+  # Save plot
+  ggsave(paste0(folder_path, "box_dot_plot_", metric, ".png"), plot, width = 10, height = 8, bg = "white")
+}
+
+# Apply the function to each metric
+lapply(metrics, create_plots)
+
+# Function to generate a Q-Q plot using ggplot2
+analyze_normality <- function(data, metric) {
+  combinations <- unique(data[, c("execution_method", "SIZE_CATEGORY")])
+
+  for (i in 1:nrow(combinations)) {
+    method <- combinations$execution_method[i]
+    size_category <- combinations$SIZE_CATEGORY[i]
+
+    subset_data <- data %>%
+      filter(execution_method == method, SIZE_CATEGORY == size_category) %>%
+      dplyr::select({{metric}}) %>%  # Updated selection method using curly-curly ({{}})
+      drop_na()
+
+    if (nrow(subset_data) > 2) {
+      # Creating the Q-Q plot
+      qq_plot <- ggplot(subset_data, aes(sample = .data[[metric]])) +
+        stat_qq(color = "black") +
+        stat_qq_line(color = "blue") +
+        ggtitle(paste("Q-Q Plot for", metric, "in", method, size_category))
+
+      # Folder for saving the plot
+      qq_plot_folder <- paste0("plots/qq_plots_", metric)
+      if (!dir.exists(qq_plot_folder)) {
+        dir.create(qq_plot_folder, recursive = TRUE)
+      }
+      # Saving the Q-Q plot
+      ggsave(paste0(qq_plot_folder, "/qq_plot_", metric, "_", method, "_", size_category, ".png"), qq_plot, width = 10, height = 8)
+
+    } else {
+      print(paste("Not enough data for Q-Q Plot for", metric, "in", method, size_category))
+    }
+  }
+}
+
+# Example usage assuming 'all_data' and 'metrics' are defined
+lapply(metrics, function(m) analyze_normality(all_data, m))
+
