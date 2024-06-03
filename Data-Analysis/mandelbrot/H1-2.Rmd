@@ -1,0 +1,196 @@
+# Set repository for package installation
+options(repos = c(CRAN = "https://cran.rstudio.com/"))
+options(warn = -1)
+# Install necessary libraries if not already installed
+if (!require("ggplot2")) install.packages("ggplot2")
+if (!require("tidyverse")) install.packages("tidyverse")
+if (!require("ggfortify")) install.packages("ggfortify")
+if (!require("MASS")) install.packages("MASS")
+if (!require("stats")) install.packages("stats")
+if (!require("effsize")) install.packages("effsize")
+if (!require("moments")) install.packages("moments")
+if (!require("brunnermunzel")) install.packages("brunnermunzel")
+if (!require("coin")) install.packages("coin")
+# Load necessary libraries
+library(tidyverse)
+library(ggplot2)
+library(ggfortify)
+library(MASS)
+library(stats)
+library(effsize) 
+library(moments) 
+library(brunnermunzel)
+library(coin)
+# Load data
+codon_data <- read_csv("codon_benchmarks.csv", show_col_types = FALSE)
+python_data <- read_csv("python_benchmarks.csv", show_col_types = FALSE)
+cpp_data <- read_csv("cpp_benchmarks.csv", show_col_types = FALSE)
+all_data <- bind_rows(codon_data, python_data, cpp_data)
+
+
+standardize_data <- function(data, metric) {
+  mean_val <- mean(data[[metric]], na.rm = TRUE)
+  sd_val <- sd(data[[metric]], na.rm = TRUE)
+  
+  if (sd_val == 0) {
+    # Leave the data as is if there is no variance
+    message(paste("Skipping standardization for", metric, "- zero variance detected"))
+  } else {
+    data[[metric]] <- (data[[metric]] - mean_val) / sd_val
+  }
+  
+  return(data)
+}
+
+metrics <- c("energy_consumption", "execution_time", "cpu_usage", "mem_usage", "compile_time")
+for (metric in metrics) {
+  all_data <- standardize_data(all_data, metric)
+  codon_data <- standardize_data(codon_data, metric)
+  python_data <- standardize_data(python_data, metric)
+  cpp_data <- standardize_data(cpp_data, metric)
+}
+
+# Remove outliers function
+remove_outliers <- function(data, metric) {
+  data %>%
+    group_by(execution_method, SIZE_CATEGORY) %>%
+    filter({
+      Q1 <- quantile(.data[[metric]], 0.25, na.rm = TRUE)
+      Q3 <- quantile(.data[[metric]], 0.75, na.rm = TRUE)
+      IQR <- Q3 - Q1
+      lower_bound <- Q1 - 1.5 * IQR
+      upper_bound <- Q3 + 1.5 * IQR
+      .data[[metric]] >= lower_bound & .data[[metric]] <= upper_bound
+    }) %>%
+    ungroup()
+}
+
+
+# Apply outlier removal
+# metrics <- c("energy_consumption", "execution_time", "cpu_usage", "mem_usage", "compile_time")
+# for (metric in metrics) {
+#  all_data <- remove_outliers(all_data, metric)
+#  codon_data <- remove_outliers(codon_data, metric)
+#  python_data <- remove_outliers(python_data, metric)
+#  cpp_data <- remove_outliers(cpp_data, metric)
+# }
+
+ # Function to apply transformation based on skewness
+transform_data <- function(data, skewness) {
+  if (skewness > 0) {
+    return(log(data + min(data[data > 0], na.rm = TRUE)))  # Adjust log transformation for positive values only
+  } else {
+    return(sqrt(data))  # Apply sqrt transformation for negative skew
+  }
+}
+
+# Process the groups and determine which test to use
+process_groups <- function(group1, group2, name) {
+  # print(paste("Processing", name))
+  # Avoid processing if there's no variability
+  if (length(unique(group1)) <= 1 || length(unique(group2)) <= 1) {
+    return(list(group1 = group1, group2 = group2, test_type = "Not Applicable - Insufficient variability"))
+  }
+
+  # Check initial normality
+  original_p1 <- shapiro.test(group1)$p.value
+  original_p2 <- shapiro.test(group2)$p.value
+
+  # Determine the test based on normality
+  test_type <- "Wilcoxon test"
+  if (original_p1 >= 0.05 && original_p2 >= 0.05) {
+    test_type <- "t-test"
+  } else {
+    skew1 <- skewness(group1)
+    skew2 <- skewness(group2)
+    if (original_p1 < 0.05) group1 <- transform_data(group1, skew1)
+    if (original_p2 < 0.05) group2 <- transform_data(group2, skew2)
+    if (shapiro.test(group1)$p.value >= 0.05 && shapiro.test(group2)$p.value >= 0.05) {
+      test_type <- "t-test"
+    }
+  }
+
+  return(list(group1 = group1, group2 = group2, test_type = test_type))
+}
+
+
+
+# Initialize a list to store results
+results_list <- list()
+
+# Define execution methods, size categories, and metrics
+execution_pairs <- list(c("codon", "python"), c("codon", "cpp"))
+# execution_pairs <- list(c("codon", "cpp"))
+size_categories <- c("small", "medium", "large")
+# metrics <- c("energy_consumption", "execution_time", "cpu_usage", "mem_usage", "compile_time")
+metrics <- c("energy_consumption")
+# Loop through each combination
+index <- 1
+for (metric in metrics) {
+  for (size in size_categories) {
+    for (pair in execution_pairs) {
+      method1 <- pair[1]
+      method2 <- pair[2]
+      # Skip processing compile time for codon and python
+      if (method1 == "codon" && method2 == "python" && metric == "compile_time") {
+        next
+      }
+
+      group1_data <- all_data %>% filter(execution_method == method1, SIZE_CATEGORY == size) %>% pull(metric) %>% na.omit()
+      group2_data <- all_data %>% filter(execution_method == method2, SIZE_CATEGORY == size) %>% pull(metric) %>% na.omit()
+      
+      # Process groups
+      result <- process_groups(group1_data, group2_data, paste(method1, method2, size, metric))
+      
+      # Store results in the list
+      results_list[[index]] <- list(
+        Method1 = method1,
+        Method2 = method2,
+        Size = size,
+        Metric = metric,
+        Group1Data = result$group1,
+        Group2Data = result$group2,
+        TestType = result$test_type
+      )
+      index <- index + 1
+    }
+  }
+}
+
+for (result in results_list) {
+  print(paste(result$Method1, "vs", result$Method2, "in", result$Size, "size category with metric", result$Metric, ":", result$TestType))
+  
+   if (result$TestType == "t-test") {
+    # Perform t-test
+    test_result <- t.test(result$Group1Data, result$Group2Data)
+ 
+    print(paste("T-test result for", result$Metric, "in", result$Size, "size category: p-value =", test_result$p.value))
+    
+    # Calculate Cohen's d if null hypothesis is rejected
+    if (test_result$p.value < 0.05) {
+      print("Decision:Reject the null hypothesis")
+      cohen_d <- effsize::cohen.d(result$Group1Data, result$Group2Data)
+      print(paste("Cohen's d:", cohen_d$estimate))
+    }else{
+      print("Decision:Fail to reject the null hypothesis") 
+    }
+   } else {
+    # Perform Wilcoxon test
+     test_result <- wilcox.test(result$Group1Data, result$Group2Data, alternative = "two.sided")
+     print(paste("Wilcoxon test result for", result$Metric, "in", result$Size, "size category: p-value =", test_result$p.value))
+  #  # Perform Brunner-Munzel test
+  #  test_result <- brunnermunzel.test(result$Group1Data, result$Group2Data)
+  #  print(paste("Brunner-Munzel test result for", result$Metric, "in", result$Size, "size category: p-value =", test_result$p.value))
+ 
+    # Calculate Cliff's Delta if null hypothesis is rejected
+    if (test_result$p.value < 0.05) {
+      print("Decision:Reject the null hypothesis")
+        cliffs_delta <- effsize::cliff.delta(result$Group1Data, result$Group2Data)
+        print(paste("Cliff's Delta:", cliffs_delta$estimate))
+  #    print(paste("Effect size:", test_result$estimate))
+    }else{
+      print("Decision:Fail to reject the null hypothesis") 
+    }
+  }
+}
+

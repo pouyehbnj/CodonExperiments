@@ -1,0 +1,13 @@
+Metric,Group1,Group2,P_Value,Significance
+energy_consumption,large,medium,0.04129784081344434,Significant
+energy_consumption,large,small,2.39698483352852e-6,Significant
+energy_consumption,medium,small,0.025241114224135282,Significant
+execution_time,large,medium,0.04129784081344434,Significant
+execution_time,large,small,2.39698483352852e-6,Significant
+execution_time,medium,small,0.025241114224135282,Significant
+cpu_usage,medium,large,0.8331334001374527,Non-Significant
+cpu_usage,small,large,0.411598647216481,Non-Significant
+cpu_usage,small,medium,0.7871771027966912,Non-Significant
+mem_usage,large,medium,0.04129784081344434,Significant
+mem_usage,large,small,2.39698483352852e-6,Significant
+mem_usage,medium,small,0.025241114224135282,Significant

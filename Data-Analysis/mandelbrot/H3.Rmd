@@ -1,0 +1,153 @@
+# Set repository for package installation
+options(repos = c(CRAN = "https://cran.rstudio.com/"))
+options(warn = -1)
+
+# Install necessary libraries if not already installed
+if (!require("ggplot2")) install.packages("ggplot2")
+if (!require("tidyverse")) install.packages("tidyverse")
+if (!require("ggfortify")) install.packages("ggfortify")
+if (!require("MASS")) install.packages("MASS")
+if (!require("stats")) install.packages("stats")
+if (!require("effsize")) install.packages("effsize")
+if (!require("moments")) install.packages("moments")
+if (!require("brunnermunzel")) install.packages("brunnermunzel")
+if (!require("coin")) install.packages("coin")
+if (!require("dunn.test")) install.packages("dunn.test")
+if (!require("multcompView")) install.packages("multcompView")
+
+# Load necessary libraries
+library(tidyverse)
+library(ggplot2)
+library(ggfortify)
+library(MASS)
+library(stats)
+library(effsize)
+library(moments)
+library(brunnermunzel)
+library(coin)
+library(dunn.test)
+library(multcompView)
+
+# Load data
+codon_data <- read_csv("codon_benchmarks.csv", show_col_types = FALSE)
+python_data <- read_csv("python_benchmarks.csv", show_col_types = FALSE)
+cpp_data <- read_csv("cpp_benchmarks.csv", show_col_types = FALSE)
+all_data <- bind_rows(codon_data, python_data, cpp_data)
+
+# Remove outliers function
+remove_outliers <- function(data, metric) {
+  data %>%
+    group_by(execution_method, SIZE_CATEGORY) %>%
+    filter({
+      Q1 <- quantile(.data[[metric]], 0.25, na.rm = TRUE)
+      Q3 <- quantile(.data[[metric]], 0.75, na.rm = TRUE)
+      IQR <- Q3 - Q1
+      lower_bound <- Q1 - 1.5 * IQR
+      upper_bound <- Q3 + 1.5 * IQR
+      .data[[metric]] >= lower_bound & .data[[metric]] <= upper_bound
+    }) %>%
+    ungroup()
+}
+
+# Apply outlier removal
+metrics <- c("energy_consumption", "execution_time", "cpu_usage", "mem_usage")
+for (metric in metrics) {
+  all_data <- remove_outliers(all_data, metric)
+  codon_data <- remove_outliers(codon_data, metric)
+  python_data <- remove_outliers(python_data, metric)
+  cpp_data <- remove_outliers(cpp_data, metric)
+}
+
+# Kruskal-Wallis test function
+kruskal_wallis_test <- function(data, metric) {
+  kruskal.test(as.formula(paste(metric, "~ SIZE_CATEGORY")), data = data)
+}
+
+# ANOVA test function
+anova_test <- function(data, metric) {
+  aov_res <- aov(as.formula(paste(metric, "~ SIZE_CATEGORY")), data = data)
+  summary(aov_res)
+}
+
+# Post-hoc Dunn's Test for Kruskal-Wallis
+kruskal_posthoc <- function(data, metric) {
+  dunn_res <- dunn.test(data[[metric]], data$SIZE_CATEGORY, method = "bonferroni")
+  data.frame(Comparison = dunn_res$comparisons, P.adj = dunn_res$P.adjusted)
+}
+
+# Post-hoc Tukey's HSD Test for ANOVA
+anova_posthoc <- function(data, metric) {
+  aov_res <- aov(as.formula(paste(metric, "~ SIZE_CATEGORY")), data = data)
+  tukey_res <- TukeyHSD(aov_res)$SIZE_CATEGORY
+  data.frame(Comparison = rownames(tukey_res), P.adj = tukey_res[, "p adj"])
+}
+
+# Perform Tests and Post-hoc Analysis
+test_results <- data.frame(Metric = character(), Test_Type = character(), P_Value = numeric())
+posthoc_results_list <- list()
+
+for (metric in metrics) {
+  print(metric)
+  size_data <- codon_data %>% filter(!is.na(!!sym(metric)))
+
+   # Check if all values for the metric are zero (excluding NA)
+  if (all(size_data[[metric]] == 0, na.rm = TRUE)) {
+    print(paste("All values for", metric, "are zero. Skipping statistical tests."))
+    next
+  }
+  # Test for normality
+  shapiro_res <- shapiro.test(size_data[[metric]])
+  
+  if (shapiro_res$p.value > 0.05) {
+    # Perform ANOVA
+    anova_res <- anova_test(codon_data, metric)
+    test_results <- rbind(test_results, data.frame(
+      Metric = metric,
+      Test_Type = "ANOVA",
+      P_Value = anova_res[[1]]$`Pr(>F)`[1]
+    ))
+    posthoc_res <- anova_posthoc(codon_data, metric)
+  } else {
+    # Perform Kruskal-Wallis test
+    kruskal_res <- kruskal_wallis_test(codon_data, metric)
+    test_results <- rbind(test_results, data.frame(
+      Metric = metric,
+      Test_Type = "Kruskal-Wallis",
+      P_Value = kruskal_res$p.value
+    ))
+    posthoc_res <- kruskal_posthoc(codon_data, metric)
+  }
+  
+  posthoc_results_list[[metric]] <- posthoc_res
+}
+
+# Save Test Results
+write_csv(test_results, "analysis_results.csv")
+
+# Save Post-hoc Results
+posthoc_results <- data.frame(Metric = character(), Group1 = character(), Group2 = character(), P_Value = numeric(), Significance = character())
+
+for (metric in names(posthoc_results_list)) {
+  posthoc_res <- posthoc_results_list[[metric]]
+  posthoc_res$Metric <- metric
+  if (test_results$Test_Type[test_results$Metric == metric] == "ANOVA") {
+    posthoc_res <- posthoc_res %>%
+      separate(Comparison, into = c("Group1", "Group2"), sep = "-") %>%
+      mutate(P_Value = as.numeric(P.adj),
+             Significance = ifelse(P_Value < 0.05, "Significant", "Non-Significant")) %>%
+      dplyr::select(Metric, Group1, Group2, P_Value, Significance)
+  } else {
+    posthoc_res <- posthoc_res %>%
+      separate(Comparison, into = c("Group1", "Group2"), sep = " - ") %>%
+      rename(P_Value = P.adj) %>%
+      dplyr::mutate(Significance = ifelse(P_Value < 0.05, "Significant", "Non-Significant")) %>%
+      dplyr::select(Metric, Group1, Group2, P_Value, Significance)
+  }
+  posthoc_results <- rbind(posthoc_results, posthoc_res)
+}
+
+write_csv(posthoc_results, "posthoc_results.csv")
+
+# Print Results
+print(test_results)
+print(posthoc_results)
