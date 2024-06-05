@@ -180,3 +180,26 @@ analyze_normality <- function(data, metric) {
 # Example usage assuming 'all_data' and 'metrics' are defined
 lapply(metrics, function(m) analyze_normality(all_data, m))
 
+# Function to create scatter plots
+create_scatter_plot <- function(data, metric) {
+  # Create scatter plot
+  p <- ggplot(data, aes_string(x = "SIZE_CATEGORY", y = metric, color = "execution_method")) +
+    geom_point(alpha = 0.6, size = 3) +  # Adjust size and transparency as needed
+    scale_color_brewer(palette = "Set1") +  # Color set for distinction
+    labs(title = paste("Scatter Plot of", metric, "across Size Categories"),
+         x = "Size Category", y = metric) +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotate x labels for readability
+
+  # Directory for saving the plot
+  scatter_plot_folder <- "plots/scatter_plots"
+  if (!dir.exists(scatter_plot_folder)) {
+    dir.create(scatter_plot_folder, recursive = TRUE)
+  }
+  
+  # Saving the plot
+  ggsave(filename = paste0(scatter_plot_folder, "/scatter_plot_", metric, ".png",bg="white"), plot = p, width = 12, height = 8, units = "in")
+}
+
+# Apply the function to each metric
+lapply(metrics, function(m) create_scatter_plot(all_data, m))

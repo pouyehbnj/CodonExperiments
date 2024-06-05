@@ -11,6 +11,9 @@ if (!require("effsize")) install.packages("effsize")
 if (!require("moments")) install.packages("moments")
 if (!require("brunnermunzel")) install.packages("brunnermunzel")
 if (!require("coin")) install.packages("coin")
+if (!require("plotrix")) install.packages("plotrix")
+if (!require("car")) install.packages("car")
+
 # Load necessary libraries
 library(tidyverse)
 library(ggplot2)
@@ -21,7 +24,8 @@ library(effsize)
 library(moments) 
 library(brunnermunzel)
 library(coin)
-
+library(plotrix) 
+library(car)
 # Load data
 codon_data <- read_csv("codon_benchmarks.csv", show_col_types = FALSE)
 python_data <- read_csv("python_benchmarks.csv", show_col_types = FALSE)
@@ -62,20 +66,44 @@ transform_data <- function(data, skewness) {
 }
 
 # Function to create and save density plots for effect size visualization
+
 create_density_plot <- function(group1, group2, group1_label, group2_label, size_category, metric) {
+  # Skip if one group is Python and the metric is compile time
+  if ((group1_label == "python" || group2_label == "python") && metric == "compile_time") {
+    return()
+  }
+
+  # Create a combined data frame
   combined_data <- data.frame(
     Values = c(group1, group2),
     Group = c(rep(group1_label, length(group1)), rep(group2_label, length(group2)))
   )
 
-  # Plot setup
+  # Handle cases where both groups only have zero values or one is all zero
+  if (all(combined_data$Values == 0)) {
+    return()  # Skip if all values are zero
+  }
+
+  # Calculate the range for each group and sort by this range
+  range_info <- combined_data %>%
+                group_by(Group) %>%
+                summarise(Min = min(Values), Max = max(Values), Range = Max - Min) %>%
+                arrange(Min) %>%
+                mutate(Group = factor(Group, levels = Group))
+
+  # Use factor levels from range_info for ordering
+  combined_data$Group <- factor(combined_data$Group, levels = range_info$Group)
+  # Define colors
+  colors <- setNames(c("blue", "red"), c(group1_label, group2_label))
+
+  # Plot setup with dynamic x-axis scaling
   p <- ggplot(combined_data, aes(x = Values, fill = Group)) +
-    geom_density(alpha = 0.5) +
-    scale_fill_manual(values = c(group1_label = "blue", group2_label = "red")) +
+    geom_density(alpha = 0.5, adjust = 1) +  # adjust parameter for better visualization
+    scale_fill_manual(values = colors) +
     labs(title = paste("Density Plot for", group1_label, "vs", group2_label, "in", size_category, metric),
          x = "Values", y = "Density") +
     theme_minimal() +
-    facet_wrap(~ Group, scales = "free_x")  # Faceting with free scales on the x-axis
+    scale_x_continuous(limits = range(combined_data$Values, na.rm = TRUE))  # Dynamic scaling based on range
 
   # Directory and file handling
   plot_dir <- file.path("plots", "effect-size", size_category)
@@ -86,8 +114,10 @@ create_density_plot <- function(group1, group2, group1_label, group2_label, size
   full_path <- file.path(plot_dir, file_name)
 
   # Save the plot
-  ggsave(full_path, plot = p, width = 10, height = 6, units = "in", bg = "white")
+  ggsave(full_path, plot = p, width = 10, height = 6, units = "in", bg="white")
 }
+
+
 
 # Process the groups and determine which test to use
 process_groups <- function(group1, group2, name) {
@@ -112,10 +142,13 @@ process_groups <- function(group1, group2, name) {
 
   # Determine the test based on normality
   if (original_p1 >= 0.05 && original_p2 >= 0.05) {
-    sd1 <- sd(group1)
-    sd2 <- sd(group2)
-    sd_ratio <- max(sd1, sd2) / min(sd1, sd2)
-    if (sd_ratio < 2) {
+  # Both groups are normally distributed, perform Levene's test for equality of variances
+   # Assuming 'group1' and 'group2' are correctly defined as vectors
+    data_for_test <- data.frame(value = c(group1, group2), group = factor(rep(1:2, c(length(group1), length(group2)))))
+    levene_res <- leveneTest(value ~ group, data = data_for_test)
+    levene_p_value <- levene_res$"Pr(>F)"[1] 
+    if (levene_p_value >= 0.05) {
+      # Variances are equal, use t-test
       test_type <- "t-test"
     }
   }
@@ -214,7 +247,7 @@ for (i in seq_along(results_list)) {
     )
 
     # Create density plot if H0 is rejected
-    if (test_result$p.value < 0.05) {
+    if (!is.nan(test_result$p.value) && test_result$p.value < 0.05) {
       create_density_plot(result$Original_Group1Data, result$Original_Group2Data, result$Method1, result$Method2, result$Size, result$Metric)
     }
   }

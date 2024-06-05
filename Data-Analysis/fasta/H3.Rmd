@@ -7,11 +7,7 @@ if (!require("ggplot2")) install.packages("ggplot2")
 if (!require("tidyverse")) install.packages("tidyverse")
 if (!require("ggfortify")) install.packages("ggfortify")
 if (!require("MASS")) install.packages("MASS")
-if (!require("stats")) install.packages("stats")
-if (!require("effsize")) install.packages("effsize")
-if (!require("moments")) install.packages("moments")
-if (!require("brunnermunzel")) install.packages("brunnermunzel")
-if (!require("coin")) install.packages("coin")
+if (!require("car")) install.packages("car")
 if (!require("dunn.test")) install.packages("dunn.test")
 if (!require("multcompView")) install.packages("multcompView")
 
@@ -20,11 +16,7 @@ library(tidyverse)
 library(ggplot2)
 library(ggfortify)
 library(MASS)
-library(stats)
-library(effsize)
-library(moments)
-library(brunnermunzel)
-library(coin)
+library(car)
 library(dunn.test)
 library(multcompView)
 
@@ -65,89 +57,103 @@ kruskal_wallis_test <- function(data, metric) {
 
 # ANOVA test function
 anova_test <- function(data, metric) {
-  aov_res <- aov(as.formula(paste(metric, "~ SIZE_CATEGORY")), data = data)
-  summary(aov_res)
+  aov(as.formula(paste(metric, "~ SIZE_CATEGORY")), data = data)
+}
+
+# Levene Test function
+levene_test <- function(data, metric) {
+  leveneTest(as.formula(paste(metric, "~ SIZE_CATEGORY")), data = data)
 }
 
 # Post-hoc Dunn's Test for Kruskal-Wallis
 kruskal_posthoc <- function(data, metric) {
   dunn_res <- dunn.test(data[[metric]], data$SIZE_CATEGORY, method = "bonferroni")
-  data.frame(Comparison = dunn_res$comparisons, P.adj = dunn_res$P.adjusted)
+  data.frame(
+    Metric = metric,
+    Comparison = dunn_res$comparisons,
+    P_Value = dunn_res$P.adjusted,
+    Significance = ifelse(dunn_res$P.adjusted < 0.05, "Significant", "Non-Significant")
+  )
+}
+
+
+# Post-hoc Dunn's Test for Kruskal-Wallis
+kruskal_posthoc <- function(data, metric) {
+  dunn_res <- dunn.test(data[[metric]], data$SIZE_CATEGORY, method = "bonferroni")
+  data.frame(
+    Metric = metric,
+    Comparison = dunn_res$comparisons,
+    P_Value = dunn_res$P.adjusted,
+    Significance = ifelse(dunn_res$P.adjusted < 0.05, "Significant", "Non-Significant")
+  )
 }
 
 # Post-hoc Tukey's HSD Test for ANOVA
-anova_posthoc <- function(data, metric) {
-  aov_res <- aov(as.formula(paste(metric, "~ SIZE_CATEGORY")), data = data)
+anova_posthoc <- function(data, aov_res, metric) {
   tukey_res <- TukeyHSD(aov_res)$SIZE_CATEGORY
-  data.frame(Comparison = rownames(tukey_res), P.adj = tukey_res[, "p adj"])
+  comparisons <- rownames(tukey_res)
+  data.frame(
+    Metric = metric,
+    Comparison = comparisons,
+    P_Value = tukey_res[, "p adj"],
+    Significance = ifelse(tukey_res[, "p adj"] < 0.05, "Significant", "Non-Significant")
+  )
 }
 
 # Perform Tests and Post-hoc Analysis
 test_results <- data.frame(Metric = character(), Test_Type = character(), P_Value = numeric())
-posthoc_results_list <- list()
+posthoc_results <- data.frame(Metric = character(), Comparison = character(), P_Value = numeric(), Significance = character())
 
 for (metric in metrics) {
   print(metric)
   size_data <- codon_data %>% filter(!is.na(!!sym(metric)))
 
-   # Check if all values for the metric are zero (excluding NA)
   if (all(size_data[[metric]] == 0, na.rm = TRUE)) {
     print(paste("All values for", metric, "are zero. Skipping statistical tests."))
     next
   }
-  # Test for normality
+
   shapiro_res <- shapiro.test(size_data[[metric]])
   
   if (shapiro_res$p.value > 0.05) {
-    # Perform ANOVA
-    anova_res <- anova_test(codon_data, metric)
-    test_results <- rbind(test_results, data.frame(
-      Metric = metric,
-      Test_Type = "ANOVA",
-      P_Value = anova_res[[1]]$`Pr(>F)`[1]
-    ))
-    posthoc_res <- anova_posthoc(codon_data, metric)
+    levene_res <- levene_test(size_data, metric)
+    print("just checking")
+    print(levene_res$p.value)
+    if (levene_res$p.value > 0.05) {
+      aov_res <- anova_test(size_data, metric)
+      test_results <- rbind(test_results, data.frame(
+        Metric = metric,
+        Test_Type = "ANOVA",
+        P_Value = summary(aov_res)[[1]]$`Pr(>F)`[1]
+      ))
+      posthoc_res <- anova_posthoc(size_data, aov_res, metric)
+    } else {
+      kruskal_res <- kruskal_wallis_test(size_data, metric)
+      test_results <- rbind(test_results, data.frame(
+        Metric = metric,
+        Test_Type = "Kruskal-Wallis",
+        P_Value = kruskal_res$p.value
+      ))
+      posthoc_res <- kruskal_posthoc(size_data, metric)
+    }
   } else {
-    # Perform Kruskal-Wallis test
-    kruskal_res <- kruskal_wallis_test(codon_data, metric)
+    kruskal_res <- kruskal_wallis_test(size_data, metric)
     test_results <- rbind(test_results, data.frame(
       Metric = metric,
       Test_Type = "Kruskal-Wallis",
       P_Value = kruskal_res$p.value
     ))
-    posthoc_res <- kruskal_posthoc(codon_data, metric)
+    posthoc_res <- kruskal_posthoc(size_data, metric)
   }
   
-  posthoc_results_list[[metric]] <- posthoc_res
-}
-
-# Save Test Results
-write_csv(test_results, "analysis_results.csv")
-
-# Save Post-hoc Results
-posthoc_results <- data.frame(Metric = character(), Group1 = character(), Group2 = character(), P_Value = numeric(), Significance = character())
-
-for (metric in names(posthoc_results_list)) {
-  posthoc_res <- posthoc_results_list[[metric]]
-  posthoc_res$Metric <- metric
-  if (test_results$Test_Type[test_results$Metric == metric] == "ANOVA") {
-    posthoc_res <- posthoc_res %>%
-      separate(Comparison, into = c("Group1", "Group2"), sep = "-") %>%
-      mutate(P_Value = as.numeric(P.adj),
-             Significance = ifelse(P_Value < 0.05, "Significant", "Non-Significant")) %>%
-      dplyr::select(Metric, Group1, Group2, P_Value, Significance)
-  } else {
-    posthoc_res <- posthoc_res %>%
-      separate(Comparison, into = c("Group1", "Group2"), sep = " - ") %>%
-      rename(P_Value = P.adj) %>%
-      dplyr::mutate(Significance = ifelse(P_Value < 0.05, "Significant", "Non-Significant")) %>%
-      dplyr::select(Metric, Group1, Group2, P_Value, Significance)
-  }
   posthoc_results <- rbind(posthoc_results, posthoc_res)
 }
 
+# Save Test Results
+write_csv(test_results, "H3_results.csv")
+
+# Save Post-hoc Results
 write_csv(posthoc_results, "posthoc_results.csv")
 
 # Print Results
 print(test_results)
-print(posthoc_results)
