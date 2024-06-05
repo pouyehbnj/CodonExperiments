@@ -21,25 +21,26 @@ library(effsize)
 library(moments) 
 library(brunnermunzel)
 library(coin)
-
-# Function to standardize data, handling constant values and NA properly
-standardize_data <- function(data, metric) {
-  mean_val <- mean(data[[metric]], na.rm = TRUE)
-  sd_val <- sd(data[[metric]], na.rm = TRUE)
-  
-  # Check if standard deviation is zero or NA
-  if (sd_val == 0 || is.na(sd_val)) {
-    message(paste("Skipping standardization for", metric, "- zero variance detected"))
-  } else {
-    data[[metric]] <- (data[[metric]] - mean_val) / sd_val
-  }
-  return(data)
-}
 # Load data
 codon_data <- read_csv("codon_benchmarks.csv", show_col_types = FALSE)
 python_data <- read_csv("python_benchmarks.csv", show_col_types = FALSE)
 cpp_data <- read_csv("cpp_benchmarks.csv", show_col_types = FALSE)
 all_data <- bind_rows(codon_data, python_data, cpp_data)
+
+
+standardize_data <- function(data, metric) {
+  mean_val <- mean(data[[metric]], na.rm = TRUE)
+  sd_val <- sd(data[[metric]], na.rm = TRUE)
+  
+  if (sd_val == 0) {
+    # Leave the data as is if there is no variance
+    message(paste("Skipping standardization for", metric, "- zero variance detected"))
+  } else {
+    data[[metric]] <- (data[[metric]] - mean_val) / sd_val
+  }
+  
+  return(data)
+}
 
 metrics <- c("energy_consumption", "execution_time", "cpu_usage", "mem_usage", "compile_time")
 for (metric in metrics) {
@@ -66,13 +67,13 @@ remove_outliers <- function(data, metric) {
 
 
 # Apply outlier removal
- metrics <- c("energy_consumption", "execution_time", "cpu_usage", "mem_usage", "compile_time")
- for (metric in metrics) {
-  all_data <- remove_outliers(all_data, metric)
-  codon_data <- remove_outliers(codon_data, metric)
-  python_data <- remove_outliers(python_data, metric)
-  cpp_data <- remove_outliers(cpp_data, metric)
- }
+# metrics <- c("energy_consumption", "execution_time", "cpu_usage", "mem_usage", "compile_time")
+# for (metric in metrics) {
+#  all_data <- remove_outliers(all_data, metric)
+#  codon_data <- remove_outliers(codon_data, metric)
+#  python_data <- remove_outliers(python_data, metric)
+#  cpp_data <- remove_outliers(cpp_data, metric)
+# }
 
  # Function to apply transformation based on skewness
 transform_data <- function(data, skewness) {
@@ -86,22 +87,14 @@ transform_data <- function(data, skewness) {
 # Process the groups and determine which test to use
 process_groups <- function(group1, group2, name) {
   # print(paste("Processing", name))
-  # Avoid processing if there's no data, insufficient variability, or only NA values
-  if (length(group1) <= 1 || length(group2) <= 1 || 
-      length(unique(na.omit(group1))) <= 1 || length(unique(na.omit(group2))) <= 1) {
+  # Avoid processing if there's no variability
+  if (length(unique(group1)) <= 1 || length(unique(group2)) <= 1) {
     return(list(group1 = group1, group2 = group2, test_type = "Not Applicable - Insufficient variability"))
   }
 
-  # Check for NA values and remove them
-  group1 <- na.omit(group1)
-  group2 <- na.omit(group2)
-
-  # Perform Shapiro-Wilk test to check normality
-  original_p1 <- ifelse(length(group1) > 2, shapiro.test(group1)$p.value, 0)
-  original_p2 <- ifelse(length(group2) > 2, shapiro.test(group2)$p.value, 0)
   # Check initial normality
-  # original_p1 <- shapiro.test(group1)$p.value
-  # original_p2 <- shapiro.test(group2)$p.value
+  original_p1 <- shapiro.test(group1)$p.value
+  original_p2 <- shapiro.test(group2)$p.value
 
   # Determine the test based on normality
   test_type <- "Wilcoxon test"
@@ -167,7 +160,6 @@ for (metric in metrics) {
 for (result in results_list) {
   print(paste(result$Method1, "vs", result$Method2, "in", result$Size, "size category with metric", result$Metric, ":", result$TestType))
   
-
    if (result$TestType == "t-test") {
     # Perform t-test
     test_result <- t.test(result$Group1Data, result$Group2Data)

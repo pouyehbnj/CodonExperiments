@@ -1,0 +1,7 @@
+"Method1","Method2","Metric","Size","Test_Type","P_Value","Decision"
+"codon","python","energy_consumption","small","Wilcoxon",8.22706705059646e-05,"Reject H0"
+"codon","cpp","energy_consumption","small","Wilcoxon",4.11353352529823e-05,"Reject H0"
+"codon","python","energy_consumption","medium","Wilcoxon",0.000102838338132456,"Reject H0"
+"codon","cpp","energy_consumption","medium","Wilcoxon",0.000102838338132456,"Reject H0"
+"codon","python","energy_consumption","large","T-test",4.02349146921008e-20,"Reject H0"
+"codon","cpp","energy_consumption","large","Wilcoxon",4.57059280588692e-05,"Reject H0"
