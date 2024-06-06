@@ -100,9 +100,20 @@ anova_posthoc <- function(data, aov_res, metric) {
   )
 }
 
+# Function to determine the most significant comparison
+most_significant_comparison <- function(posthoc_data) {
+  if (nrow(posthoc_data) == 0) {
+    return("None")
+  }
+  min_p_value <- min(posthoc_data$P_Value)
+  most_sig <- posthoc_data$Comparison[posthoc_data$P_Value == min_p_value]
+  return(paste(most_sig, collapse=", "))
+}
+
+
 # Perform Tests and Post-hoc Analysis
-test_results <- data.frame(Metric = character(), Test_Type = character(), P_Value = numeric())
-posthoc_results <- data.frame(Metric = character(), Comparison = character(), P_Value = numeric(), Significance = character())
+test_results <- data.frame(Metric = character(), Test_Type = character(), P_Value = numeric(), Reject_H0 = character())
+posthoc_results <- data.frame(Metric = character(), Comparison = character(), P_Value = numeric(), Significance = character(), Most_Significant = character())
 
 for (metric in metrics) {
   print(metric)
@@ -117,36 +128,53 @@ for (metric in metrics) {
   
   if (shapiro_res$p.value > 0.05) {
     levene_res <- levene_test(size_data, metric)
-    print("just checking")
-    print(levene_res$p.value)
     if (levene_res$p.value > 0.05) {
       aov_res <- anova_test(size_data, metric)
+      p_value <- summary(aov_res)[[1]]$`Pr(>F)`[1]
       test_results <- rbind(test_results, data.frame(
         Metric = metric,
         Test_Type = "ANOVA",
-        P_Value = summary(aov_res)[[1]]$`Pr(>F)`[1]
+        P_Value = p_value,
+        Reject_H0 = ifelse(p_value < 0.05, "Yes", "No")
       ))
-      posthoc_res <- anova_posthoc(size_data, aov_res, metric)
+      
+      if (p_value < 0.05) {
+        posthoc_res <- anova_posthoc(size_data, aov_res, metric)
+        posthoc_res$Most_Significant <- most_significant_comparison(posthoc_res)
+        posthoc_results <- rbind(posthoc_results, posthoc_res)
+      }
     } else {
       kruskal_res <- kruskal_wallis_test(size_data, metric)
+      p_value <- kruskal_res$p.value
       test_results <- rbind(test_results, data.frame(
         Metric = metric,
         Test_Type = "Kruskal-Wallis",
-        P_Value = kruskal_res$p.value
+        P_Value = p_value,
+        Reject_H0 = ifelse(p_value < 0.05, "Yes", "No")
       ))
-      posthoc_res <- kruskal_posthoc(size_data, metric)
+      
+      if (p_value < 0.05) {
+        posthoc_res <- kruskal_posthoc(size_data, metric)
+        posthoc_res$Most_Significant <- most_significant_comparison(posthoc_res)
+        posthoc_results <- rbind(posthoc_results, posthoc_res)
+      }
     }
   } else {
     kruskal_res <- kruskal_wallis_test(size_data, metric)
+    p_value <- kruskal_res$p.value
     test_results <- rbind(test_results, data.frame(
       Metric = metric,
       Test_Type = "Kruskal-Wallis",
-      P_Value = kruskal_res$p.value
+      P_Value = p_value,
+      Reject_H0 = ifelse(p_value < 0.05, "Yes", "No")
     ))
-    posthoc_res <- kruskal_posthoc(size_data, metric)
+    
+    if (p_value < 0.05) {
+      posthoc_res <- kruskal_posthoc(size_data, metric)
+      posthoc_res$Most_Significant <- most_significant_comparison(posthoc_res)
+      posthoc_results <- rbind(posthoc_results, posthoc_res)
+    }
   }
-  
-  posthoc_results <- rbind(posthoc_results, posthoc_res)
 }
 
 # Save Test Results
@@ -157,3 +185,4 @@ write_csv(posthoc_results, "posthoc_results.csv")
 
 # Print Results
 print(test_results)
+print(posthoc_results)

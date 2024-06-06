@@ -91,36 +91,39 @@ ggsave(filename = here("Data-Analysis", "output", "Mean_Improvement_Plot.png"), 
 
 
 
+# Calculate mean improvements by metric and comparison
+mean_improvements <- improvements %>%
+  group_by(Metric, Comparison, SIZE_CATEGORY) %>%
+  summarize(Mean_Improvement = mean(Improvement, na.rm = TRUE), .groups = 'drop') %>%
+  mutate(Color_Label = paste(Comparison, SIZE_CATEGORY, sep = "_"))  # Creating color labels for aesthetics
 
+# Define colors for the combinations of comparisons and size categories
+colors_cpp <- c("codon_cpp_small" = "red", "codon_cpp_medium" = "blue", "codon_cpp_large" = "green")
+colors_python <- c("codon_python_small" = "red", "codon_python_medium" = "blue", "codon_python_large" = "green")
 
-# Assuming improvements is already loaded and contains the basic data
-# Example metrics and categories
-metrics <- c("energy_consumption", "execution_time", "cpu_usage", "mem_usage")
-comparisons <- c("codon_cpp", "codon_python")
-sizes <- c("small", "medium", "large")
+# Function to create and save a bubble chart for a given comparison type
+create_and_save_bubble_chart <- function(data, comparison_type, colors) {
+  bubble_chart <- ggplot(data, aes(x = Metric, y = Mean_Improvement, size = abs(Mean_Improvement), color = Color_Label)) +
+    geom_point(alpha = 0.5) +
+    scale_size_continuous(range = c(5, 20), guide = FALSE) +
+    scale_color_manual(values = colors) +
+    labs(title = paste("Mean Improvements for", comparison_type, "Across Metrics and Sizes"),
+         x = "Metric", y = "Mean Improvement (%)") +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position = "bottom")
 
-# Create a full grid of combinations
-full_grid <- expand.grid(Metric = metrics, Comparison = comparisons, SIZE_CATEGORY = sizes)
+  # Save the plot in the specified output directory
+  output_path <- here("Data-Analysis", "output")
+  if (!dir.exists(output_path)) {
+    dir.create(output_path, recursive = TRUE)
+  }
+  ggsave(filename = file.path(output_path, paste("Mean_Improvement_Bubble_Chart_", comparison_type, ".png", sep = "")), plot = bubble_chart, width = 12, height = 8, units = "in", dpi = 300, bg = "white")
+}
 
-# Join your data with the full grid to ensure all combinations are represented
-improvements_full <- full_grid %>%
-  left_join(improvements, by = c("Metric", "Comparison", "SIZE_CATEGORY")) %>%
-  replace_na(list(Improvement = 0))  # Replace NA improvements with 0 or another placeholder
+# Filter and create bubble chart for CPP comparisons
+improvements_cpp <- filter(mean_improvements, str_detect(Comparison, "cpp"))
+create_and_save_bubble_chart(improvements_cpp, "CPP", colors_cpp)
 
-# Now proceed with creating the bubble chart
-improvements_full$Color_Label <- with(improvements_full, paste(Comparison, SIZE_CATEGORY, sep = "_"))
-
-# Prepare the bubble chart with all possible entries
-bubble_chart <- ggplot(improvements_full, aes(x = Metric, y = Improvement, size = abs(Improvement), color = Color_Label)) +
-  geom_point(alpha = 0.5) +
-  scale_size_continuous(range = c(5, 20), guide = FALSE) +
-  labs(title = "Improvements Across Metrics and Sizes",
-       x = "Metric",
-       y = "Improvement (%)") +
-  theme_minimal() +
-  scale_color_brewer(palette = "Set1") +
-  theme(legend.position = "bottom")
-
-
-# Save the plot, if needed
-ggsave(filename = here("Data-Analysis", "output","improvement_bubble_chart.png"), bubble_chart, width = 10, height = 8, units = "in", dpi = 300,bg="white")
+# Filter and create bubble chart for Python comparisons
+improvements_python <- filter(mean_improvements, str_detect(Comparison, "python"))
+create_and_save_bubble_chart(improvements_python, "Python", colors_python)
