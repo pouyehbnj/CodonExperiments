@@ -59,27 +59,68 @@ plots <- lapply(metrics, function(metric) {
   ggsave(filename = here("Data-Analysis", "output", paste0("Improvement_", metric, ".png")), plot = plot, width = 10, height = 8, units = "in", bg="white")
 })
 
-# Create and save plots for each metric
-plots <- lapply(metrics, function(metric) {
-  data_subset <- filter(improvements, Metric == metric)
+# Calculate median improvements by metric and comparison
+mean_improvements <- improvements %>%
+  group_by(Metric, Comparison) %>%
+  summarize(Mean_Improvement = mean(Improvement, na.rm = TRUE), .groups = 'drop')
 
-  plot <- ggplot(data_subset, aes(x = subject, y = Improvement, fill = SIZE_CATEGORY)) +
-    geom_bar(stat = "identity", position = position_dodge(), width = 0.7) +
-    geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
-    theme_minimal(base_size = 12) +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1),
-          plot.background = element_rect(fill = "white"),
-          panel.background = element_rect(fill = "white")) +
-    labs(title = paste("Improvement in", metric, "across subjects"),
-         x = "Subject",
-         y = "Improvement (%)",
-         fill = "Size Category") +
-    facet_wrap(~ Comparison, scales = "free_y") +  # Ensure there's a plus sign at the end of this line
-    scale_y_continuous(labels = scales::percent_format(scale = 1)) +  # Format y-axis labels as percentages
-    scale_fill_manual(values = c("lightblue", "lightgreen"), 
-                      labels = c("Codon vs. CPP", "Codon vs. Python"))  # Adjust colors and labels as needed
-  
-  # Save the plot
-  ggsave(filename = here("Data-Analysis", "output", paste0("Improvement2_", metric, ".png")), plot = plot, width = 10, height = 8, units = "in", bg="white")
-})
+# Define the colors for each comparison type
+comparison_types <- unique(mean_improvements$Comparison)
+colors <- c("codon_cpp" = "lightblue", "codon_python" = "lightgreen")
 
+# Calculate the range for setting y-axis limits dynamically
+abs_max <- max(abs(mean_improvements$Mean_Improvement), na.rm = TRUE)
+padding <- abs_max * 0.1  # 10% padding
+
+# Define breaks for the y-axis
+positive_breaks <- seq(0, abs_max + padding, by = 20)
+negative_breaks <- seq(-abs_max - padding, 0, by = 50)
+# Combine breaks and remove duplicates
+all_breaks <- unique(c(negative_breaks, positive_breaks))
+plot <- ggplot(mean_improvements, aes(x = Metric, y = Mean_Improvement, fill = Comparison)) +
+  geom_bar(stat = "identity", position = position_dodge(), width = 0.7) +
+  scale_fill_manual(values = colors) +
+  labs(title = "Mean Improvement Percentage by Metric",
+       x = "Metric",
+       y = "Mean Improvement (%)") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_y_continuous(limits = c(-300, 100), breaks = c(seq(-300, 0, by = 50),seq(0, 100, by = 20)))  # Adjust this based on your data's range
+# Save the plot
+ggsave(filename = here("Data-Analysis", "output", "Mean_Improvement_Plot.png"), plot, width = 10, height = 8, units = "in", bg = "white")
+
+
+
+
+
+# Assuming improvements is already loaded and contains the basic data
+# Example metrics and categories
+metrics <- c("energy_consumption", "execution_time", "cpu_usage", "mem_usage")
+comparisons <- c("codon_cpp", "codon_python")
+sizes <- c("small", "medium", "large")
+
+# Create a full grid of combinations
+full_grid <- expand.grid(Metric = metrics, Comparison = comparisons, SIZE_CATEGORY = sizes)
+
+# Join your data with the full grid to ensure all combinations are represented
+improvements_full <- full_grid %>%
+  left_join(improvements, by = c("Metric", "Comparison", "SIZE_CATEGORY")) %>%
+  replace_na(list(Improvement = 0))  # Replace NA improvements with 0 or another placeholder
+
+# Now proceed with creating the bubble chart
+improvements_full$Color_Label <- with(improvements_full, paste(Comparison, SIZE_CATEGORY, sep = "_"))
+
+# Prepare the bubble chart with all possible entries
+bubble_chart <- ggplot(improvements_full, aes(x = Metric, y = Improvement, size = abs(Improvement), color = Color_Label)) +
+  geom_point(alpha = 0.5) +
+  scale_size_continuous(range = c(5, 20), guide = FALSE) +
+  labs(title = "Improvements Across Metrics and Sizes",
+       x = "Metric",
+       y = "Improvement (%)") +
+  theme_minimal() +
+  scale_color_brewer(palette = "Set1") +
+  theme(legend.position = "bottom")
+
+
+# Save the plot, if needed
+ggsave(filename = here("Data-Analysis", "output","improvement_bubble_chart.png"), bubble_chart, width = 10, height = 8, units = "in", dpi = 300,bg="white")
