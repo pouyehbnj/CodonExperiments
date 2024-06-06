@@ -11,13 +11,6 @@ library(pracma)
 process_data_file <- function(file_name) {
   data <- read_csv(file_name, show_col_types = FALSE)
 
-# Function to clean and convert CPU Power data
-clean_and_convert_cpu_power <- function(cpu_power) {
-  # Replace non-numeric characters and convert to numeric
-  cleaned_power <- gsub("[^0-9\\.]", 0, cpu_power)  # Remove anything that's not a digit or decimal point
-  as.numeric(cleaned_power)  # Convert to numeric, non-numeric becomes NA
-}
-
   # Initialize a column for energy consumption
   data$energy_consumption <- NA
 
@@ -31,13 +24,12 @@ clean_and_convert_cpu_power <- function(cpu_power) {
       power_data <- read_csv(power_file_name, show_col_types = FALSE) %>%
         mutate(
           Time = ymd_hms(Date),  # Convert Date to POSIXct/POSIXlt
-          Time_Seconds = as.numeric(difftime(Time, min(Time), units = "secs")),  # Calculate time in seconds relative to the first timestamp
-          `CPU Power` = clean_and_convert_cpu_power(`CPU Power`)
+          Time_Seconds = as.numeric(difftime(Time, min(Time), units = "secs"))  # Calculate time in seconds relative to the first timestamps
         ) %>%
         arrange(Time)  # Ensure the data is ordered by time
 
       # Filter out invalid power values (negative or infinite)
-       valid_power_data <- power_data %>%
+      valid_power_data <- power_data %>%
        filter(!is.nan(`CPU Power`), is.finite(`CPU Power`), `CPU Power` >= 0)
 
         # Check if there are enough valid data points to perform integration

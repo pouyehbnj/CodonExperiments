@@ -72,8 +72,15 @@ if (!dir.exists(plot_dir)) {
 # Load the improvements data
 all_improvements <- read_csv("improvement.csv")
 
+# Filter out metrics where all improvements are zero
+filtered_improvements <- all_improvements %>%
+  group_by(Metric) %>%
+  filter(sum(Improvement != 0, na.rm = TRUE) > 0) %>%
+  ungroup()
+
 # Creating the grouped bar plot
-grouped_bar_plot <- all_improvements %>%
+if (nrow(filtered_improvements) > 0) {
+grouped_bar_plot <- filtered_improvements %>%
   ggplot(aes(x = SIZE_CATEGORY, y = Improvement, fill = Comparison)) +
   geom_bar(stat = "identity", position = position_dodge(width = 0.8), width = 0.7) +
   facet_wrap(~Metric, scales = "free_y") +
@@ -95,3 +102,4 @@ grouped_bar_plot <- all_improvements %>%
 
 # Save the plot or print to view
 ggsave(paste0(plot_dir,"grouped_improvement_plot.png"), grouped_bar_plot, width = 12, height = 8, bg="white")
+}

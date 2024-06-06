@@ -7,12 +7,14 @@ if (!require("tidyverse")) install.packages("tidyverse")
 if (!require("ggfortify")) install.packages("ggfortify")
 if (!require("MASS")) install.packages("MASS")
 if (!require("moments")) install.packages("moments")
+if (!require("plotrix")) install.packages("plotrix")
 # Load necessary libraries
 library(tidyverse)
 library(ggplot2)
 library(ggfortify)
 library(MASS)
 library(moments)
+library(plotrix)
 # Load data
 codon_data <- read_csv("codon_benchmarks.csv", show_col_types = FALSE)
 python_data <- read_csv("python_benchmarks.csv", show_col_types = FALSE)
@@ -99,6 +101,26 @@ descriptive_stats <- all_data %>%
 
 write_csv(descriptive_stats, "descriptive_stats.csv")
 
+
+
+# Function to dynamically set y-axis limits based on the data
+set_y_limits <- function(data, metric) {
+  # Create a list to store limits for each group combination
+  limits_list <- lapply(unique(data$execution_method), function(method) {
+    method_data <- data %>% filter(execution_method == method)
+    sapply(unique(method_data$SIZE_CATEGORY), function(size) {
+      group_data <- method_data %>% filter(SIZE_CATEGORY == size)
+      if (all(group_data[[metric]] == 0, na.rm = TRUE)) {
+        return(c(0, 1))  # Set limits to 0-1 if all values are zero
+      } else {
+        return(range(group_data[[metric]], na.rm = TRUE))
+      }
+    })
+  })
+  return(limits_list)
+}
+
+
 # Function to create and save box and dot plots for each metric
 create_plots <- function(metric) {
   # Filter out Python if the metric is 'compile_time'
@@ -107,22 +129,27 @@ create_plots <- function(metric) {
   } else {
     all_data
   }
-  
+  # Determine dynamic y-limits for each subplot
+  y_limits <- set_y_limits(data_filtered, metric)
+
   # Check if all values for the metric are zero (excluding NA)
   if (metric != "compile_time" && all(data_filtered[[metric]] == 0, na.rm = TRUE)) {
+     # Apply dynamic y-axis limits
+    
     # Create a simple plot showing all values as zero
     plot <- ggplot(data_filtered, aes(x = execution_method, y = !!sym(metric), fill = execution_method)) +
       geom_bar(stat = "identity", position = "dodge", width = 0.7) +
       facet_wrap(~SIZE_CATEGORY, scales = "free_y", ncol = 3) +
-      scale_y_continuous(limits = c(0, 1)) +  # Set y-axis limits to show the zero line
+      scale_y_continuous(limits = c(0, 1), breaks = c(0))+
       labs(title = paste("All values for", metric, "are zero"), x = "Compilation Method", y = metric) +
       theme_minimal() +
       theme(plot.background = element_rect(fill = "white"), panel.background = element_rect(fill = "white"))
-
-    # Save plot
-    ggsave(paste0(folder_path, "box_dot_plot_", metric, "_all_zero.png"), plot, width = 10, height = 8, bg = "white")
   
-  } else {
+  
+    # Save plot
+    ggsave(paste0(folder_path, "box_dot_plot_", metric, ".png"), plot, width = 10, height = 8, bg = "white")
+}
+   else {
     n_cols <- if (metric == "compile_time") 2 else 3  
     
     # Create box and dot plot
@@ -141,6 +168,50 @@ create_plots <- function(metric) {
 
 # Apply the function to each metric
 lapply(metrics, create_plots)
+
+
+create_scatter_plots <- function(metric) {
+  # Filter out Python if the metric is 'compile_time'
+  data_filtered <- if (metric == "compile_time") {
+    all_data %>% filter(execution_method != "python")
+  } else {
+    all_data
+  }
+
+  # Check if all values for the metric are zero (excluding NA)
+  if (metric != "compile_time" && all(data_filtered[[metric]] == 0, na.rm = TRUE)) {
+    # Create a simple plot showing all values as zero
+    plot <- ggplot(data_filtered, aes(x = execution_method, y = !!sym(metric), fill = execution_method)) +
+      geom_bar(stat = "identity", position = "dodge", width = 0.7) +
+      facet_wrap(~SIZE_CATEGORY, scales = "free_y", ncol = 3) +
+      scale_y_continuous(limits = c(0, 1), breaks = c(0)) +  # Set y-axis limits to show the zero line
+      labs(title = paste("All values for", metric, "are zero"), x = "Compilation Method", y = metric) +
+      theme_minimal() +
+      theme(plot.background = element_rect(fill = "white"), panel.background = element_rect(fill = "white"))
+
+    # Save plot
+    ggsave(paste0(folder_path, "scatter_plot_", metric, "_all_zero.png"), plot, width = 10, height = 8, bg = "white")
+  } else {
+    n_cols <- if (metric == "compile_time") 2 else 3
+    
+    # Create scatter plot
+    plot <- ggplot(data_filtered, aes(x = execution_method, y = !!sym(metric), color = execution_method)) +
+      geom_point(size = 2.5, alpha = 0.7) +  # Increase point size for better visibility
+      facet_wrap(~SIZE_CATEGORY + execution_method, scales = "free_y", ncol = n_cols) +
+      labs(title = paste("Scatter Plot of", metric, "by Execution Method"), x = "Execution Method", y = metric) +
+      theme_minimal() +
+      theme(plot.background = element_rect(fill = "white"), panel.background = element_rect(fill = "white"))
+
+    # Save plot
+    ggsave(paste0(folder_path, "scatter_plot_", metric, ".png"), plot, width = 10, height = 8, bg = "white")
+  }
+}
+
+# Apply the function to each metric
+lapply(metrics, create_scatter_plots)
+
+
+
 
 
 # Function to generate a Q-Q plot using ggplot2
@@ -164,7 +235,7 @@ analyze_normality <- function(data, metric) {
         ggtitle(paste("Q-Q Plot for", metric, "in", method, size_category))
 
       # Folder for saving the plot
-      qq_plot_folder <- paste0("plots/qq_plots_", metric)
+      qq_plot_folder <- paste0("plots/qq-plots/qq_plots_", metric)
       if (!dir.exists(qq_plot_folder)) {
         dir.create(qq_plot_folder, recursive = TRUE)
       }
@@ -180,3 +251,52 @@ analyze_normality <- function(data, metric) {
 # Example usage assuming 'all_data' and 'metrics' are defined
 lapply(metrics, function(m) analyze_normality(all_data, m))
 
+
+# Function to create scatter plots with annotations for overall min and max per execution method
+create_scatter_plot <- function(data, metric) {
+  # Set factor levels for SIZE_CATEGORY to control order
+  data$SIZE_CATEGORY <- factor(data$SIZE_CATEGORY, levels = c("small", "medium", "large"))
+  
+  # Calculate the range of data to dynamically set y-axis limits
+  range_min <- min(data[[metric]], na.rm = TRUE)
+  range_max <- max(data[[metric]], na.rm = TRUE)
+  padding <- (range_max - range_min) * 0.1  # Add 10% padding for visibility
+  
+  p <- ggplot(data, aes(x = SIZE_CATEGORY, y = !!sym(metric), color = execution_method)) +
+    geom_point(alpha = 0.6, size = 3) +
+    scale_color_brewer(palette = "Set1") +
+    labs(title = paste("Scatter Plot of", metric, "across Size Categories"),
+         x = "Size Category", y = metric) +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+    scale_y_continuous(limits = c(range_min - padding, range_max + padding),
+                       breaks = pretty(c(range_min, range_max), n = 10))  # Set dynamic y-axis limits
+
+  # Add horizontal lines only for specified metrics
+  if (metric %in% c("energy_consumption", "execution_time")) {
+    summary_data <- data %>%
+      group_by(execution_method) %>%
+      summarise(Min = min(!!sym(metric), na.rm = TRUE),
+                Max = max(!!sym(metric), na.rm = TRUE),
+                .groups = 'drop')
+
+    # Adding horizontal lines for overall min and max without text annotations
+    p <- p + 
+      geom_hline(data = summary_data, aes(yintercept = Min, color = execution_method), 
+                 linetype = "dotted", size = 1) +
+      geom_hline(data = summary_data, aes(yintercept = Max, color = execution_method),
+                 linetype = "dotted", size = 1)
+  }
+
+  # Directory for saving the plot
+  scatter_plot_folder <- "plots/scatter-plots"
+  if (!dir.exists(scatter_plot_folder)) {
+    dir.create(scatter_plot_folder, recursive = TRUE)
+  }
+  
+  # Saving the plot
+  ggsave(filename = paste0(scatter_plot_folder, "/scatter_plot_", metric, ".png"), plot = p, width = 12, height = 8, units = "in", bg="white")
+}
+
+# Apply the function to each metric
+lapply(metrics, function(m) create_scatter_plot(all_data, m))

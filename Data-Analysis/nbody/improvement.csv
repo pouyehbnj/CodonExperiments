@@ -1,6 +1,6 @@
 Comparison,SIZE_CATEGORY,Metric,Improvement
 codon_python,large,energy_consumption,96.30350103690898
-codon_python,medium,energy_consumption,99.583829530012
+codon_python,medium,energy_consumption,95.83193302247318
 codon_python,small,energy_consumption,97.26968501052016
 codon_python,large,execution_time,95.00286360697604
 codon_python,medium,execution_time,92.72154334215806

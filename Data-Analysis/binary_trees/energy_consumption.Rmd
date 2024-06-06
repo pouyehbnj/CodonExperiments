@@ -24,13 +24,13 @@ process_data_file <- function(file_name) {
       power_data <- read_csv(power_file_name, show_col_types = FALSE) %>%
         mutate(
           Time = ymd_hms(Date),  # Convert Date to POSIXct/POSIXlt
-          Time_Seconds = as.numeric(difftime(Time, min(Time), units = "secs"))  # Calculate time in seconds relative to the first timestamp
+          Time_Seconds = as.numeric(difftime(Time, min(Time), units = "secs"))  # Calculate time in seconds relative to the first timestamps
         ) %>%
         arrange(Time)  # Ensure the data is ordered by time
 
       # Filter out invalid power values (negative or infinite)
       valid_power_data <- power_data %>%
-        filter(`CPU Power` >= 0, is.finite(`CPU Power`))
+       filter(!is.nan(`CPU Power`), is.finite(`CPU Power`), `CPU Power` >= 0)
 
         # Check if there are enough valid data points to perform integration
       if (nrow(valid_power_data) > 1) {

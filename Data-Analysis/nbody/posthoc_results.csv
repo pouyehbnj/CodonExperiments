@@ -1,10 +1,10 @@
-Metric,Group1,Group2,P_Value,Significance
-energy_consumption,large,medium,0.022075929175614396,Significant
-energy_consumption,large,small,1.03001387198744e-5,Significant
-energy_consumption,medium,small,0.022075929175614396,Significant
-execution_time,large,medium,0.022075929175614396,Significant
-execution_time,large,small,1.03001387198744e-5,Significant
-execution_time,medium,small,0.022075929175614396,Significant
-cpu_usage,medium,large,0.7435232717126271,Non-Significant
-cpu_usage,small,large,0.005713600904117766,Significant
-cpu_usage,small,medium,0.015583855941689428,Significant
+Metric,Comparison,P_Value,Significance,Most_Significant
+energy_consumption,large - medium,0.022075929175614396,Significant,large - small
+energy_consumption,large - small,1.03001387198744e-5,Significant,large - small
+energy_consumption,medium - small,0.022075929175614396,Significant,large - small
+execution_time,large - medium,0.022075929175614396,Significant,large - small
+execution_time,large - small,1.03001387198744e-5,Significant,large - small
+execution_time,medium - small,0.022075929175614396,Significant,large - small
+cpu_usage,medium-large,0.7435232717126271,Non-Significant,small-large
+cpu_usage,small-large,0.005713600904117766,Significant,small-large
+cpu_usage,small-medium,0.015583855941689428,Significant,small-large
