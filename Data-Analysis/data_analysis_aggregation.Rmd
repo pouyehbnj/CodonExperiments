@@ -1,0 +1,36 @@
+library(tidyverse)
+library(here)
+
+# Ensure the 'here' package is correctly identifying your project root
+# The project root is usually where your .Rproj file or Git repository is initialized
+print(here())
+
+# Find all relevant files in subdirectories under 'Data-Analysis'
+h1_2_files <- list.files(path = here("Data-Analysis"), pattern = "H1_2_results.csv", full.names = TRUE, recursive = TRUE)
+h3_files <- list.files(path = here("Data-Analysis"), pattern = "H3_results.csv", full.names = TRUE, recursive = TRUE)
+posthoc_files <- list.files(path = here("Data-Analysis"), pattern = "posthoc_results.csv", full.names = TRUE, recursive = TRUE)
+
+# Function to read and append subject name
+read_and_label <- function(filepath, subject_name) {
+  read_csv(filepath) %>% mutate(Subject = subject_name)
+}
+
+# Process each type of file and combine them
+process_files <- function(files) {
+   map(files, ~read_and_label(.x, basename(dirname(.x)))) %>%
+    bind_rows() %>%
+    arrange(Metric, Subject) 
+}
+
+# Combine data for each file type
+combined_h1_2 <- process_files(h1_2_files)
+combined_h3 <- process_files(h3_files)
+combined_posthoc <- process_files(posthoc_files)
+
+# Save combined data frames
+write_csv(combined_h1_2, here("Data-Analysis", "meta_H1-2.csv"))
+write_csv(combined_h3, here("Data-Analysis", "meta_H3.csv"))
+write_csv(combined_posthoc, here("Data-Analysis", "meta_posthoc_results.csv"))
+
+# Print out a message to indicate completion
+print("Data aggregation completed and files saved.")
