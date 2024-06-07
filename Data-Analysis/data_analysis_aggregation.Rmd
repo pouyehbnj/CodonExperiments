@@ -2,7 +2,6 @@ library(tidyverse)
 library(here)
 
 # Ensure the 'here' package is correctly identifying your project root
-# The project root is usually where your .Rproj file or Git repository is initialized
 print(here())
 
 # Find all relevant files in subdirectories under 'Data-Analysis'
@@ -11,15 +10,21 @@ h3_files <- list.files(path = here("Data-Analysis"), pattern = "H3_results.csv",
 posthoc_files <- list.files(path = here("Data-Analysis"), pattern = "posthoc_results.csv", full.names = TRUE, recursive = TRUE)
 
 # Function to read and append subject name
-read_and_label <- function(filepath, subject_name) {
-  read_csv(filepath) %>% mutate(Subject = subject_name)
+read_and_label <- function(filepath) {
+  # Split the file path to extract the subdirectory name directly under "Data-Analysis"
+  path_parts <- str_split(filepath, "/")[[1]]
+  data_analysis_index <- which(path_parts == "Data-Analysis")
+  subject_name <- path_parts[data_analysis_index + 1]  # The subject name is immediately after 'Data-Analysis'
+  
+  read_csv(filepath) %>% 
+    mutate(Subject = subject_name)
 }
 
 # Process each type of file and combine them
 process_files <- function(files) {
-   map(files, ~read_and_label(.x, basename(dirname(.x)))) %>%
+  map(files, read_and_label) %>%
     bind_rows() %>%
-    arrange(Metric, Subject) 
+    arrange(Metric, Subject)
 }
 
 # Combine data for each file type
@@ -27,10 +32,20 @@ combined_h1_2 <- process_files(h1_2_files)
 combined_h3 <- process_files(h3_files)
 combined_posthoc <- process_files(posthoc_files)
 
-# Save combined data frames
-write_csv(combined_h1_2, here("Data-Analysis", "meta_H1-2.csv"))
-write_csv(combined_h3, here("Data-Analysis", "meta_H3.csv"))
-write_csv(combined_posthoc, here("Data-Analysis", "meta_posthoc_results.csv"))
+# Function to save the combined data frame, checking for existing file
+save_data <- function(data, filename) {
+  file_path <- here("Data-Analysis", filename)
+  if (file.exists(file_path)) {
+    file.remove(file_path)
+  }
+  write_csv(data, file_path)
+}
+
+# Save combined data frames with overwrite check
+save_data(combined_h1_2, "meta_H1-2.csv")
+save_data(combined_h3, "meta_H3.csv")
+save_data(combined_posthoc, "meta_posthoc_results.csv")
 
 # Print out a message to indicate completion
 print("Data aggregation completed and files saved.")
+
