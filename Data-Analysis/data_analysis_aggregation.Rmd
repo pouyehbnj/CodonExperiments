@@ -59,15 +59,15 @@ combined_stats <- map_dfr(desc_files, process_descriptive_stats)
 combined_stats <- map_dfr(desc_files, process_descriptive_stats)
 
 # Reshape data to wide format for comparison
+# Reshape data to wide format for comparison
 comparison_results <- combined_stats %>%
   pivot_wider(names_from = execution_method, values_from = Value, names_prefix = "mean_") %>%
   rowwise() %>%
   mutate(
     Metric_base = stringr::str_replace(Metric, "mean_", ""),
-    comparison_order = case_when(
-      Metric_base == "compile_time" ~ paste(c("codon", "cpp")[order(c(`mean_codon`, `mean_cpp`))], collapse = "<"),
-      TRUE ~ paste(c("codon", "cpp", "python")[order(c(`mean_codon`, `mean_cpp`, `mean_python`))], collapse = "<")
-    )
+    codon_vs_cpp = if_else(`mean_codon` < `mean_cpp`, "codon<cpp", "cpp<codon"),
+    codon_vs_python = if_else(Metric_base == "compile_time", NA_character_, 
+                              if_else(`mean_codon` < `mean_python`, "codon<python", "python<codon"))
   ) %>%
   ungroup()
 
