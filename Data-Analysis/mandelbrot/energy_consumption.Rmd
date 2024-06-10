@@ -24,18 +24,29 @@ process_data_file <- function(file_name) {
       power_data <- read_csv(power_file_name, show_col_types = FALSE) %>%
         mutate(
           Time = ymd_hms(Date),  # Convert Date to POSIXct/POSIXlt
-          Time_Seconds = as.numeric(difftime(Time, min(Time), units = "secs"))  # Calculate time in seconds relative to the first timestamp
+          Time_Seconds = as.numeric(difftime(Time, min(Time), units = "secs"))  # Calculate time in seconds relative to the first timestamps
         ) %>%
         arrange(Time)  # Ensure the data is ordered by time
 
       # Filter out invalid power values (negative or infinite)
       valid_power_data <- power_data %>%
-        filter(`CPU Power` >= 0, is.finite(`CPU Power`))
+       filter(!is.nan(`CPU Power`), is.finite(`CPU Power`), `CPU Power` >= 0)
 
-      # Check if there are enough valid data points to perform integration
+        # Check if there are enough valid data points to perform integration
       if (nrow(valid_power_data) > 1) {
-        # Calculate energy consumption using the trapezoidal rule
-        energy <- pracma::trapz(valid_power_data$Time_Seconds, valid_power_data$`CPU Power`)
+        # Simplified Trapezoidal Rule: Calculate energy consumption by averaging consecutive power values
+        time_intervals <- diff(valid_power_data$Time_Seconds)  # Time differences between consecutive measurements
+        power_averages <- (head(valid_power_data$`CPU Power`, -1) + tail(valid_power_data$`CPU Power`, -1)) / 2
+        energy <- sum(power_averages * time_intervals)  # Apply trapezoidal rule manually
+
+        
+
+        # Store the computed energy values (choose which one to use based on your preference)
+        data$energy_consumption[i] <- energy  # Replace with total_energy_simple_sum if preferred
+      } else if (nrow(valid_power_data) == 1) {
+        # Handle single data point case: Assume power is constant over the expected run time
+        expected_run_time <- 1  # Assume 1 second if not specified
+        energy <- valid_power_data$`CPU Power` * expected_run_time
         data$energy_consumption[i] <- energy
       }
     }

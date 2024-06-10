@@ -1,0 +1,589 @@
+Metric,Comparison,P_Value,Significance,Most_Significant,Subject
+cpu_usage,large - medium,0.1952857542381372,Non-Significant,large - small,binary_trees
+cpu_usage,large - small,1.7922810615156524e-4,Significant,large - small,binary_trees
+cpu_usage,medium - small,0.03447369396856814,Significant,large - small,binary_trees
+cpu_usage,medium-large,0.8004153190909942,Non-Significant,small-large,mandelbrot
+cpu_usage,small-large,0.0305163978115831,Significant,small-large,mandelbrot
+cpu_usage,small-medium,0.07856499002630946,Non-Significant,small-large,mandelbrot
+cpu_usage,large - medium,0.1952857542381372,Non-Significant,large - small,meta_posthoc_results.csv
+cpu_usage,large - small,1.7922810615156524e-4,Significant,large - small,meta_posthoc_results.csv
+cpu_usage,medium - small,0.03447369396856814,Significant,large - small,meta_posthoc_results.csv
+cpu_usage,medium-large,0.8004153190909942,Non-Significant,small-large,meta_posthoc_results.csv
+cpu_usage,small-large,0.0305163978115831,Significant,small-large,meta_posthoc_results.csv
+cpu_usage,small-medium,0.07856499002630946,Non-Significant,small-large,meta_posthoc_results.csv
+cpu_usage,large - medium,0.1952857542381372,Non-Significant,large - small,meta_posthoc_results.csv
+cpu_usage,large - small,1.7922810615156524e-4,Significant,large - small,meta_posthoc_results.csv
+cpu_usage,medium - small,0.03447369396856814,Significant,large - small,meta_posthoc_results.csv
+cpu_usage,medium-large,0.8004153190909942,Non-Significant,small-large,meta_posthoc_results.csv
+cpu_usage,small-large,0.0305163978115831,Significant,small-large,meta_posthoc_results.csv
+cpu_usage,small-medium,0.07856499002630946,Non-Significant,small-large,meta_posthoc_results.csv
+cpu_usage,large - medium,0.1952857542381372,Non-Significant,large - small,meta_posthoc_results.csv
+cpu_usage,large - small,1.7922810615156524e-4,Significant,large - small,meta_posthoc_results.csv
+cpu_usage,medium - small,0.03447369396856814,Significant,large - small,meta_posthoc_results.csv
+cpu_usage,medium-large,0.8004153190909942,Non-Significant,small-large,meta_posthoc_results.csv
+cpu_usage,small-large,0.0305163978115831,Significant,small-large,meta_posthoc_results.csv
+cpu_usage,small-medium,0.07856499002630946,Non-Significant,small-large,meta_posthoc_results.csv
+cpu_usage,large - medium,0.1952857542381372,Non-Significant,large - small,meta_posthoc_results.csv
+cpu_usage,large - small,1.7922810615156524e-4,Significant,large - small,meta_posthoc_results.csv
+cpu_usage,medium - small,0.03447369396856814,Significant,large - small,meta_posthoc_results.csv
+cpu_usage,medium-large,0.8004153190909942,Non-Significant,small-large,meta_posthoc_results.csv
+cpu_usage,small-large,0.0305163978115831,Significant,small-large,meta_posthoc_results.csv
+cpu_usage,small-medium,0.07856499002630946,Non-Significant,small-large,meta_posthoc_results.csv
+cpu_usage,large - medium,0.1952857542381372,Non-Significant,large - small,meta_posthoc_results.csv
+cpu_usage,large - small,1.7922810615156524e-4,Significant,large - small,meta_posthoc_results.csv
+cpu_usage,medium - small,0.03447369396856814,Significant,large - small,meta_posthoc_results.csv
+cpu_usage,medium-large,0.8004153190909942,Non-Significant,small-large,meta_posthoc_results.csv
+cpu_usage,small-large,0.0305163978115831,Significant,small-large,meta_posthoc_results.csv
+cpu_usage,small-medium,0.07856499002630946,Non-Significant,small-large,meta_posthoc_results.csv
+cpu_usage,large - medium,0.1952857542381372,Non-Significant,large - small,meta_posthoc_results.csv
+cpu_usage,large - small,1.7922810615156524e-4,Significant,large - small,meta_posthoc_results.csv
+cpu_usage,medium - small,0.03447369396856814,Significant,large - small,meta_posthoc_results.csv
+cpu_usage,medium-large,0.8004153190909942,Non-Significant,small-large,meta_posthoc_results.csv
+cpu_usage,small-large,0.0305163978115831,Significant,small-large,meta_posthoc_results.csv
+cpu_usage,small-medium,0.07856499002630946,Non-Significant,small-large,meta_posthoc_results.csv
+cpu_usage,medium-large,0.7435232717126271,Non-Significant,small-large,meta_posthoc_results.csv
+cpu_usage,small-large,0.00571360090411776,Significant,small-large,meta_posthoc_results.csv
+cpu_usage,small-medium,0.01558385594168942,Significant,small-large,meta_posthoc_results.csv
+cpu_usage,large - medium,0.4098717720368294,Non-Significant,large - small,meta_posthoc_results.csv
+cpu_usage,large - small,2.3182745586939094e-5,Significant,large - small,meta_posthoc_results.csv
+cpu_usage,medium - small,0.00433360926510192,Significant,large - small,meta_posthoc_results.csv
+cpu_usage,medium-large,0.05520830684010147,Non-Significant,small-large,meta_posthoc_results.csv
+cpu_usage,small-large,0.01917140784394022,Significant,small-large,meta_posthoc_results.csv
+cpu_usage,small-medium,0.8819097743213882,Non-Significant,small-large,meta_posthoc_results.csv
+cpu_usage,medium-large,0.7435232717126271,Non-Significant,small-large,meta_posthoc_results.csv
+cpu_usage,small-large,0.00571360090411776,Significant,small-large,meta_posthoc_results.csv
+cpu_usage,small-medium,0.01558385594168942,Significant,small-large,meta_posthoc_results.csv
+cpu_usage,large - medium,0.4098717720368294,Non-Significant,large - small,meta_posthoc_results.csv
+cpu_usage,large - small,2.3182745586939094e-5,Significant,large - small,meta_posthoc_results.csv
+cpu_usage,medium - small,0.00433360926510192,Significant,large - small,meta_posthoc_results.csv
+cpu_usage,medium-large,0.05520830684010147,Non-Significant,small-large,meta_posthoc_results.csv
+cpu_usage,small-large,0.01917140784394022,Significant,small-large,meta_posthoc_results.csv
+cpu_usage,small-medium,0.8819097743213882,Non-Significant,small-large,meta_posthoc_results.csv
+cpu_usage,medium-large,0.7435232717126271,Non-Significant,small-large,meta_posthoc_results.csv
+cpu_usage,small-large,0.00571360090411776,Significant,small-large,meta_posthoc_results.csv
+cpu_usage,small-medium,0.01558385594168942,Significant,small-large,meta_posthoc_results.csv
+cpu_usage,large - medium,0.4098717720368294,Non-Significant,large - small,meta_posthoc_results.csv
+cpu_usage,large - small,2.3182745586939094e-5,Significant,large - small,meta_posthoc_results.csv
+cpu_usage,medium - small,0.00433360926510192,Significant,large - small,meta_posthoc_results.csv
+cpu_usage,medium-large,0.05520830684010147,Non-Significant,small-large,meta_posthoc_results.csv
+cpu_usage,small-large,0.01917140784394022,Significant,small-large,meta_posthoc_results.csv
+cpu_usage,small-medium,0.8819097743213882,Non-Significant,small-large,meta_posthoc_results.csv
+cpu_usage,medium-large,0.7435232717126271,Non-Significant,small-large,meta_posthoc_results.csv
+cpu_usage,small-large,0.00571360090411776,Significant,small-large,meta_posthoc_results.csv
+cpu_usage,small-medium,0.01558385594168942,Significant,small-large,meta_posthoc_results.csv
+cpu_usage,large - medium,0.4098717720368294,Non-Significant,large - small,meta_posthoc_results.csv
+cpu_usage,large - small,2.3182745586939094e-5,Significant,large - small,meta_posthoc_results.csv
+cpu_usage,medium - small,0.00433360926510192,Significant,large - small,meta_posthoc_results.csv
+cpu_usage,medium-large,0.05520830684010147,Non-Significant,small-large,meta_posthoc_results.csv
+cpu_usage,small-large,0.01917140784394022,Significant,small-large,meta_posthoc_results.csv
+cpu_usage,small-medium,0.8819097743213882,Non-Significant,small-large,meta_posthoc_results.csv
+cpu_usage,medium-large,0.7435232717126271,Non-Significant,small-large,meta_posthoc_results.csv
+cpu_usage,small-large,0.00571360090411776,Significant,small-large,meta_posthoc_results.csv
+cpu_usage,small-medium,0.01558385594168942,Significant,small-large,meta_posthoc_results.csv
+cpu_usage,large - medium,0.4098717720368294,Non-Significant,large - small,meta_posthoc_results.csv
+cpu_usage,large - small,2.3182745586939094e-5,Significant,large - small,meta_posthoc_results.csv
+cpu_usage,medium - small,0.00433360926510192,Significant,large - small,meta_posthoc_results.csv
+cpu_usage,medium-large,0.05520830684010147,Non-Significant,small-large,meta_posthoc_results.csv
+cpu_usage,small-large,0.01917140784394022,Significant,small-large,meta_posthoc_results.csv
+cpu_usage,small-medium,0.8819097743213882,Non-Significant,small-large,meta_posthoc_results.csv
+cpu_usage,medium-large,0.7435232717126271,Non-Significant,small-large,meta_posthoc_results.csv
+cpu_usage,small-large,0.00571360090411776,Significant,small-large,meta_posthoc_results.csv
+cpu_usage,small-medium,0.01558385594168942,Significant,small-large,meta_posthoc_results.csv
+cpu_usage,large - medium,0.4098717720368294,Non-Significant,large - small,meta_posthoc_results.csv
+cpu_usage,large - small,2.3182745586939094e-5,Significant,large - small,meta_posthoc_results.csv
+cpu_usage,medium - small,0.00433360926510192,Significant,large - small,meta_posthoc_results.csv
+cpu_usage,medium-large,0.05520830684010147,Non-Significant,small-large,meta_posthoc_results.csv
+cpu_usage,small-large,0.01917140784394022,Significant,small-large,meta_posthoc_results.csv
+cpu_usage,small-medium,0.8819097743213882,Non-Significant,small-large,meta_posthoc_results.csv
+cpu_usage,medium-large,0.7435232717126271,Non-Significant,small-large,nbody
+cpu_usage,small-large,0.00571360090411776,Significant,small-large,nbody
+cpu_usage,small-medium,0.01558385594168942,Significant,small-large,nbody
+cpu_usage,large - medium,0.4098717720368294,Non-Significant,large - small,set_partition
+cpu_usage,large - small,2.3182745586939094e-5,Significant,large - small,set_partition
+cpu_usage,medium - small,0.00433360926510192,Significant,large - small,set_partition
+cpu_usage,medium-large,0.05520830684010147,Non-Significant,small-large,spectral_norm
+cpu_usage,small-large,0.01917140784394022,Significant,small-large,spectral_norm
+cpu_usage,small-medium,0.8819097743213882,Non-Significant,small-large,spectral_norm
+energy_consumption,large - medium,0.0068195409379463,Significant,large - small,binary_trees
+energy_consumption,large - small,2.183783119838228e-4,Significant,large - small,binary_trees
+energy_consumption,medium - small,0.4558403528908729,Non-Significant,large - small,binary_trees
+energy_consumption,large - medium,0.01295432514047937,Significant,large - small,fasta
+energy_consumption,large - small,9.324720425143016e-7,Significant,large - small,fasta
+energy_consumption,medium - small,0.02275583604137178,Significant,large - small,fasta
+energy_consumption,large - medium,0.04129784081344434,Significant,large - small,float
+energy_consumption,large - small,2.39698483352852e-6,Significant,large - small,float
+energy_consumption,medium - small,0.02524111422413528,Significant,large - small,float
+energy_consumption,large - medium,0.01093553713730346,Significant,large - small,mandelbrot
+energy_consumption,large - small,1.2782246497100869e-5,Significant,large - small,mandelbrot
+energy_consumption,medium - small,0.04268960537446589,Significant,large - small,mandelbrot
+energy_consumption,large - medium,0.0068195409379463,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,2.183783119838228e-4,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.4558403528908729,Non-Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.01295432514047937,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,9.324720425143016e-7,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.02275583604137178,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.04129784081344434,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,2.39698483352852e-6,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.02524111422413528,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.01093553713730346,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,1.2782246497100869e-5,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.04268960537446589,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.0068195409379463,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,2.183783119838228e-4,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.4558403528908729,Non-Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.01295432514047937,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,9.324720425143016e-7,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.02275583604137178,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.04129784081344434,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,2.39698483352852e-6,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.02524111422413528,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.01093553713730346,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,1.2782246497100869e-5,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.04268960537446589,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.0068195409379463,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,2.183783119838228e-4,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.4558403528908729,Non-Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.01295432514047937,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,9.324720425143016e-7,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.02275583604137178,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.04129784081344434,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,2.39698483352852e-6,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.02524111422413528,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.01093553713730346,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,1.2782246497100869e-5,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.04268960537446589,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.0068195409379463,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,2.183783119838228e-4,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.4558403528908729,Non-Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.01295432514047937,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,9.324720425143016e-7,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.02275583604137178,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.04129784081344434,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,2.39698483352852e-6,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.02524111422413528,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.01093553713730346,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,1.2782246497100869e-5,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.04268960537446589,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.0068195409379463,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,2.183783119838228e-4,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.4558403528908729,Non-Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.01295432514047937,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,9.324720425143016e-7,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.02275583604137178,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.04129784081344434,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,2.39698483352852e-6,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.02524111422413528,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.01093553713730346,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,1.2782246497100869e-5,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.04268960537446589,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.0068195409379463,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,2.183783119838228e-4,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.4558403528908729,Non-Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.01295432514047937,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,9.324720425143016e-7,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.02275583604137178,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.04129784081344434,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,2.39698483352852e-6,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.02524111422413528,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.01093553713730346,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,1.2782246497100869e-5,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.04268960537446589,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.02207592917561439,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,1.03001387198744e-5,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.02207592917561439,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.04894129960765366,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,1.5101405642838706e-5,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.0274811031329118,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.03161944144936329,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,1.4900912472093603e-6,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.03161944144936329,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.01313222790515087,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,1.8710692393367662e-5,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.13414403854349033,Non-Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.01966899489773384,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,3.774769579082859e-6,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.01966899489773384,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.02207592917561439,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,1.03001387198744e-5,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.02207592917561439,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.04894129960765366,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,1.5101405642838706e-5,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.0274811031329118,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.03161944144936329,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,1.4900912472093603e-6,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.03161944144936329,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.01313222790515087,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,1.8710692393367662e-5,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.13414403854349033,Non-Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.01966899489773384,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,3.774769579082859e-6,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.01966899489773384,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.02207592917561439,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,1.03001387198744e-5,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.02207592917561439,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.04894129960765366,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,1.5101405642838706e-5,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.0274811031329118,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.03161944144936329,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,1.4900912472093603e-6,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.03161944144936329,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.01313222790515087,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,1.8710692393367662e-5,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.13414403854349033,Non-Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.01966899489773384,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,3.774769579082859e-6,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.01966899489773384,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.02207592917561439,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,1.03001387198744e-5,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.02207592917561439,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.04894129960765366,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,1.5101405642838706e-5,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.0274811031329118,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.03161944144936329,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,1.4900912472093603e-6,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.03161944144936329,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.01313222790515087,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,1.8710692393367662e-5,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.13414403854349033,Non-Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.01966899489773384,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,3.774769579082859e-6,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.01966899489773384,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.02207592917561439,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,1.03001387198744e-5,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.02207592917561439,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.04894129960765366,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,1.5101405642838706e-5,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.0274811031329118,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.03161944144936329,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,1.4900912472093603e-6,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.03161944144936329,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.01313222790515087,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,1.8710692393367662e-5,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.13414403854349033,Non-Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.01966899489773384,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,3.774769579082859e-6,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.01966899489773384,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.02207592917561439,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,1.03001387198744e-5,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.02207592917561439,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.04894129960765366,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,1.5101405642838706e-5,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.0274811031329118,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.03161944144936329,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,1.4900912472093603e-6,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.03161944144936329,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.01313222790515087,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,1.8710692393367662e-5,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.13414403854349033,Non-Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.01966899489773384,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - small,3.774769579082859e-6,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,medium - small,0.01966899489773384,Significant,large - small,meta_posthoc_results.csv
+energy_consumption,large - medium,0.02207592917561439,Significant,large - small,nbody
+energy_consumption,large - small,1.03001387198744e-5,Significant,large - small,nbody
+energy_consumption,medium - small,0.02207592917561439,Significant,large - small,nbody
+energy_consumption,large - medium,0.04894129960765366,Significant,large - small,nsieve
+energy_consumption,large - small,1.5101405642838706e-5,Significant,large - small,nsieve
+energy_consumption,medium - small,0.0274811031329118,Significant,large - small,nsieve
+energy_consumption,large - medium,0.03161944144936329,Significant,large - small,set_partition
+energy_consumption,large - small,1.4900912472093603e-6,Significant,large - small,set_partition
+energy_consumption,medium - small,0.03161944144936329,Significant,large - small,set_partition
+energy_consumption,large - medium,0.01313222790515087,Significant,large - small,spectral_norm
+energy_consumption,large - small,1.8710692393367662e-5,Significant,large - small,spectral_norm
+energy_consumption,medium - small,0.13414403854349033,Non-Significant,large - small,spectral_norm
+energy_consumption,large - medium,0.01966899489773384,Significant,large - small,taq
+energy_consumption,large - small,3.774769579082859e-6,Significant,large - small,taq
+energy_consumption,medium - small,0.01966899489773384,Significant,large - small,taq
+execution_time,large - medium,0.0217492741051228,Significant,large - small,binary_trees
+execution_time,large - small,3.4014131012620007e-5,Significant,large - small,binary_trees
+execution_time,medium - small,0.10797836535984026,Non-Significant,large - small,binary_trees
+execution_time,large - medium,0.01295432514047937,Significant,large - small,fasta
+execution_time,large - small,9.324720425143016e-7,Significant,large - small,fasta
+execution_time,medium - small,0.02275583604137178,Significant,large - small,fasta
+execution_time,large - medium,0.04129784081344434,Significant,large - small,float
+execution_time,large - small,2.39698483352852e-6,Significant,large - small,float
+execution_time,medium - small,0.02524111422413528,Significant,large - small,float
+execution_time,large - medium,0.01093553713730346,Significant,large - small,mandelbrot
+execution_time,large - small,1.2782246497100869e-5,Significant,large - small,mandelbrot
+execution_time,medium - small,0.04268960537446589,Significant,large - small,mandelbrot
+execution_time,large - medium,0.0217492741051228,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,3.4014131012620007e-5,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.10797836535984026,Non-Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.01295432514047937,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,9.324720425143016e-7,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.02275583604137178,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.04129784081344434,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,2.39698483352852e-6,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.02524111422413528,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.01093553713730346,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,1.2782246497100869e-5,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.04268960537446589,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.0217492741051228,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,3.4014131012620007e-5,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.10797836535984026,Non-Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.01295432514047937,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,9.324720425143016e-7,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.02275583604137178,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.04129784081344434,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,2.39698483352852e-6,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.02524111422413528,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.01093553713730346,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,1.2782246497100869e-5,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.04268960537446589,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.0217492741051228,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,3.4014131012620007e-5,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.10797836535984026,Non-Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.01295432514047937,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,9.324720425143016e-7,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.02275583604137178,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.04129784081344434,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,2.39698483352852e-6,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.02524111422413528,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.01093553713730346,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,1.2782246497100869e-5,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.04268960537446589,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.0217492741051228,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,3.4014131012620007e-5,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.10797836535984026,Non-Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.01295432514047937,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,9.324720425143016e-7,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.02275583604137178,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.04129784081344434,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,2.39698483352852e-6,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.02524111422413528,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.01093553713730346,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,1.2782246497100869e-5,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.04268960537446589,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.0217492741051228,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,3.4014131012620007e-5,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.10797836535984026,Non-Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.01295432514047937,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,9.324720425143016e-7,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.02275583604137178,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.04129784081344434,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,2.39698483352852e-6,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.02524111422413528,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.01093553713730346,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,1.2782246497100869e-5,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.04268960537446589,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.0217492741051228,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,3.4014131012620007e-5,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.10797836535984026,Non-Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.01295432514047937,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,9.324720425143016e-7,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.02275583604137178,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.04129784081344434,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,2.39698483352852e-6,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.02524111422413528,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.01093553713730346,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,1.2782246497100869e-5,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.04268960537446589,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.02207592917561439,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,1.03001387198744e-5,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.02207592917561439,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.04894129960765366,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,1.5101405642838706e-5,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.0274811031329118,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.03161944144936329,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,1.4900912472093603e-6,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.03161944144936329,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.02619454639583183,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,5.930316918293219e-6,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.0445608677537974,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.01966899489773384,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,3.774769579082859e-6,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.01966899489773384,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.02207592917561439,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,1.03001387198744e-5,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.02207592917561439,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.04894129960765366,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,1.5101405642838706e-5,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.0274811031329118,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.03161944144936329,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,1.4900912472093603e-6,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.03161944144936329,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.02619454639583183,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,5.930316918293219e-6,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.0445608677537974,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.01966899489773384,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,3.774769579082859e-6,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.01966899489773384,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.02207592917561439,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,1.03001387198744e-5,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.02207592917561439,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.04894129960765366,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,1.5101405642838706e-5,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.0274811031329118,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.03161944144936329,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,1.4900912472093603e-6,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.03161944144936329,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.02619454639583183,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,5.930316918293219e-6,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.0445608677537974,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.01966899489773384,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,3.774769579082859e-6,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.01966899489773384,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.02207592917561439,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,1.03001387198744e-5,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.02207592917561439,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.04894129960765366,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,1.5101405642838706e-5,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.0274811031329118,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.03161944144936329,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,1.4900912472093603e-6,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.03161944144936329,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.02619454639583183,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,5.930316918293219e-6,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.0445608677537974,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.01966899489773384,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,3.774769579082859e-6,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.01966899489773384,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.02207592917561439,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,1.03001387198744e-5,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.02207592917561439,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.04894129960765366,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,1.5101405642838706e-5,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.0274811031329118,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.03161944144936329,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,1.4900912472093603e-6,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.03161944144936329,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.02619454639583183,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,5.930316918293219e-6,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.0445608677537974,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.01966899489773384,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,3.774769579082859e-6,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.01966899489773384,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.02207592917561439,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,1.03001387198744e-5,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.02207592917561439,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.04894129960765366,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,1.5101405642838706e-5,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.0274811031329118,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.03161944144936329,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,1.4900912472093603e-6,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.03161944144936329,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.02619454639583183,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,5.930316918293219e-6,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.0445608677537974,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.01966899489773384,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - small,3.774769579082859e-6,Significant,large - small,meta_posthoc_results.csv
+execution_time,medium - small,0.01966899489773384,Significant,large - small,meta_posthoc_results.csv
+execution_time,large - medium,0.02207592917561439,Significant,large - small,nbody
+execution_time,large - small,1.03001387198744e-5,Significant,large - small,nbody
+execution_time,medium - small,0.02207592917561439,Significant,large - small,nbody
+execution_time,large - medium,0.04894129960765366,Significant,large - small,nsieve
+execution_time,large - small,1.5101405642838706e-5,Significant,large - small,nsieve
+execution_time,medium - small,0.0274811031329118,Significant,large - small,nsieve
+execution_time,large - medium,0.03161944144936329,Significant,large - small,set_partition
+execution_time,large - small,1.4900912472093603e-6,Significant,large - small,set_partition
+execution_time,medium - small,0.03161944144936329,Significant,large - small,set_partition
+execution_time,large - medium,0.02619454639583183,Significant,large - small,spectral_norm
+execution_time,large - small,5.930316918293219e-6,Significant,large - small,spectral_norm
+execution_time,medium - small,0.0445608677537974,Significant,large - small,spectral_norm
+execution_time,large - medium,0.01966899489773384,Significant,large - small,taq
+execution_time,large - small,3.774769579082859e-6,Significant,large - small,taq
+execution_time,medium - small,0.01966899489773384,Significant,large - small,taq
+mem_usage,large - medium,0.01983244275224521,Significant,large - small,binary_trees
+mem_usage,large - small,2.6306861502777846e-5,Significant,large - small,binary_trees
+mem_usage,medium - small,0.10232575228109368,Non-Significant,large - small,binary_trees
+mem_usage,large - medium,0.04129784081344434,Significant,large - small,float
+mem_usage,large - small,2.39698483352852e-6,Significant,large - small,float
+mem_usage,medium - small,0.02524111422413528,Significant,large - small,float
+mem_usage,large - medium,8.342516926078704e-4,Significant,large - small,mandelbrot
+mem_usage,large - small,1.2719139478248025e-4,Significant,large - small,mandelbrot
+mem_usage,medium - small,0.5211708406637148,Non-Significant,large - small,mandelbrot
+mem_usage,large - medium,0.01983244275224521,Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - small,2.6306861502777846e-5,Significant,large - small,meta_posthoc_results.csv
+mem_usage,medium - small,0.10232575228109368,Non-Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - medium,0.04129784081344434,Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - small,2.39698483352852e-6,Significant,large - small,meta_posthoc_results.csv
+mem_usage,medium - small,0.02524111422413528,Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - medium,8.342516926078704e-4,Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - small,1.2719139478248025e-4,Significant,large - small,meta_posthoc_results.csv
+mem_usage,medium - small,0.5211708406637148,Non-Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - medium,0.01983244275224521,Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - small,2.6306861502777846e-5,Significant,large - small,meta_posthoc_results.csv
+mem_usage,medium - small,0.10232575228109368,Non-Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - medium,0.04129784081344434,Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - small,2.39698483352852e-6,Significant,large - small,meta_posthoc_results.csv
+mem_usage,medium - small,0.02524111422413528,Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - medium,8.342516926078704e-4,Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - small,1.2719139478248025e-4,Significant,large - small,meta_posthoc_results.csv
+mem_usage,medium - small,0.5211708406637148,Non-Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - medium,0.01983244275224521,Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - small,2.6306861502777846e-5,Significant,large - small,meta_posthoc_results.csv
+mem_usage,medium - small,0.10232575228109368,Non-Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - medium,0.04129784081344434,Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - small,2.39698483352852e-6,Significant,large - small,meta_posthoc_results.csv
+mem_usage,medium - small,0.02524111422413528,Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - medium,8.342516926078704e-4,Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - small,1.2719139478248025e-4,Significant,large - small,meta_posthoc_results.csv
+mem_usage,medium - small,0.5211708406637148,Non-Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - medium,0.01983244275224521,Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - small,2.6306861502777846e-5,Significant,large - small,meta_posthoc_results.csv
+mem_usage,medium - small,0.10232575228109368,Non-Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - medium,0.04129784081344434,Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - small,2.39698483352852e-6,Significant,large - small,meta_posthoc_results.csv
+mem_usage,medium - small,0.02524111422413528,Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - medium,8.342516926078704e-4,Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - small,1.2719139478248025e-4,Significant,large - small,meta_posthoc_results.csv
+mem_usage,medium - small,0.5211708406637148,Non-Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - medium,0.01983244275224521,Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - small,2.6306861502777846e-5,Significant,large - small,meta_posthoc_results.csv
+mem_usage,medium - small,0.10232575228109368,Non-Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - medium,0.04129784081344434,Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - small,2.39698483352852e-6,Significant,large - small,meta_posthoc_results.csv
+mem_usage,medium - small,0.02524111422413528,Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - medium,8.342516926078704e-4,Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - small,1.2719139478248025e-4,Significant,large - small,meta_posthoc_results.csv
+mem_usage,medium - small,0.5211708406637148,Non-Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - medium,0.01983244275224521,Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - small,2.6306861502777846e-5,Significant,large - small,meta_posthoc_results.csv
+mem_usage,medium - small,0.10232575228109368,Non-Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - medium,0.04129784081344434,Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - small,2.39698483352852e-6,Significant,large - small,meta_posthoc_results.csv
+mem_usage,medium - small,0.02524111422413528,Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - medium,8.342516926078704e-4,Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - small,1.2719139478248025e-4,Significant,large - small,meta_posthoc_results.csv
+mem_usage,medium - small,0.5211708406637148,Non-Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - medium,0.04784934703334075,Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - small,1.3850758436211617e-5,Significant,large - small,meta_posthoc_results.csv
+mem_usage,medium - small,0.02675139170399067,Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - medium,0.00944166174229294,Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - small,1.4949497678221353e-5,Significant,large - small,meta_posthoc_results.csv
+mem_usage,medium - small,0.08137350460255292,Non-Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - medium,0.04784934703334075,Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - small,1.3850758436211617e-5,Significant,large - small,meta_posthoc_results.csv
+mem_usage,medium - small,0.02675139170399067,Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - medium,0.00944166174229294,Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - small,1.4949497678221353e-5,Significant,large - small,meta_posthoc_results.csv
+mem_usage,medium - small,0.08137350460255292,Non-Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - medium,0.04784934703334075,Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - small,1.3850758436211617e-5,Significant,large - small,meta_posthoc_results.csv
+mem_usage,medium - small,0.02675139170399067,Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - medium,0.00944166174229294,Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - small,1.4949497678221353e-5,Significant,large - small,meta_posthoc_results.csv
+mem_usage,medium - small,0.08137350460255292,Non-Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - medium,0.04784934703334075,Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - small,1.3850758436211617e-5,Significant,large - small,meta_posthoc_results.csv
+mem_usage,medium - small,0.02675139170399067,Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - medium,0.00944166174229294,Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - small,1.4949497678221353e-5,Significant,large - small,meta_posthoc_results.csv
+mem_usage,medium - small,0.08137350460255292,Non-Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - medium,0.04784934703334075,Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - small,1.3850758436211617e-5,Significant,large - small,meta_posthoc_results.csv
+mem_usage,medium - small,0.02675139170399067,Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - medium,0.00944166174229294,Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - small,1.4949497678221353e-5,Significant,large - small,meta_posthoc_results.csv
+mem_usage,medium - small,0.08137350460255292,Non-Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - medium,0.04784934703334075,Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - small,1.3850758436211617e-5,Significant,large - small,meta_posthoc_results.csv
+mem_usage,medium - small,0.02675139170399067,Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - medium,0.00944166174229294,Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - small,1.4949497678221353e-5,Significant,large - small,meta_posthoc_results.csv
+mem_usage,medium - small,0.08137350460255292,Non-Significant,large - small,meta_posthoc_results.csv
+mem_usage,large - medium,0.04784934703334075,Significant,large - small,nsieve
+mem_usage,large - small,1.3850758436211617e-5,Significant,large - small,nsieve
+mem_usage,medium - small,0.02675139170399067,Significant,large - small,nsieve
+mem_usage,large - medium,0.00944166174229294,Significant,large - small,taq
+mem_usage,large - small,1.4949497678221353e-5,Significant,large - small,taq
+mem_usage,medium - small,0.08137350460255292,Non-Significant,large - small,taq

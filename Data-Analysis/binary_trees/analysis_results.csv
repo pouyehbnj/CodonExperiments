@@ -1,0 +1,5 @@
+Metric,Test_Type,P_Value
+energy_consumption,Kruskal-Wallis,2.861627806609183e-4
+execution_time,Kruskal-Wallis,9.620667098797623e-5
+cpu_usage,Kruskal-Wallis,6.076051453085242e-4
+mem_usage,Kruskal-Wallis,7.476504516712353e-5

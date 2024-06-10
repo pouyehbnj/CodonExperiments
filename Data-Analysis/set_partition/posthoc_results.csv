@@ -1,0 +1,10 @@
+Metric,Comparison,P_Value,Significance,Most_Significant
+energy_consumption,large - medium,0.03161944144936329,Significant,large - small
+energy_consumption,large - small,1.4900912472093605e-6,Significant,large - small
+energy_consumption,medium - small,0.03161944144936329,Significant,large - small
+execution_time,large - medium,0.03161944144936329,Significant,large - small
+execution_time,large - small,1.4900912472093605e-6,Significant,large - small
+execution_time,medium - small,0.03161944144936329,Significant,large - small
+cpu_usage,large - medium,0.4098717720368294,Non-Significant,large - small
+cpu_usage,large - small,2.3182745586939094e-5,Significant,large - small
+cpu_usage,medium - small,0.004333609265101924,Significant,large - small

@@ -1,0 +1,31 @@
+"Method1","Method2","Metric","Size","Test_Type","P_Value","Decision"
+"codon","python","energy_consumption","small","Wilcoxon",0.000102838338132456,"Reject H0"
+"codon","cpp","energy_consumption","small","Wilcoxon",0.000310800310800311,"Reject H0"
+"codon","python","energy_consumption","medium","Wilcoxon",2.16501764489381e-05,"Reject H0"
+"codon","cpp","energy_consumption","medium","Wilcoxon",0.315416609534257,"Fail to reject H0"
+"codon","python","energy_consumption","large","Wilcoxon",0.000102838338132456,"Reject H0"
+"codon","cpp","energy_consumption","large","T-test",1.2803515852588e-12,"Reject H0"
+"codon","python","execution_time","small","Wilcoxon",0.000102838338132456,"Reject H0"
+"codon","cpp","execution_time","small","Wilcoxon",0.000310800310800311,"Reject H0"
+"codon","python","execution_time","medium","Wilcoxon",2.16501764489381e-05,"Reject H0"
+"codon","cpp","execution_time","medium","Wilcoxon",0.274281274281274,"Fail to reject H0"
+"codon","python","execution_time","large","Wilcoxon",0.000102838338132456,"Reject H0"
+"codon","cpp","execution_time","large","Wilcoxon",0.00116550116550117,"Reject H0"
+"codon","python","cpu_usage","small","Wilcoxon",0.000102838338132456,"Reject H0"
+"codon","cpp","cpu_usage","small","T-test",0.054280950951946,"Fail to reject H0"
+"codon","python","cpu_usage","medium","Wilcoxon",0.182316135876507,"Fail to reject H0"
+"codon","cpp","cpu_usage","medium","T-test",0.457769532063602,"Fail to reject H0"
+"codon","python","cpu_usage","large","Wilcoxon",0.0249897161661868,"Reject H0"
+"codon","cpp","cpu_usage","large","T-test",0.808387729128056,"Fail to reject H0"
+"codon","python","mem_usage","small","Wilcoxon",NA,NA
+"codon","cpp","mem_usage","small","Wilcoxon",NA,NA
+"codon","python","mem_usage","medium","Wilcoxon",NA,NA
+"codon","cpp","mem_usage","medium","Wilcoxon",NA,NA
+"codon","python","mem_usage","large","Wilcoxon",NA,NA
+"codon","cpp","mem_usage","large","Wilcoxon",NA,NA
+"codon","python","compile_time","small","Wilcoxon",0.000163601741481847,"Reject H0"
+"codon","cpp","compile_time","small","Wilcoxon",0.000310800310800311,"Reject H0"
+"codon","python","compile_time","medium","Wilcoxon",0.000122435183530585,"Reject H0"
+"codon","cpp","compile_time","medium","Wilcoxon",4.57059280588692e-05,"Reject H0"
+"codon","python","compile_time","large","Wilcoxon",0.000163601741481847,"Reject H0"
+"codon","cpp","compile_time","large","T-test",4.36654389315628e-15,"Reject H0"

@@ -1,0 +1,81 @@
+# Load necessary libraries
+if (!require("ggplot2")) install.packages("ggplot2")
+if (!require("tidyverse")) install.packages("tidyverse")
+if (!require("cowplot")) install.packages("cowplot")
+
+library(tidyverse)
+library(ggplot2)
+library(cowplot)
+
+# Load data
+codon_data <- read_csv("codon_benchmarks.csv")
+python_data <- read_csv("python_benchmarks.csv")
+cpp_data <- read_csv("cpp_benchmarks.csv")
+
+# Combine data into a single dataframe
+all_data <- bind_rows(codon_data, python_data, cpp_data)
+
+# Function to create a comparison data frame
+create_comparison_data <- function(metric, method1, method2, size) {
+  method1_data <- all_data %>%
+    filter(execution_method == method1, SIZE_CATEGORY == size) %>%
+    select(!!sym(metric)) %>%
+    mutate(Distribution = method1)
+  
+  method2_data <- all_data %>%
+    filter(execution_method == method2, SIZE_CATEGORY == size) %>%
+    select(!!sym(metric)) %>%
+    mutate(Distribution = method2)
+  
+  comparison_data <- bind_rows(method1_data, method2_data)
+  colnames(comparison_data)[1] <- "Values"
+  return(comparison_data)
+}
+
+# Function to create density plot
+density_plot <- function(dataset, title, x, y) {
+  ggplot(dataset, aes(x = Values, fill = Distribution)) +
+    geom_density(alpha = 0.5) +
+    labs(title = title, x = x, y = y) +
+    theme_minimal()
+}
+
+# Function to create violin plot
+violin_plot <- function(dataset, title, x, y) {
+  ggplot(dataset, aes(x = Distribution, y = Values, fill = Distribution)) +
+    geom_violin() +
+    geom_boxplot(width = 0.1, fill = "white") +
+    labs(title = title, x = x, y = y) +
+    theme_minimal()
+}
+
+# Metrics to analyze
+metrics <- c("energy_consumption", "execution_time", "cpu_usage", "mem_usage", "compile_time")
+sizes <- unique(all_data$SIZE_CATEGORY)
+
+# Create and save plots for each metric and size
+for (metric in metrics) {
+  for (size in sizes) {
+    # Create comparison data frames
+    comparison_data_python <- create_comparison_data(metric, "codon", "python", size)
+    comparison_data_cpp <- create_comparison_data(metric, "codon", "cpp", size)
+
+    # Create density and violin plots
+    density_plot_python <- density_plot(comparison_data_python, paste("Density Plot - Codon vs Python -", metric, size), metric, "Density")
+    violin_plot_python <- violin_plot(comparison_data_python, paste("Violin Plot - Codon vs Python -", metric, size), metric, "Values")
+    density_plot_cpp <- density_plot(comparison_data_cpp, paste("Density Plot - Codon vs C++ -", metric, size), metric, "Density")
+    violin_plot_cpp <- violin_plot(comparison_data_cpp, paste("Violin Plot - Codon vs C++ -", metric, size), metric, "Values")
+
+    # Arrange the plots in a 2x2 grid
+    grid <- plot_grid(density_plot_python, density_plot_cpp, violin_plot_python, violin_plot_cpp, nrow = 2, labels = "AUTO")
+
+    # Create subfolder if it doesn't exist
+    folder_path <- paste0("plots/comparisons_", metric)
+    if (!dir.exists(folder_path)) {
+      dir.create(folder_path, recursive = TRUE)
+    }
+
+    # Save the grid of plots as a PNG image
+    ggsave(filename = paste0(folder_path, "/grid_of_", metric, "_", size, ".png"), plot = grid, width = 12, height = 10, units = "in",bg="white")
+  }
+}

@@ -1,66 +1,105 @@
+# Load necessary libraries
 library(tidyverse)
 library(readr)
 
-# Adjusted function to handle vectorized improvement calculation
+# Function to calculate improvement percentages
 calculate_improvement <- function(codon, other) {
   improvement <- vector("numeric", length(codon))
   for (i in seq_along(codon)) {
     if (!is.na(codon[i]) && !is.na(other[i])) {
       if (other[i] == 0 && codon[i] == 0) {
-        improvement[i] <- 0  # Return 0 if both values are zero
+        improvement[i] <- 0  # No change if both are zero
       } else if (other[i] != 0) {
-        improvement[i] <- (other[i] - codon[i]) / other[i] * 100  # Standard improvement calculation
+        improvement[i] <- (other[i] - codon[i]) / other[i] * 100  # Calculate improvement
       } else {
-        improvement[i] <- NA_real_  # Return NA if other is zero
+        improvement[i] <- NA_real_  # Handle cases where 'other' is zero
       }
     } else {
-      improvement[i] <- NA_real_  # Return NA for NA cases
+      improvement[i] <- NA_real_  # Handle missing data
     }
   }
   return(improvement)
 }
 
-# Process improvements across different size categories and metrics
+# Function to process improvements across metrics and categories
 process_improvements <- function(codon_data, other_data, comparison_name) {
-  # Define the metrics to calculate improvements
+  # Metrics to consider
   metrics <- c("energy_consumption", "execution_time", "cpu_usage", "mem_usage")
   if (comparison_name == "codon_cpp") {
-    metrics <- c(metrics, "compile_time")
+    metrics <- c(metrics, "compile_time")  # Add compile_time for codon vs cpp comparison
   }
   
-  # Ensure valid data points are used to calculate medians
+  # Calculate mean values and improvements
   improvements <- bind_rows(lapply(metrics, function(metric) {
-    median_codon <- codon_data %>%
+    mean_codon <- codon_data %>%
       group_by(SIZE_CATEGORY) %>%
-      summarize(Median_Codon = ifelse(all(is.na(!!sym(metric))), NA, median(!!sym(metric), na.rm = TRUE)), .groups = 'drop')
+      summarize(mean_Codon = mean(!!sym(metric), na.rm = TRUE), .groups = 'drop')
     
-    median_other <- other_data %>%
+    mean_other <- other_data %>%
       group_by(SIZE_CATEGORY) %>%
-      summarize(Median_Other = ifelse(all(is.na(!!sym(metric))), NA, median(!!sym(metric), na.rm = TRUE)), .groups = 'drop')
+      summarize(mean_Other = mean(!!sym(metric), na.rm = TRUE), .groups = 'drop')
 
-    combined_data <- left_join(median_codon, median_other, by = "SIZE_CATEGORY") %>%
-      mutate(Improvement = calculate_improvement(Median_Codon, Median_Other),
+    combined_data <- left_join(mean_codon, mean_other, by = "SIZE_CATEGORY") %>%
+      mutate(Improvement = calculate_improvement(mean_Codon, mean_Other),
              Metric = metric,
              Comparison = comparison_name)
     
-    select(combined_data, Comparison, SIZE_CATEGORY, Metric, Improvement)
+    dplyr::select(combined_data, Comparison, SIZE_CATEGORY, Metric, Improvement)
   }))
   
   return(improvements)
 }
 
-# Example usage:
+# Read benchmark data
 codon_data <- read_csv("codon_benchmarks.csv")
 cpp_data <- read_csv("cpp_benchmarks.csv")
 python_data <- read_csv("python_benchmarks.csv")
 
-# Calculate improvements
+# Process improvements for both comparisons
 improvements_codon_python <- process_improvements(codon_data, python_data, "codon_python")
 improvements_codon_cpp <- process_improvements(codon_data, cpp_data, "codon_cpp")
 
-# Combine and save results
+# Combine and output the results
 all_improvements <- bind_rows(improvements_codon_python, improvements_codon_cpp)
 write_csv(all_improvements, "improvement.csv")
 
-# Print the results
-print(all_improvements)
+# Create a directory for plots if it doesn't exist
+plot_dir <- "plots/"
+if (!dir.exists(plot_dir)) {
+  dir.create(plot_dir)
+}
+
+# Load the improvements data
+all_improvements <- read_csv("improvement.csv")
+
+# Filter out metrics where all improvements are zero
+filtered_improvements <- all_improvements %>%
+  group_by(Metric) %>%
+  filter(sum(Improvement != 0, na.rm = TRUE) > 0) %>%
+  ungroup()
+
+# Creating the grouped bar plot
+if (nrow(filtered_improvements) > 0) {
+grouped_bar_plot <- filtered_improvements %>%
+  ggplot(aes(x = SIZE_CATEGORY, y = Improvement, fill = Comparison)) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.8), width = 0.7) +
+  facet_wrap(~Metric, scales = "free_y") +
+  scale_y_continuous(labels = scales::percent_format(scale = 1)) +
+  scale_fill_manual(values = c("lightblue", "lightgreen"), 
+                    labels = c("Codon vs. CPP", "Codon vs. Python")) +
+  labs(
+    title = "Improvement Percentage by Metric and Size Category",
+    x = "Size Category",
+    y = "Improvement (%)",
+    fill = "Comparison"
+  ) +
+  theme_classic() +
+  theme(
+    plot.title = element_text(hjust = 0.5),
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "bottom"
+  )
+
+# Save the plot or print to view
+ggsave(paste0(plot_dir,"grouped_improvement_plot.png"), grouped_bar_plot, width = 12, height = 8, bg="white")
+}

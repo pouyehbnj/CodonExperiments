@@ -1,0 +1,262 @@
+# Set repository for package installation
+options(repos = c(CRAN = "https://cran.rstudio.com/"))
+options(warn = -1)
+# Install necessary libraries if not already installed
+if (!require("ggplot2")) install.packages("ggplot2")
+if (!require("tidyverse")) install.packages("tidyverse")
+if (!require("ggfortify")) install.packages("ggfortify")
+if (!require("MASS")) install.packages("MASS")
+if (!require("stats")) install.packages("stats")
+if (!require("effsize")) install.packages("effsize")
+if (!require("moments")) install.packages("moments")
+if (!require("brunnermunzel")) install.packages("brunnermunzel")
+if (!require("coin")) install.packages("coin")
+if (!require("plotrix")) install.packages("plotrix")
+if (!require("car")) install.packages("car")
+
+# Load necessary libraries
+library(tidyverse)
+library(ggplot2)
+library(ggfortify)
+library(MASS)
+library(stats)
+library(effsize) 
+library(moments) 
+library(brunnermunzel)
+library(coin)
+library(plotrix) 
+library(car)
+# Load data
+codon_data <- read_csv("codon_benchmarks.csv", show_col_types = FALSE)
+python_data <- read_csv("python_benchmarks.csv", show_col_types = FALSE)
+cpp_data <- read_csv("cpp_benchmarks.csv", show_col_types = FALSE)
+all_data <- bind_rows(codon_data, python_data, cpp_data)
+
+# Remove outliers function
+remove_outliers <- function(data, metric) {
+  data %>%
+    group_by(execution_method, SIZE_CATEGORY) %>%
+    filter({
+      Q1 <- quantile(.data[[metric]], 0.25, na.rm = TRUE)
+      Q3 <- quantile(.data[[metric]], 0.75, na.rm = TRUE)
+      IQR <- Q3 - Q1
+      lower_bound <- Q1 - 1.5 * IQR
+      upper_bound <- Q3 + 1.5 * IQR
+      .data[[metric]] >= lower_bound & .data[[metric]] <= upper_bound
+    }) %>%
+    ungroup()
+}
+
+# Apply outlier removal
+metrics <- c("energy_consumption", "execution_time", "cpu_usage", "mem_usage", "compile_time")
+for (metric in metrics) {
+  all_data <- remove_outliers(all_data, metric)
+  codon_data <- remove_outliers(codon_data, metric)
+  python_data <- remove_outliers(python_data, metric)
+  cpp_data <- remove_outliers(cpp_data, metric)
+}
+
+# Function to apply transformation based on skewness
+transform_data <- function(data, skewness) {
+  if (skewness > 0) {
+    return(log(data + min(data[data > 0], na.rm = TRUE)))  # Adjust log transformation for positive values only
+  } else {
+    return(sqrt(data))  # Apply sqrt transformation for negative skew
+  }
+}
+
+# Function to create and save density plots for effect size visualization
+
+create_density_plot <- function(group1, group2, group1_label, group2_label, size_category, metric) {
+  # Skip if one group is Python and the metric is compile time
+  if ((group1_label == "python" || group2_label == "python") && metric == "compile_time") {
+    return()
+  }
+
+  # Create a combined data frame
+  combined_data <- data.frame(
+    Values = c(group1, group2),
+    Group = c(rep(group1_label, length(group1)), rep(group2_label, length(group2)))
+  )
+
+  # Handle cases where both groups only have zero values or one is all zero
+  if (all(combined_data$Values == 0)) {
+    return()  # Skip if all values are zero
+  }
+
+  # Calculate the range for each group and sort by this range
+  range_info <- combined_data %>%
+                group_by(Group) %>%
+                summarise(Min = min(Values), Max = max(Values), Range = Max - Min) %>%
+                arrange(Min) %>%
+                mutate(Group = factor(Group, levels = Group))
+
+  # Plot setup with dynamic x-axis scaling and adjusted bandwidth
+  adjust_density <- 1.25
+  max_value <- max(combined_data$Values, na.rm = TRUE)
+  min_value <- min(combined_data$Values, na.rm = TRUE)
+
+  # Use factor levels from range_info for ordering
+  combined_data$Group <- factor(combined_data$Group, levels = range_info$Group)
+  # Define colors
+  colors <- setNames(c("blue", "red"), c(group1_label, group2_label))
+
+  # Plot setup with dynamic x-axis scaling
+  p <- ggplot(combined_data, aes(x = Values, fill = Group)) +
+    geom_density(alpha = 0.5, adjust = adjust_density) +  # adjust parameter for better visualization
+    scale_fill_manual(values = colors) +
+    labs(title = paste("Density Plot for", group1_label, "vs", group2_label, "in", size_category, metric),
+         x = "Values", y = "Density") +
+    theme_minimal() +
+    scale_x_continuous(limits = range(combined_data$Values, na.rm = TRUE))  # Dynamic scaling based on range
+
+  # Directory and file handling
+  plot_dir <- file.path("plots", "effect-size", size_category)
+  if (!dir.exists(plot_dir)) {
+    dir.create(plot_dir, recursive = TRUE)
+  }
+  file_name <- paste(group1_label, "vs", group2_label, size_category, metric, "density_plot.png", sep="_")
+  full_path <- file.path(plot_dir, file_name)
+
+  # Save the plot
+  ggsave(full_path, plot = p, width = 10, height = 6, units = "in", bg="white")
+}
+
+
+
+# Process the groups and determine which test to use
+process_groups <- function(group1, group2, name) {
+  # Avoid processing if there's no data, insufficient variability, or only NA values
+  if (length(group1) <= 1 || length(group2) <= 1 || 
+      length(unique(na.omit(group1))) <= 1 || length(unique(na.omit(group2))) <= 1) {
+    return(list(group1 = group1, group2 = group2, test_type = "Not Applicable - Insufficient variability"))
+  }
+
+  # Check for NA values and remove them
+  group1 <- na.omit(group1)
+  group2 <- na.omit(group2)
+  # Ensure the group sizes are appropriate for Shapiro-Wilk test
+  if (length(group1) < 3 || length(group1) > 5000 || length(group2) < 3 || length(group2) > 5000) {
+    return(list(group1 = group1, group2 = group2, test_type = "Not Applicable - Sample size out of bounds for Shapiro-Wilk"))
+  }
+
+  # Perform Shapiro-Wilk test to check normality
+  test_type <- "Wilcoxon test"
+  original_p1 <- shapiro.test(group1)$p.value
+  original_p2 <- shapiro.test(group2)$p.value
+
+  # Determine the test based on normality
+  if (original_p1 >= 0.05 && original_p2 >= 0.05) {
+  # Both groups are normally distributed, perform Levene's test for equality of variances
+   # Assuming 'group1' and 'group2' are correctly defined as vectors
+    data_for_test <- data.frame(value = c(group1, group2), group = factor(rep(1:2, c(length(group1), length(group2)))))
+    levene_res <- leveneTest(value ~ group, data = data_for_test)
+    levene_p_value <- levene_res$"Pr(>F)"[1] 
+    if (levene_p_value >= 0.05) {
+      # Variances are equal, use t-test
+      test_type <- "t-test"
+    }
+  }
+
+  return(list(group1 = group1, group2 = group2, test_type = test_type, original_group1 = group1, original_group2 = group2))
+}
+
+# Initialize a list to store results
+results_list <- list()
+
+# Define execution methods, size categories, and metrics
+execution_pairs <- list(c("codon", "python"), c("codon", "cpp"))
+size_categories <- c("small", "medium", "large")
+metrics <- c("energy_consumption", "execution_time", "cpu_usage", "mem_usage", "compile_time")
+
+# Loop through each combination
+index <- 1
+for (metric in metrics) {
+  for (size in size_categories) {
+    for (pair in execution_pairs) {
+      method1 <- pair[1]
+      method2 <- pair[2]
+
+      group1_data <- all_data %>% filter(execution_method == method1, SIZE_CATEGORY == size) %>% pull(metric) %>% na.omit()
+      group2_data <- all_data %>% filter(execution_method == method2, SIZE_CATEGORY == size) %>% pull(metric) %>% na.omit()
+
+      # Process groups
+      result <- process_groups(group1_data, group2_data, paste(method1, method2, size, metric))
+
+      # Store results in the list
+      results_list[[index]] <- list(
+        Method1 = method1,
+        Method2 = method2,
+        Size = size,
+        Metric = metric,
+        Group1Data = result$group1,
+        Group2Data = result$group2,
+        Original_Group1Data = result$original_group1,
+        Original_Group2Data = result$original_group2,
+        TestType = result$test_type
+      )
+      index <- index + 1
+    }
+  }
+}
+
+# Initialize CSV storage for hypothesis results
+hypothesis_results <- vector("list", length = length(results_list))
+names(hypothesis_results) <- sapply(results_list, function(x) paste(x$Method1, x$Method2, x$Size, x$Metric, sep = "_"))
+
+# Perform hypothesis testing and save results
+for (i in seq_along(results_list)) {
+  result <- results_list[[i]]
+  print(paste(result$Method1, "vs", result$Method2, "in", result$Size, "size category with metric", result$Metric, ":", result$TestType))
+
+  if (result$TestType == "t-test") {
+    # Perform t-test
+    test_result <- t.test(result$Group1Data, result$Group2Data)
+    decision <- ifelse(test_result$p.value < 0.05, "Reject H0", "Fail to reject H0")
+
+    print(paste("T-test result for", result$Metric, "in", result$Size, "size category: p-value =", test_result$p.value))
+    print(decision)
+
+    # Store results
+    hypothesis_results[[i]] <- data.frame(
+      Method1 = result$Method1,
+      Method2 = result$Method2,
+      Metric = result$Metric,
+      Size = result$Size,
+      Test_Type = "T-test",
+      P_Value = test_result$p.value,
+      Decision = decision
+    )
+
+    # Create density plot if H0 is rejected
+    if (test_result$p.value < 0.05) {
+      create_density_plot(result$Original_Group1Data, result$Original_Group2Data, result$Method1, result$Method2, result$Size, result$Metric)
+    }
+  } else {
+    # Perform Wilcoxon test
+    test_result <- wilcox.test(result$Group1Data, result$Group2Data, alternative = "two.sided")
+    decision <- ifelse(test_result$p.value < 0.05, "Reject H0", "Fail to reject H0")
+
+    print(paste("Wilcoxon test result for", result$Metric, "in", result$Size, "size category: p-value =", test_result$p.value))
+    print(decision)
+
+    # Store results
+    hypothesis_results[[i]] <- data.frame(
+      Method1 = result$Method1,
+      Method2 = result$Method2,
+      Metric = result$Metric,
+      Size = result$Size,
+      Test_Type = "Wilcoxon",
+      P_Value = test_result$p.value,
+      Decision = decision
+    )
+
+    # Create density plot if H0 is rejected
+    if (!is.nan(test_result$p.value) && test_result$p.value < 0.05) {
+      create_density_plot(result$Original_Group1Data, result$Original_Group2Data, result$Method1, result$Method2, result$Size, result$Metric)
+    }
+  }
+}
+
+# Write results to CSV
+write.csv(do.call(rbind, hypothesis_results), "H1_2_results.csv", row.names = FALSE)

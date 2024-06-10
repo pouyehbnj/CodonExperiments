@@ -1,0 +1,87 @@
+library(tidyverse)
+library(here)
+
+# Ensure the 'here' package is correctly identifying your project root
+print(here())
+
+# Find all relevant files in subdirectories under 'Data-Analysis'
+h1_2_files <- list.files(path = here("Data-Analysis"), pattern = "H1_2_results.csv", full.names = TRUE, recursive = TRUE)
+h3_files <- list.files(path = here("Data-Analysis"), pattern = "H3_results.csv", full.names = TRUE, recursive = TRUE)
+posthoc_files <- list.files(path = here("Data-Analysis"), pattern = "posthoc_results.csv", full.names = TRUE, recursive = TRUE)
+desc_files <- list.files(path = here("Data-Analysis"), pattern = "descriptive_stats.csv", full.names = TRUE, recursive = TRUE)
+
+
+# Function to read files, extract necessary data and append the subject name
+process_descriptive_stats <- function(filepath) {
+  subject_name <- basename(dirname(filepath))
+  data <- read_csv(filepath) %>%
+    mutate(Subject = subject_name) %>%
+    select(Subject, execution_method, SIZE_CATEGORY, matches("mean_")) %>%
+    pivot_longer(cols = -c(Subject, execution_method, SIZE_CATEGORY), names_to = "Metric", values_to = "Value")
+  
+  return(data)
+}
+
+# Function to read and append subject name
+read_and_label <- function(filepath) {
+  # Split the file path to extract the subdirectory name directly under "Data-Analysis"
+  path_parts <- str_split(filepath, "/")[[1]]
+  data_analysis_index <- which(path_parts == "Data-Analysis")
+  subject_name <- path_parts[data_analysis_index + 1]  # The subject name is immediately after 'Data-Analysis'
+  
+  read_csv(filepath) %>% 
+    mutate(Subject = subject_name)
+}
+
+# Process each type of file and combine them
+process_files <- function(files) {
+  map(files, read_and_label) %>%
+    bind_rows() %>%
+    arrange(Metric, Subject)
+}
+
+# Function to save the combined data frame, checking for existing file
+save_data <- function(data, filename) {
+  file_path <- here("Data-Analysis", filename)
+  if (file.exists(file_path)) {
+    file.remove(file_path)
+  }
+  write_csv(data, file_path)
+}
+
+# Combine data for each file type
+combined_h1_2 <- process_files(h1_2_files)
+combined_h3 <- process_files(h3_files)
+combined_posthoc <- process_files(posthoc_files)
+combined_stats <- map_dfr(desc_files, process_descriptive_stats)
+
+# Calculate the comparison order for each group
+combined_stats <- map_dfr(desc_files, process_descriptive_stats)
+
+# Reshape data to wide format for comparison
+# Reshape data to wide format for comparison
+comparison_results <- combined_stats %>%
+  pivot_wider(names_from = execution_method, values_from = Value, names_prefix = "mean_") %>%
+  rowwise() %>%
+  mutate(
+    Metric_base = stringr::str_replace(Metric, "mean_", ""),
+    codon_vs_cpp = if_else(`mean_codon` < `mean_cpp`, "codon<cpp", "cpp<codon"),
+    codon_vs_python = if_else(Metric_base == "compile_time", NA_character_, 
+                              if_else(`mean_codon` < `mean_python`, "codon<python", "python<codon"))
+  ) %>%
+  ungroup()
+
+# Order the dataframe based on Metric_base
+ordered_results <- comparison_results %>%
+  arrange(Metric_base) %>%
+  select(-Metric_base) 
+
+# Save combined data frames with overwrite check
+save_data(combined_h1_2, "meta_H1-2.csv")
+save_data(combined_h3, "meta_H3.csv")
+save_data(combined_posthoc, "meta_posthoc_results.csv")
+save_data(ordered_results, "meta_comparisons.csv")
+
+# Print out a message to indicate completion
+print("Data aggregation completed and files saved.")
+

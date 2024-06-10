@@ -1,0 +1,5 @@
+Metric,Test_Type,P_Value
+energy_consumption,Kruskal-Wallis,9.774688831303263e-6
+execution_time,Kruskal-Wallis,9.774688831303263e-6
+cpu_usage,ANOVA,0.4434069405120209
+mem_usage,Kruskal-Wallis,9.774688831303263e-6
