@@ -91,25 +91,27 @@ create_density_plot <- function(group1, group2, group1_label, group2_label, size
                 arrange(Min) %>%
                 mutate(Group = factor(Group, levels = Group))
 
-  # Plot setup with dynamic x-axis scaling and adjusted bandwidth
-  adjust_density <- 1.25
-  max_value <- max(combined_data$Values, na.rm = TRUE)
-  min_value <- min(combined_data$Values, na.rm = TRUE)
-
   # Use factor levels from range_info for ordering
   combined_data$Group <- factor(combined_data$Group, levels = range_info$Group)
   # Define colors
   colors <- setNames(c("blue", "red"), c(group1_label, group2_label))
 
+  x_limits_adjusted <- quantile(combined_data$Values, probs = c(0.01, 0.99), na.rm = TRUE)
+  padding <- diff(x_limits_adjusted) * 0.1
+  x_limits_adjusted <- x_limits_adjusted + c(-padding, padding)
+
+  
+
   # Plot setup with dynamic x-axis scaling
   p <- ggplot(combined_data, aes(x = Values, fill = Group)) +
-    geom_density(alpha = 0.5, adjust = adjust_density) +  # adjust parameter for better visualization
+    geom_density(alpha = 0.5, adjust = 1) +  # adjust parameter for better visualization
     scale_fill_manual(values = colors) +
     labs(title = paste("Density Plot for", group1_label, "vs", group2_label, "in", size_category, metric),
          x = "Values", y = "Density") +
     theme_minimal() +
-    scale_x_continuous(limits = range(combined_data$Values, na.rm = TRUE))  # Dynamic scaling based on range
-
+  #  scale_x_continuous(limits = range(combined_data$Values, na.rm = TRUE))  # Dynamic scaling based on range
+    scale_x_continuous(limits = x_limits_adjusted)
+  #  scale_y_continuous(limits = y_limit)  # Set fixed y-axis limits
   # Directory and file handling
   plot_dir <- file.path("plots", "effect-size", size_category)
   if (!dir.exists(plot_dir)) {
@@ -161,6 +163,21 @@ process_groups <- function(group1, group2, name) {
   return(list(group1 = group1, group2 = group2, test_type = test_type, original_group1 = group1, original_group2 = group2))
 }
 
+# Function to calculate effect size and add to results
+calculate_effect_size <- function(group1, group2, test_type) {
+  if (test_type == "Wilcoxon") {
+    # Calculate Cliff's Delta for non-parametric data
+    delta <- cliff.delta(group1, group2)
+    return(list(effect_size = delta$estimate, effect_size_type = "Cliff's Delta"))
+  } else if (test_type == "t-test") {
+    # Calculate Cohen's d for parametric data
+    d <- cohen.d(group1, group2)
+    return(list(effect_size = d$estimate, effect_size_type = "Cohen's d"))
+  } else {
+    return(list(effect_size = NA, effect_size_type = NA))
+  }
+}
+
 # Initialize a list to store results
 results_list <- list()
 
@@ -203,6 +220,7 @@ for (metric in metrics) {
 # Initialize CSV storage for hypothesis results
 hypothesis_results <- vector("list", length = length(results_list))
 names(hypothesis_results) <- sapply(results_list, function(x) paste(x$Method1, x$Method2, x$Size, x$Metric, sep = "_"))
+effect_size_info <- list(effect_size = NA, effect_size_type = NA)
 
 # Perform hypothesis testing and save results
 for (i in seq_along(results_list)) {
@@ -217,6 +235,13 @@ for (i in seq_along(results_list)) {
     print(paste("T-test result for", result$Metric, "in", result$Size, "size category: p-value =", test_result$p.value))
     print(decision)
 
+    
+
+    # Create density plot if H0 is rejected
+    if (test_result$p.value < 0.05) {
+      create_density_plot(result$Original_Group1Data, result$Original_Group2Data, result$Method1, result$Method2, result$Size, result$Metric)
+      effect_size_info <- calculate_effect_size(result$Group1Data, result$Group2Data, "t-test")
+    }
     # Store results
     hypothesis_results[[i]] <- data.frame(
       Method1 = result$Method1,
@@ -226,12 +251,9 @@ for (i in seq_along(results_list)) {
       Test_Type = "T-test",
       P_Value = test_result$p.value,
       Decision = decision
+    #  Effect_Size = effect_size_info$effect_size,
+    #  Effect_Size_Type = effect_size_info$effect_size_type
     )
-
-    # Create density plot if H0 is rejected
-    if (test_result$p.value < 0.05) {
-      create_density_plot(result$Original_Group1Data, result$Original_Group2Data, result$Method1, result$Method2, result$Size, result$Metric)
-    }
   } else {
     # Perform Wilcoxon test
     test_result <- wilcox.test(result$Group1Data, result$Group2Data, alternative = "two.sided")
@@ -240,6 +262,13 @@ for (i in seq_along(results_list)) {
     print(paste("Wilcoxon test result for", result$Metric, "in", result$Size, "size category: p-value =", test_result$p.value))
     print(decision)
 
+    
+
+    # Create density plot if H0 is rejected
+    if (!is.nan(test_result$p.value) && test_result$p.value < 0.05) {
+      create_density_plot(result$Original_Group1Data, result$Original_Group2Data, result$Method1, result$Method2, result$Size, result$Metric)
+      effect_size_info <- calculate_effect_size(result$Group1Data, result$Group2Data, "Wilcoxon")
+    }
     # Store results
     hypothesis_results[[i]] <- data.frame(
       Method1 = result$Method1,
@@ -249,12 +278,9 @@ for (i in seq_along(results_list)) {
       Test_Type = "Wilcoxon",
       P_Value = test_result$p.value,
       Decision = decision
+    #  Effect_Size = effect_size_info$effect_size,
+    #  Effect_Size_Type = effect_size_info$effect_size_type
     )
-
-    # Create density plot if H0 is rejected
-    if (!is.nan(test_result$p.value) && test_result$p.value < 0.05) {
-      create_density_plot(result$Original_Group1Data, result$Original_Group2Data, result$Method1, result$Method2, result$Size, result$Metric)
-    }
   }
 }
 
