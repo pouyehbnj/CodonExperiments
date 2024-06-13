@@ -48,6 +48,11 @@ remove_outliers <- function(data, metric) {
 
 # Apply outlier removal
  metrics <- c("energy_consumption", "execution_time", "cpu_usage", "mem_usage", "compile_time")
+ units <- c("(J)", "(s)", "(%)", "(%)", "(s)")
+
+ # Create a named vector to easily match metrics with units
+  units_map <- setNames(units, metrics)
+  
  for (metric in metrics) {
   all_data <- remove_outliers(all_data, metric)
   codon_data <- remove_outliers(codon_data, metric)
@@ -131,7 +136,9 @@ create_plots <- function(metric) {
   }
   # Determine dynamic y-limits for each subplot
   y_limits <- set_y_limits(data_filtered, metric)
+  unit_label <- units_map[[metric]] # Fetch the unit for the current metric
 
+  # unit_label <- units_map[[metric]] # Fetch the unit for the current metric
   # Check if all values for the metric are zero (excluding NA)
   if (metric != "compile_time" && all(data_filtered[[metric]] == 0, na.rm = TRUE)) {
      # Apply dynamic y-axis limits
@@ -141,7 +148,7 @@ create_plots <- function(metric) {
       geom_bar(stat = "identity", position = "dodge", width = 0.7) +
       facet_wrap(~SIZE_CATEGORY, scales = "free_y", ncol = 3) +
       scale_y_continuous(limits = c(0, 1), breaks = c(0))+
-      labs(title = paste("All values for", metric, "are zero"), x = "Compilation Method", y = metric) +
+      labs(title = paste("All values for", metric, "are zero"), x = "Compilation Method", y = paste(metric,unit_label,sep=" ")) +
       theme_minimal() +
       theme(plot.background = element_rect(fill = "white"), panel.background = element_rect(fill = "white"))
   
@@ -157,7 +164,7 @@ create_plots <- function(metric) {
       geom_boxplot(width = 0.1, outlier.shape = NA, alpha = 0.6) +  # Add box plot
       geom_jitter(color = "black", size = 0.4, width = 0.1, alpha = 0.7) +  # Add dot plot for data points
       facet_wrap(~SIZE_CATEGORY + execution_method, scales = "free_y", ncol = n_cols) +
-      labs(title = paste("Combined Plot of", metric, "by Execution Method"), x = "Execution Method", y = metric) +
+      labs(title = paste("Combined Plot of", metric, "by Execution Method"), x = "Execution Method", y = paste(metric, unit_label, sep=" ")) +
       theme_minimal() +
       theme(plot.background = element_rect(fill = "white"), panel.background = element_rect(fill = "white"))
 
@@ -177,7 +184,9 @@ create_scatter_plots <- function(metric) {
   } else {
     all_data
   }
+  unit_label <- units_map[[metric]] # Fetch the unit for the current metric
 
+ 
   # Check if all values for the metric are zero (excluding NA)
   if (metric != "compile_time" && all(data_filtered[[metric]] == 0, na.rm = TRUE)) {
     # Create a simple plot showing all values as zero
@@ -185,7 +194,7 @@ create_scatter_plots <- function(metric) {
       geom_bar(stat = "identity", position = "dodge", width = 0.7) +
       facet_wrap(~SIZE_CATEGORY, scales = "free_y", ncol = 3) +
       scale_y_continuous(limits = c(0, 1), breaks = c(0)) +  # Set y-axis limits to show the zero line
-      labs(title = paste("All values for", metric, "are zero"), x = "Compilation Method", y = metric) +
+       labs(title = paste("All values for", metric, "are zero"), x = "Compilation Method", y = paste(metric,unit_label,sep=" "))  +
       theme_minimal() +
       theme(plot.background = element_rect(fill = "white"), panel.background = element_rect(fill = "white"))
 
@@ -198,7 +207,7 @@ create_scatter_plots <- function(metric) {
     plot <- ggplot(data_filtered, aes(x = execution_method, y = !!sym(metric), color = execution_method)) +
       geom_point(size = 2.5, alpha = 0.7) +  # Increase point size for better visibility
       facet_wrap(~SIZE_CATEGORY + execution_method, scales = "free_y", ncol = n_cols) +
-      labs(title = paste("Scatter Plot of", metric, "by Execution Method"), x = "Execution Method", y = metric) +
+      labs(title = paste("Scatter Plot of", metric, "by Execution Method"), x = "Execution Method", y = paste(metric,unit_label,sep=" ")) +
       theme_minimal() +
       theme(plot.background = element_rect(fill = "white"), panel.background = element_rect(fill = "white"))
 
@@ -217,7 +226,7 @@ lapply(metrics, create_scatter_plots)
 # Function to generate a Q-Q plot using ggplot2
 analyze_normality <- function(data, metric) {
   combinations <- unique(data[, c("execution_method", "SIZE_CATEGORY")])
-
+  unit_label <- units_map[[metric]] # Fetch the unit for the current metric
   for (i in 1:nrow(combinations)) {
     method <- combinations$execution_method[i]
     size_category <- combinations$SIZE_CATEGORY[i]
@@ -232,7 +241,7 @@ analyze_normality <- function(data, metric) {
       qq_plot <- ggplot(subset_data, aes(sample = .data[[metric]])) +
         stat_qq(color = "black") +
         stat_qq_line(color = "blue") +
-        ggtitle(paste("Q-Q Plot for", metric, "in", method, size_category))
+        ggtitle(paste("Q-Q Plot for", metric, unit_label, "in", method, size_category))
 
       # Folder for saving the plot
       qq_plot_folder <- paste0("plots/qq-plots/qq_plots_", metric)
@@ -256,7 +265,8 @@ lapply(metrics, function(m) analyze_normality(all_data, m))
 create_scatter_plot <- function(data, metric) {
   # Set factor levels for SIZE_CATEGORY to control order
   data$SIZE_CATEGORY <- factor(data$SIZE_CATEGORY, levels = c("small", "medium", "large"))
-  
+  unit_label <- units_map[[metric]] # Fetch the unit for the current metric
+
   # Calculate the range of data to dynamically set y-axis limits
   range_min <- min(data[[metric]], na.rm = TRUE)
   range_max <- max(data[[metric]], na.rm = TRUE)
@@ -266,7 +276,8 @@ create_scatter_plot <- function(data, metric) {
     geom_point(alpha = 0.6, size = 3) +
     scale_color_brewer(palette = "Set1") +
     labs(title = paste("Scatter Plot of", metric, "across Size Categories"),
-         x = "Size Category", y = metric) +
+         x = "Size Category", y = paste(metric,unit_label,sep=" ")) +
+         
     theme_minimal() +
     theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
     scale_y_continuous(limits = c(range_min - padding, range_max + padding),

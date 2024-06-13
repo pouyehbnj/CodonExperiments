@@ -49,6 +49,11 @@ remove_outliers <- function(data, metric) {
 
 # Apply outlier removal
 metrics <- c("energy_consumption", "execution_time", "cpu_usage", "mem_usage", "compile_time")
+units <- c("(J)", "(s)", "(%)", "(%)", "(s)")
+
+# Create a named vector to easily match metrics with units
+units_map <- setNames(units, metrics)
+
 for (metric in metrics) {
   all_data <- remove_outliers(all_data, metric)
   codon_data <- remove_outliers(codon_data, metric)
@@ -93,6 +98,7 @@ create_density_plot <- function(group1, group2, group1_label, group2_label, size
 
   # Use factor levels from range_info for ordering
   combined_data$Group <- factor(combined_data$Group, levels = range_info$Group)
+  unit_label <- units_map[[metric]]  # Fetch the unit for the current metric
   # Define colors
   colors <- setNames(c("blue", "red"), c(group1_label, group2_label))
 
@@ -106,7 +112,7 @@ create_density_plot <- function(group1, group2, group1_label, group2_label, size
   p <- ggplot(combined_data, aes(x = Values, fill = Group)) +
     geom_density(alpha = 0.5, adjust = 1) +  # adjust parameter for better visualization
     scale_fill_manual(values = colors) +
-    labs(title = paste("Density Plot for", group1_label, "vs", group2_label, "in", size_category, metric),
+  labs(title = paste("Density Plot for", group1_label, "vs", group2_label, "in", size_category, metric, unit_label),
          x = "Values", y = "Density") +
     theme_minimal() +
   #  scale_x_continuous(limits = range(combined_data$Values, na.rm = TRUE))  # Dynamic scaling based on range
