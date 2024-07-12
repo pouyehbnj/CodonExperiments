@@ -2,6 +2,16 @@
 library(tidyverse)
 library(readr)
 
+# Function to remove outliers using IQR method
+remove_outliers <- function(data, metric) {
+  q1 <- quantile(data[[metric]], 0.25, na.rm = TRUE)
+  q3 <- quantile(data[[metric]], 0.75, na.rm = TRUE)
+  iqr <- q3 - q1
+  lower_bound <- q1 - 1.5 * iqr
+  upper_bound <- q3 + 1.5 * iqr
+  data %>% filter((!!sym(metric) >= lower_bound) & (!!sym(metric) <= upper_bound))
+}
+
 # Function to calculate improvement percentages
 calculate_improvement <- function(codon, other) {
   improvement <- vector("numeric", length(codon))
@@ -31,11 +41,14 @@ process_improvements <- function(codon_data, other_data, comparison_name) {
   
   # Calculate mean values and improvements
   improvements <- bind_rows(lapply(metrics, function(metric) {
-    mean_codon <- codon_data %>%
+    codon_data_filtered <- remove_outliers(codon_data, metric)
+    other_data_filtered <- remove_outliers(other_data, metric)
+    
+    mean_codon <- codon_data_filtered %>%
       group_by(SIZE_CATEGORY) %>%
       summarize(mean_Codon = mean(!!sym(metric), na.rm = TRUE), .groups = 'drop')
     
-    mean_other <- other_data %>%
+    mean_other <- other_data_filtered %>%
       group_by(SIZE_CATEGORY) %>%
       summarize(mean_Other = mean(!!sym(metric), na.rm = TRUE), .groups = 'drop')
 
@@ -77,29 +90,29 @@ filtered_improvements <- all_improvements %>%
   group_by(Metric) %>%
   filter(sum(Improvement != 0, na.rm = TRUE) > 0) %>%
   ungroup()
-
+print(n=100,filtered_improvements)
 # Creating the grouped bar plot
 if (nrow(filtered_improvements) > 0) {
-grouped_bar_plot <- filtered_improvements %>%
-  ggplot(aes(x = SIZE_CATEGORY, y = Improvement, fill = Comparison)) +
-  geom_bar(stat = "identity", position = position_dodge(width = 0.8), width = 0.7) +
-  facet_wrap(~Metric, scales = "free_y") +
-  scale_y_continuous(labels = scales::percent_format(scale = 1)) +
-  scale_fill_manual(values = c("lightblue", "lightgreen"), 
-                    labels = c("Codon vs. CPP", "Codon vs. Python")) +
-  labs(
-    title = "Improvement Percentage by Metric and Size Category",
-    x = "Size Category",
-    y = "Improvement (%)",
-    fill = "Comparison"
-  ) +
-  theme_classic() +
-  theme(
-    plot.title = element_text(hjust = 0.5),
-    axis.text.x = element_text(angle = 45, hjust = 1),
-    legend.position = "bottom"
-  )
+  grouped_bar_plot <- filtered_improvements %>%
+    ggplot(aes(x = SIZE_CATEGORY, y = Improvement, fill = Comparison)) +
+    geom_bar(stat = "identity", position = position_dodge(width = 0.8), width = 0.7) +
+    facet_wrap(~Metric, scales = "free_y") +
+    scale_y_continuous(labels = scales::percent_format(scale = 1)) +
+    scale_fill_manual(values = c("lightblue", "lightgreen"), 
+                      labels = c("Codon vs. CPP", "Codon vs. Python")) +
+    labs(
+      title = "Improvement Percentage by Metric and Size Category",
+      x = "Size Category",
+      y = "Improvement (%)",
+      fill = "Comparison"
+    ) +
+    theme_classic() +
+    theme(
+      plot.title = element_text(hjust = 0.5),
+      axis.text.x = element_text(angle = 45, hjust = 1),
+      legend.position = "bottom"
+    )
 
-# Save the plot or print to view
-ggsave(paste0(plot_dir,"grouped_improvement_plot.png"), grouped_bar_plot, width = 12, height = 8, bg="white")
+  # Save the plot or print to view
+  ggsave(paste0(plot_dir,"grouped_improvement_plot.png"), grouped_bar_plot, width = 12, height = 8, bg="white")
 }

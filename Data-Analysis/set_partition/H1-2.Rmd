@@ -95,10 +95,11 @@ create_density_plot <- function(group1, group2, group1_label, group2_label, size
                 summarise(Min = min(Values), Max = max(Values), Range = Max - Min) %>%
                 arrange(Min) %>%
                 mutate(Group = factor(Group, levels = Group))
+  
 
+  unit_label <- units_map[[metric]]  # Fetch the unit for the current metric
   # Use factor levels from range_info for ordering
   combined_data$Group <- factor(combined_data$Group, levels = range_info$Group)
-  unit_label <- units_map[[metric]]  # Fetch the unit for the current metric
   # Define colors
   colors <- setNames(c("blue", "red"), c(group1_label, group2_label))
 
@@ -257,10 +258,11 @@ for (i in seq_along(results_list)) {
       Test_Type = "T-test",
       P_Value = test_result$p.value,
       Decision = decision
-    #  Effect_Size = effect_size_info$effect_size,
-    #  Effect_Size_Type = effect_size_info$effect_size_type
+      # Effect_Size = effect_size_info$effect_size,
+      # Effect_Size_Type = effect_size_info$effect_size_type
     )
-  } else {
+  } 
+  else if (result$TestType == "Wilcoxon test") {
     # Perform Wilcoxon test
     test_result <- wilcox.test(result$Group1Data, result$Group2Data, alternative = "two.sided")
     decision <- ifelse(test_result$p.value < 0.05, "Reject H0", "Fail to reject H0")
@@ -284,8 +286,21 @@ for (i in seq_along(results_list)) {
       Test_Type = "Wilcoxon",
       P_Value = test_result$p.value,
       Decision = decision
-    #  Effect_Size = effect_size_info$effect_size,
-    #  Effect_Size_Type = effect_size_info$effect_size_type
+      # Effect_Size = effect_size_info$effect_size,
+      # Effect_Size_Type = effect_size_info$effect_size_type
+    )
+  }else{
+     # Store results
+      hypothesis_results[[i]] <- data.frame(
+      Method1 = result$Method1,
+      Method2 = result$Method2,
+      Metric = result$Metric,
+      Size = result$Size,
+      Test_Type = "Not Applicable",
+      P_Value = "Not Applicable",
+      Decision = "Not Applicable"
+      # Effect_Size = effect_size_info$effect_size,
+      # Effect_Size_Type = effect_size_info$effect_size_type
     )
   }
 }
