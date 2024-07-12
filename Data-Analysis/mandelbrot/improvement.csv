@@ -20,8 +20,8 @@ codon_cpp,small,execution_time,3.9857408445945564
 codon_cpp,large,cpu_usage,1.2588138746973105
 codon_cpp,medium,cpu_usage,3.3117816858918436
 codon_cpp,small,cpu_usage,3.0619825474116955
-codon_cpp,large,mem_usage,NA
-codon_cpp,medium,mem_usage,NA
+codon_cpp,large,mem_usage,-100
+codon_cpp,medium,mem_usage,-100
 codon_cpp,small,mem_usage,0
 codon_cpp,large,compile_time,-302.60781085748584
 codon_cpp,medium,compile_time,-300.4711589859993

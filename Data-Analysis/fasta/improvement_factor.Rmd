@@ -84,7 +84,8 @@ grouped_bar_plot <- filtered_improvements %>%
   ggplot(aes(x = SIZE_CATEGORY, y = Improvement, fill = Comparison)) +
   geom_bar(stat = "identity", position = position_dodge(width = 0.8), width = 0.7) +
   facet_wrap(~Metric, scales = "free_y") +
-  scale_y_continuous(labels = scales::percent_format(scale = 1)) +
+  # scale_y_continuous(limits = c(-500, 100), breaks = c(seq(-500, 0, by = 100),seq(0, 100, by = 50))) +
+   scale_y_continuous(labels = scales::percent_format(scale = 1)) +
   scale_fill_manual(values = c("lightblue", "lightgreen"), 
                     labels = c("Codon vs. CPP", "Codon vs. Python")) +
   labs(

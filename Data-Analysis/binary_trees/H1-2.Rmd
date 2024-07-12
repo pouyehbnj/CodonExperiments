@@ -261,7 +261,8 @@ for (i in seq_along(results_list)) {
       # Effect_Size = effect_size_info$effect_size,
       # Effect_Size_Type = effect_size_info$effect_size_type
     )
-  } else {
+  } 
+  else if (result$TestType == "Wilcoxon test") {
     # Perform Wilcoxon test
     test_result <- wilcox.test(result$Group1Data, result$Group2Data, alternative = "two.sided")
     decision <- ifelse(test_result$p.value < 0.05, "Reject H0", "Fail to reject H0")
@@ -285,6 +286,19 @@ for (i in seq_along(results_list)) {
       Test_Type = "Wilcoxon",
       P_Value = test_result$p.value,
       Decision = decision
+      # Effect_Size = effect_size_info$effect_size,
+      # Effect_Size_Type = effect_size_info$effect_size_type
+    )
+  }else{
+     # Store results
+      hypothesis_results[[i]] <- data.frame(
+      Method1 = result$Method1,
+      Method2 = result$Method2,
+      Metric = result$Metric,
+      Size = result$Size,
+      Test_Type = "Not Applicable",
+      P_Value = "Not Applicable",
+      Decision = "Not Applicable"
       # Effect_Size = effect_size_info$effect_size,
       # Effect_Size_Type = effect_size_info$effect_size_type
     )

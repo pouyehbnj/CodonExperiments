@@ -11,8 +11,11 @@ calculate_improvement <- function(codon, other) {
         improvement[i] <- 0  # No change if both are zero
       } else if (other[i] != 0) {
         improvement[i] <- (other[i] - codon[i]) / other[i] * 100  # Calculate improvement
-      } else {
-        improvement[i] <- NA_real_  # Handle cases where 'other' is zero
+      } else if( other[i] == 0 && codon[i] != 0)
+      {
+        improvement[i] <- -100  # Handle cases where 'other' is zero
+      }else{
+        improvement[i] <- NA_real_  # Handle cases where 'codon' is zero
       }
     } else {
       improvement[i] <- NA_real_  # Handle missing data
