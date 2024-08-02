@@ -6,27 +6,27 @@ Python programming language, known for its simplicity and extensive library supp
 ## Installation
 
 To install this project, follow these steps:
-1. Make sure to have [Codon ](https://github.com/exaloop/codon), Clang++ [Clang++ ](https://clang.llvm.org/get_started.html), and Python3 [Python3 ](https://www.python.org/downloads/) installed in your system
+1. Make sure to have [Codon ](https://github.com/exaloop/codon), [Clang++ ](https://clang.llvm.org/get_started.html), and [Python3 ](https://www.python.org/downloads/) installed in your system
 2. Clone the repository.
 
 ## Usage
-To use this project, follow these steps:
+To use this project, follow thes instructions for conducting the experiments and data analysis:
 
 ### Running the Experiment
-To use this project, follow these steps:
+To run this project, follow these steps: 
 
-### Running the Experiment
 1. Change directory to `Experiment-1` by running the command below.
 ```bash
 cd Experiment-1
 ```
 2. Execute the 
 ```bash
- ./main_experiment.sh
+ main_experiment.sh
 ```
 script to run the tests.
 
 ### Conducting Data Analysis
+For analysing the experimental data, follow these steps:
 
 1. Change directory to `Data-Analysis` by running the command below.
 
@@ -34,12 +34,3 @@ script to run the tests.
 cd Data-Analysis
 ```
 2. Follow the instructions in the [README.md](./Data-Analysis/README.md) file in the `Data-Analysis` directory to conduct the data analysis.
-
-1. Change directory to `Experiment-1` by running the command `cd Experiment-1`.
-2. Execute the `main_experiment.sh` script to run the tests.
-
-### Conducting Data Analysis
-1. Change directory to `Data-Analysis` by running the command `cd Data-Analysis`.
-2. Follow the instructions in the [README.md](./Data-Analysis/README.md) file in the `Data-Analysis` directory to conduct the data analysis.
-
-
