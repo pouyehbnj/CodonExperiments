@@ -7,7 +7,10 @@ Python programming language, known for its simplicity and extensive library supp
 
 To install this project, follow these steps:
 1. Make sure to have [Codon ](https://github.com/exaloop/codon), [Clang++ ](https://clang.llvm.org/get_started.html), and [Python3 ](https://www.python.org/downloads/) installed in your system
-2. Clone the repository.
+2. Clone the repository using the command below:
+```bash
+git clone https://github.com/pouyehbnj/CodonExperiments.git
+```
 
 ## Usage
 To use this project, follow thes instructions for conducting the experiments and data analysis:
