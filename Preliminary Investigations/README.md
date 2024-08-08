@@ -1,2 +1,6 @@
 # Preliminary Invesitgation of Codon Experiments
-This folder contains the specifications of the Subjects used in this experiment and the results of static analysis done prior to the experiments for making sure that all the subjects function correctly and are comparable.  
+This folder contains the following :
+
+- Specifications of the subjects used in this experiment.
+
+- The results of static analysis done prior to the experiments for making sure that all subjects function correctly and are comparable to one another.  
