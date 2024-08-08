@@ -1,4 +1,4 @@
-# Preliminary Invesitgation of Codon Experiments
+# Preliminary Invesitgations of Codon Experiments
 This folder contains the following :
 
 - Specifications of the subjects used in this experiment.
